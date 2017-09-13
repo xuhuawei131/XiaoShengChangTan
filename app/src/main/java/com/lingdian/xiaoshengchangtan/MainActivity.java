@@ -1,5 +1,6 @@
 package com.lingdian.xiaoshengchangtan;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lingdian.xiaoshengchangtan.activity.HomePageActivity;
+import com.lingdian.xiaoshengchangtan.activity.NetEasyActivity;
 import com.lingdian.xiaoshengchangtan.bean.PageBean;
 import com.lingdian.xiaoshengchangtan.player.MyPlayer;
 import com.lingdian.xiaoshengchangtan.utils.HtmlParer;
@@ -59,6 +62,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         View btn_page=findViewById(R.id.btn_page);
         btn_page.setOnClickListener(this);
 
+
+        View btn_junp_home=findViewById(R.id.btn_junp_home);
+        btn_junp_home.setOnClickListener(this);
+
+        View btn_junp_neteasy=findViewById(R.id.btn_junp_neteasy);
+        btn_junp_neteasy.setOnClickListener(this);
+
+
+
         textResult = (TextView) findViewById(R.id.text_result);
     }
 
@@ -83,6 +95,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_page:
                 requestNetFileList();
                 break;
+            case R.id.btn_junp_home:
+                startActivity(new Intent(this, HomePageActivity.class));
+                break;
+            case R.id.btn_junp_neteasy:
+                startActivity(new Intent(this, NetEasyActivity.class));
+                break;
+
         }
     }
 
@@ -234,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void playMusic(String fileUri) {
-        MyPlayer.getInstance().start(fileUri);
+        MyPlayer.getInstance().loadUri(fileUri);
 
     }
 

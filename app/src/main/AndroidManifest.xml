@@ -4,7 +4,6 @@
 
     <application
         android:name=".MyApp"
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -24,7 +23,17 @@
             android:exported="false" />
 
         <activity android:name=".activity.HomePageActivity" />
-        <activity android:name=".activity.DetailPageActivity"></activity>
+        <activity android:name=".activity.DetailPageActivity" />
+        <activity android:name=".activity.NetEasyActivity" />
+
+        <service android:name=".services.MusicService" />
+        <service
+            android:name=".services.DownLoadService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity android:name=".activity.DownLoadingActivity" />
+        <activity android:name=".activity.DownLoadedActivity"></activity>
     </application>
 
 </manifest>

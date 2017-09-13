@@ -18,6 +18,10 @@ public class SwitchConfig {
     //跳过头的时间  毫秒
     public static int SkipHeadTime =300000;//
 
+    public static final String URL_HOME="http://gb.jlradio.net";
+    //下载的音频文件 文件夹路径
+    public static final String PATH_DIR="/xsct/.download";
 
+    public static final String DB_NAME="xsct.db";
 
 }

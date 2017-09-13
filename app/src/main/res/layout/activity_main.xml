@@ -41,6 +41,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+
+    <Button
+        android:id="@+id/btn_junp_home"
+        android:text="跳转到Home页面"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_junp_neteasy"
+        android:text="跳转到网易云页面"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <TextView
         android:id="@+id/text_result"
         android:layout_width="match_parent"

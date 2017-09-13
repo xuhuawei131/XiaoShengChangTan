@@ -8,6 +8,9 @@ import android.util.Log;
 
 import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by lingdian on 17/9/10.
@@ -19,10 +22,12 @@ public class MyPlayer {
     private MediaPlayer player; // 定义多媒体对象
     private MediaCallBack callBack;
     private Context context;
+    private List<MediaPlayerCallBack> callBackList;
+    private MusicStatus currentStatus = MusicStatus.STOP;
 
     private MyPlayer() {
         player = new MediaPlayer();
-
+        callBackList = new ArrayList<>();
         callBack = new MediaCallBack();
         player.setLooping(SwitchConfig.isLoop);
 
@@ -45,34 +50,50 @@ public class MyPlayer {
     }
 
 
-    public void start(String dataSource) {
-        try {
-            player.reset(); //重置多媒体
-//            Uri dataSource = musicList.get(songNum);//得到当前播放音乐的路径
-            //为多媒体对象设置播放路径
-            if (dataSource.startsWith("http")) {
-                Uri uri = Uri.parse(dataSource);
-                player.setDataSource(context, uri);
-            } else {
-                player.setDataSource(dataSource);
-            }
-            player.prepareAsync();//准备播放
-
-        } catch (Exception e) {
+    public void addMediaPlayerListener(MediaPlayerCallBack listener) {
+        if (!callBackList.contains(listener)) {
+            callBackList.add(listener);
         }
     }
 
+    public void removeMediaPlayerListener(MediaPlayerCallBack listener) {
+        if (callBackList.contains(listener)) {
+            callBackList.remove(listener);
+        }
+    }
 
+    public void loadUri(String url) {
+        try {
+            player.reset(); //重置多媒体
+//            Uri url = musicList.get(songNum);//得到当前播放音乐的路径
+            //为多媒体对象设置播放路径
+            if (url.startsWith("http")) {
+                Uri uri = Uri.parse(url);
+                player.setDataSource(context, uri);
+            } else {
+                player.setDataSource(url);
+            }
+            player.prepareAsync();//准备播放
+            currentStatus = MusicStatus.PLAY;
+        } catch (Exception e) {
+
+        }
+    }
 
     /**
      * 暂停与继续播放
      */
-    public void pause() {
-        if (player.isPlaying())
+    public MusicStatus startOrPause(){
+        if (player.isPlaying()) {
             player.pause();
-        else
+            currentStatus = MusicStatus.PAUSE;
+        } else {
             player.start();
+            currentStatus = MusicStatus.PLAY;
+        }
+        return currentStatus;
     }
+
 
     /**
      * 停止播放
@@ -80,20 +101,19 @@ public class MyPlayer {
     public void stop() {
         if (player.isPlaying()) {
             player.stop();
+            currentStatus=MusicStatus.STOP;
         }
-        player.release();
     }
 
     /**
      * 彻底销毁
      */
     public void destory() {
-        if (player.isPlaying()) {
-            player.stop();
-        }
+        stop();
         player.release();
         player = null;
         myPlayer = null;
+        currentStatus=MusicStatus.STOP;
     }
 
     /**
@@ -107,15 +127,24 @@ public class MyPlayer {
 
     /**
      * 设置是否重复播放
+     *
      * @param isLoop 是否循环播放
      */
-    public void setLoop(boolean isLoop){
+    public void setLoop(boolean isLoop) {
         player.setLooping(isLoop);
     }
 
 
+    /**
+     * 音乐当前的状态：只有播放、暂停、停止三种
+     */
+    public enum MusicStatus {
+        PLAY, PAUSE, STOP
+    }
 
-
+    /**
+     * 播放器的状态回调
+     */
     private class MediaCallBack implements MediaPlayer.OnPreparedListener, MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnCompletionListener {
         /**
          * OnCompletionListener
@@ -125,7 +154,9 @@ public class MyPlayer {
          */
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
-
+            for (MediaPlayerCallBack item : callBackList) {
+                item.onCompletion(mediaPlayer);
+            }
         }
 
         /**
@@ -137,7 +168,9 @@ public class MyPlayer {
         @Override
         public void onBufferingUpdate(MediaPlayer mediaPlayer, int percent) {
             Log.v("xhw", "onBufferingUpdate percent " + percent);
-
+            for (MediaPlayerCallBack item : callBackList) {
+                item.onBufferingUpdate(mediaPlayer, percent);
+            }
         }
 
         /**
@@ -150,7 +183,9 @@ public class MyPlayer {
          */
         @Override
         public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-
+            for (MediaPlayerCallBack item : callBackList) {
+                item.onError(mediaPlayer, i, i1);
+            }
             return false;
         }
 
@@ -162,7 +197,9 @@ public class MyPlayer {
          */
         @Override
         public void onSeekComplete(MediaPlayer mediaPlayer) {
-
+            for (MediaPlayerCallBack item : callBackList) {
+                item.onSeekComplete(mediaPlayer);
+            }
         }
 
         /**
@@ -173,11 +210,33 @@ public class MyPlayer {
          */
         @Override
         public void onPrepared(MediaPlayer mediaPlayer) {
-            if(SwitchConfig.isSkipHead){
+            for (MediaPlayerCallBack item : callBackList) {
+                item.onPrepared(mediaPlayer);
+            }
+            if (SwitchConfig.isSkipHead) {
                 player.seekTo(SwitchConfig.SkipHeadTime);
             }
-                player.start();//开始播放
+
         }
+    }
+
+    /**
+     * 开始播放
+     */
+    public void startPlay(){
+        player.start();
+    }
+
+    public interface MediaPlayerCallBack {
+        public void onCompletion(MediaPlayer mediaPlayer);
+
+        public void onBufferingUpdate(MediaPlayer mediaPlayer, int percent);
+
+        public boolean onError(MediaPlayer mediaPlayer, int i, int i1);
+
+        public void onSeekComplete(MediaPlayer mediaPlayer);
+
+        public void onPrepared(MediaPlayer mediaPlayer);
     }
 
 }

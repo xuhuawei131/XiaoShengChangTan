@@ -2,6 +2,7 @@ package com.lingdian.xiaoshengchangtan;
 
 import android.app.Application;
 
+import com.lingdian.xiaoshengchangtan.db.DatabaseHelper;
 import com.lingdian.xiaoshengchangtan.player.MyPlayer;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
@@ -19,11 +20,14 @@ import okhttp3.OkHttpClient;
  */
 
 public class MyApp extends Application {
+    public static MyApp application;
     @Override
     public void onCreate() {
         super.onCreate();
         initHttp();
         MyPlayer.getInstance().init(this);
+        application=this;
+        DatabaseHelper.getHelper().init(this);
     }
 
     private void initHttp() {
