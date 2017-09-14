@@ -2,6 +2,7 @@ package com.lingdian.xiaoshengchangtan;
 
 import android.app.Application;
 
+import com.lingdian.xiaoshengchangtan.crash.CrashHandler;
 import com.lingdian.xiaoshengchangtan.db.DatabaseHelper;
 import com.lingdian.xiaoshengchangtan.player.MyPlayer;
 import com.lzy.okgo.OkGo;
@@ -28,6 +29,7 @@ public class MyApp extends Application {
         MyPlayer.getInstance().init(this);
         application=this;
         DatabaseHelper.getHelper().init(this);
+        CrashHandler.getInstance().init(this);
     }
 
     private void initHttp() {
@@ -48,7 +50,7 @@ public class MyApp extends Application {
         //以下都不是必须的，根据需要自行选择,一般来说只需要 debug,缓存相关,cookie相关的 就可以了
         OkGo.getInstance()
                 //可以全局统一设置缓存模式,默认是不使用缓存,可以不传,具体其他模式看 github 介绍 https://github.com/jeasonlzy/
-                .setCacheMode(CacheMode.IF_NONE_CACHE_REQUEST)
+                .setCacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                 //可以全局统一设置缓存时间,默认永不过期,具体使用方法看 github 介绍
                 .setCacheTime(CacheEntity.CACHE_NEVER_EXPIRE)
                 //可以全局统一设置超时重连次数,默认为三次,那么最差的情况会请求4次(一次原始请求,三次重连请求),不需要可以设置为0

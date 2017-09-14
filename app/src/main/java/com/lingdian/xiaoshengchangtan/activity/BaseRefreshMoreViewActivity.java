@@ -21,11 +21,12 @@ import rx.schedulers.Schedulers;
 
 /**
  * Created by lingdian on 17/9/13.
+ * 下拉刷新以及更多的基类
  */
 
 public abstract class BaseRefreshMoreViewActivity extends BaseActivity   {
     protected HWRefreshLayout refresh_layout;
-
+    private static final int MAX_PAGE_NUM=20;
     protected abstract int getJRefreshLayoutId();
 
     protected abstract void findRefreshMoreViewByIds();
@@ -53,7 +54,6 @@ public abstract class BaseRefreshMoreViewActivity extends BaseActivity   {
 
     //---------------------------------------
     protected RecyclerView mListView;
-    protected RecyclerView.Adapter adapter;
     protected boolean hasMore = true;
 
     /**
@@ -118,7 +118,7 @@ public abstract class BaseRefreshMoreViewActivity extends BaseActivity   {
             RefreshReturnType type = doStartTask();
             if (type == RefreshReturnType.NONE) {
                 refresh_layout.setRefreshing(false);
-            } else if (type == RefreshReturnType.UI_THREAD) {
+            } else if (type == RefreshReturnType.UI_THREAD||type==null) {
                 doRefreshTask();
             } else {
                 Observable.just("").subscribeOn(Schedulers.io())
@@ -169,11 +169,11 @@ public abstract class BaseRefreshMoreViewActivity extends BaseActivity   {
     }
 
     protected void showLoadingFootView() {
-        showLoadingFootView(50);
+        showLoadingFootView(MAX_PAGE_NUM);
     }
 
     protected void showEndingFootView() {
-        showEndingFootView(50);
+        showEndingFootView(MAX_PAGE_NUM);
     }
 
     protected void showEndingFootView(int maxLength) {
@@ -181,7 +181,7 @@ public abstract class BaseRefreshMoreViewActivity extends BaseActivity   {
     }
 
     protected void showErrorFootView() {
-        showErrorFootView(50);
+        showErrorFootView(MAX_PAGE_NUM);
     }
 
     protected void showErrorFootView(int maxLength) {
@@ -189,14 +189,16 @@ public abstract class BaseRefreshMoreViewActivity extends BaseActivity   {
     }
 
     protected int getMaxNumByPage() {
-        return 50;
+        return MAX_PAGE_NUM;
     }
 
     public void setAdapter(RecyclerView.Adapter adapter) {
-        this.adapter = adapter;
         mHeaderAndFooterRecyclerViewAdapter = new HeaderAndFooterRecyclerViewAdapter(adapter);
         mListView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
     }
 
+    public void notifyDataSetChanged(){
+        mHeaderAndFooterRecyclerViewAdapter.notifyDataSetChanged();
+    }
 
 }

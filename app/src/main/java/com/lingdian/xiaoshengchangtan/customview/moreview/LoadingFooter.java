@@ -8,7 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jiayuan.R;
+import com.lingdian.xiaoshengchangtan.R;
 
 
 /**

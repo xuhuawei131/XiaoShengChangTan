@@ -3,4 +3,371 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+
+        <color name="encounter_adapter_title">#666666</color>
+        <color name="encounter_bottom_sheet">#99000000</color>
+
+
+        <color name="express_green">#47ba14</color>
+        <color name="express_yellow">#eba600</color>
+
+        <color name="light_gray">#99a4b7</color>
+        <color name="light_blue">#87d0f2</color>
+        <color name="none_color">#00000000</color>
+        <color name="bule_overlay">#660D92DD</color>
+        <color name="holo_blue_light">#ff33b5e5</color>
+        <color name="transparent">#00000000</color>
+        <!-- 半透明 -->
+        <color name="htransparent">#a1000000</color>
+        <color name="WhiteColor">#ffffff</color>
+        <color name="BlackColor">#000000</color>
+        <color name="black_alpha">#99000000</color>
+        <color name="RedColor">#ff0000</color>
+        <color name="GrayColor">#FFB3B3B3</color>
+        <color name="light_grey">#b9b9b9</color>
+        <color name="light_grey_bg">#f0f1f2</color>
+        <color name="dim_foreground_disabled_holo_dark">#80bebebe</color>
+        <color name="dim_foreground_holo_dark">#bebebe</color>
+        <color name="background_holo_light">#fff3f3f3</color>
+        <color name="bright_foreground_holo_dark">@color/background_holo_light</color>
+        <color name="bright_foreground_disabled_holo_dark">#ff4c4c4c</color>
+        <color name="pink_color">#FE5165</color>
+        <color name="tab_line">#DE214E</color>
+        <color name="deep_red">#C41940</color>
+        <color name="deep_red_disable">#E497A9</color>
+        <color name="title_color">#5a5a5a</color>
+        <color name="title_divider_color">#d4d4d5</color>
+        <color name="deep_gray">#7c6c5b</color>
+        <color name="blue">#0074bd</color>
+        <color name="gray_white">#dedede</color>
+        <color name="gray">#bbbbbb</color>
+        <color name="gray1">#797979</color>
+        <color name="title_gray">#EEEEEE</color>
+        <color name="chat_send_blue">#3b859a</color>
+        <color name="chat_page_bg">#f2f2f2</color>
+        <color name="un_follow_color">#0488ca</color>
+        <color name="no_data_hint_color">#b58888</color>
+        <color name="recommend_tag_color">#fdaf37</color>
+        <color name="recommend_txt_color">#fdd097</color>
+        <color name="login_red">#F08080</color>
+        <color name="match_network_tips">#b1b1b1</color>
+        <color name="match_network_fresh">#d0d0d0</color>
+        <color name="refresh_color">#0074bd</color>
+        <color name="match_tag_color">#feb434</color>
+        <color name="msg_color">#3f3f3f</color>
+        <color name="msg_time_color">#888888</color>
+
+        <!-- profile -->
+        <color name="profile_send_selection">#98a3b2</color>
+        <color name="profile_note_color">#555555</color>
+        <color name="dividing_line">#e9e9e9</color>
+
+        <!-- miss -->
+        <color name="miss_nick_name">#343434</color>
+        <color name="miss_count">#3cd4f5</color>
+
+        <color name="miss_count_new">#00cbf7</color>
+        <color name="miss_text">#888888</color>
+
+        <!-- 礼物弹出框 -->
+        <!-- 礼物名称   字体颜色 -->
+        <!--<color name="gift_name">#464244</color>-->
+        <!-- 邮票文案   字体颜色 -->
+        <!--<color name="gift_stamp">#47ad69</color>-->
+        <!--<color name="gift_stamp1">#ff0000</color>-->
+        <!-- 魅力文案   字体颜色 -->
+        <!--<color name="single_gift_title_color">#d77e2d</color>-->
+        <!--<color name="gift_charm">#df2d6c</color>-->
+        <!--<color name="gift_charm1">#ffaa00</color>-->
+        <!--<color name="gift_detail_title_color">#e06970</color>-->
+        <!--<color name="gift_detail_desc_color">#aaaaaa</color>-->
+
+        <!-- 个性标签颜色 -->
+        <color name="personal_tag_bg">#fff3ea</color>
+        <color name="dividing_line_personal_tag">#ffc9b8</color>
+        <color name="personal_tag_1">#ff9936</color>
+        <color name="personal_tag_2">#ff7a7a</color>
+        <color name="personal_tag_3">#72d28b</color>
+        <color name="personal_tag_4">#dd76ff</color>
+        <color name="personal_tag_5">#7acbff</color>
+        <color name="personal_tag_6">#7091c7</color>
+        <color name="personal_tag_7">#f76cbe</color>
+        <color name="personal_tag_8">#c6be2e</color>
+        <color name="personal_tag_9">#37abe4</color>
+        <color name="personal_tag_10">#96b862</color>
+        <color name="personal_tag_11">#e27000</color>
+        <color name="personal_tag_12">#946da4</color>
+        <color name="personal_tag_13">#fabf3d</color>
+        <color name="personal_tag_14">#4ecac6</color>
+        <color name="personal_tag_15">#b87c60</color>
+        <color name="personal_tag_text_press">#b7b7b7</color>
+
+        <!-- login -->
+        <color name="login_bg">#f2f2f2</color>
+        <color name="et_text_color">#565656</color>
+        <color name="et_hint_text_color">#a6a6a6</color>
+        <color name="et_listview_bg">#dedede</color>
+        <color name="et_listview_select">#bbbbbb</color>
+        <color name="select_color">#de214e</color>
+        <color name="disable_color">#bebebe</color>
+        <color name="disable_btn_color">#9b1736</color>
+        <color name="cancle_btn_color">#bad0de</color>
+        <color name="cancle_btn_select_color">#95a6b2</color>
+        <color name="divide_line_color">#cdcdcd</color>
+        <!-- select dialog -->
+        <color name="dialog_bg_color">#dedede</color>
+        <color name="dialog_title_color">#363636</color>
+        <color name="dialog_text_color">#565656</color>
+        <color name="dialog_item_no_select">#dad0de</color>
+        <color name="dialog_item_no_select_press">#859baa</color>
+
+        <!-- setting -->
+        <color name="setting_select_color">#d2d2d2</color>
+        <color name="distance_setting_color">#0091d4</color>
+        <color name="setting_version_text_color">#848484</color>
+        <color name="setting_service_text_color">#565656</color>
+        <color name="setting_copyright_text_color">#898989</color>
+        <!-- report view color -->
+        <color name="report_name_color">#B8B8B8</color>
+        <color name="report_title_color">#666666</color>
+        <color name="report_reason_color">#D9D9D9</color>
+        <color name="report_rule_text_color">#999999</color>
+        <color name="report_info_text_color">#647B9F</color>
+
+        <!-- miss tip color -->
+        <color name="miss_no_data_tip_color">#B58989</color>
+
+        <!-- 注册 -->
+        <color name="register_prompt_text_color">#909090</color>
+        <color name="match_setting_select_color">#dfdfdf</color>
+        <!-- profile note -->
+        <color name="profile_note_switch_bg">#989898</color>
+
+        <!-- 发送有眼缘弹框 -->
+        <color name="dialog_send_match_color">#504d46</color>
+        <color name="submit_btn_bg_press">#a81337</color>
+        <color name="submit_btn_bg_press_blue">#3eb4ff</color>
+        <color name="bg_light_yellow">#fff8f2</color>
+        <color name="bg_yellow">#fdd2a8</color>
+        <!-- 登录那块忘记密码 -->
+        <color name="forget_pwd_color_press">#85a0b1</color>
+        <!-- 弹出框 -->
+        <color name="popup_item_color_press">#858585</color>
+        <!-- title 右边文字点击 -->
+        <color name="title_color_press">#e87d90</color>
+
+        <!-- 会员特权界面 -->
+        <!--<color name="privilege_title_color">#4e4e4e</color>-->
+        <!--<color name="privilege_notice_color">#f87795</color>-->
+        <color name="call_board_color">#fef3d5</color>
+        <color name="call_board_text_color">#a5876c</color>
+        <color name="member_club_lable_color">#F5F5F5</color> <!-- 烟白色 -->
+        <color name="refresh_more_bg_color">#fef5dd</color>
+        <color name="reliable_txt_color">#51a0f0</color>
+
+        <color name="member_club_blue_color">#268fb6</color>
+        <color name="member_club_yellow_color">#ff7200</color>
+
+        <!-- self center -->
+        <color name="self_center_reliable_color">#a36969</color>
+        <color name="self_center_black_color">#333333</color>
+        <color name="self_center_dividing_line">#ffd9cd</color>
+        <color name="self_center_sticky_layout_color">#f8dce2</color>
+        <color name="self_center_sticky_layout_bg">#9ae0355e</color>
+        <color name="self_center_avatar_vip_border">#e0355e</color>
+        <color name="self_center_avatar_border">#f0b5c1</color>
+        <color name="self_center_prompt_bg_color">#f93c3c</color>
+        <color name="self_center_avatar_zxtq_red_border">#eb6567</color>
+        <color name="self_center_tsfw_color">#f79e9e</color>
+        <color name="self_center_unopened_color">#7e7e7e</color>
+        <color name="self_center_red_color">#e55074</color>
+        <color name="self_center_green_color">#7dc259</color>
+        <color name="self_center_make_friend">#cccccc</color>
+        <!-- recently login -->
+
+        <!-- 个人资料页图标标题颜色 -->
+        <color name="charm_yellow_color">#e49e13</color>
+        <color name="reliable_bule_color">#4397ce</color>
+        <color name="education_green_color">#30a96f</color>
+        <color name="estate_yellow_color">#c19a5c</color>
+        <color name="status_red_color">#e35253</color>
+        <color name="noopen_grey_color">#c7c7c7</color>
+        <color name="upload_auth_grey_color">#cacaca</color>
+        <color name="auth_desc_grey_color">#8e8e8e</color>
+        <color name="sesame_auth_color">#4cb686</color>
+
+        <!-- 红色标题：红色提示：浅红背景： -->
+        <color name="status_auth_red_title">#ff7a7b</color>
+        <color name="status_auth_red_tip">#c36d6e</color>
+        <color name="status_auth_red_bg">#fbdbdb</color>
+        <!-- 绿色标题：绿色提示：浅绿背景： -->
+        <color name="record_auth_green_title">#59cc95</color>
+        <color name="record_auth_green_tip">#27935f</color>
+        <color name="record_auth_green_bg">#c8f6e0</color>
+        <!-- 黄色标题：黄色提示：浅黄背景： -->
+        <color name="estate_auth_yellow_title">#cfb791</color>
+        <color name="estate_auth_yellow_tip">#8f6a30</color>
+        <color name="estate_auth_yellow_bg">#f1e4cf</color>
+        <!--  找回缘分深红色文字 -->
+        <color name="findfate_deep_red_text">#A52A2A</color>
+
+        <!-- 缘分圈举报 -->
+        <color name="fate_report_msg_bg">#ededf3</color>
+        <color name="fate_report_msg_dividing_line">#e5e5e7</color>
+        <color name="fate_report_msg_text_color_1">#78787d</color>
+        <color name="fate_report_msg_text_color_2">#6b6b6b</color>
+        <color name="fate_report_msg_text_color_3">#b0b0b4</color>
+        <color name="fate_report_additional_text_color">#b1c2fa</color>
+        <!--投票-->
+        <color name="vote_choice_green">#47bb33</color>
+        <color name="vote_dark_green">#3d9a2e</color>
+        <color name="vote_choice_color">#FF8500</color>
+        <color name="vote_unchoice_color">#FFAE00</color>
+        <color name="vote_title_orange">#EBDBA5</color>
+        <color name="vote_cotent_blue">#87B8CA</color>
+        <color name="vote_orange">#F6DA97</color>
+        <color name="vote_bg_transparent_black">#5000</color>8A8A8A
+        <color name="vote_release_txt_dark">#757575</color>
+        <color name="vote_bg_dark_black">#727171</color>
+        <color name="vote_bg_line_lightgray">#d8d7d7</color>
+        <color name="vote_bg_line_light2gray">#d8d7d7</color>
+        <color name="vote_devider_color">#d8d7d7</color>
+        <color name="vote_dynamic_bg_color">#5000</color>
+        <color name="vote_table_bg_blue">#39B2DB</color>
+        <color name="vote_bg_table_layout">#F6F6F6</color>
+        <color name="vote_commen_bg">#f7eeeeee</color>
+        <color name="vote_commen_item_bg">#faf6f6f6</color>
+        <color name="vote_text_bg_blue">#189eca</color>
+        <color name="vote_text_bg_orange">#db9603</color>
+        <color name="vote_table_bg_orange">#f3a603</color>
+        <color name="vote_table_bg_red">#e13562</color>
+        <color name="vote_hot_table_red">#f0ec2459</color>
+        <color name="vote_hot_table_white">#f3f3f3</color>
+        <color name="vote_choice_item_grey">#ECECEC</color>
+        <color name="vote_bg_empty_table_header">#949494</color>
+        <color name="vote_histogramview_txt">#727171</color>
+        <color name="vote_choice_txt">#8e8e8e</color>
+        <color name="vote_dynamic_txt_color">#fafafa</color>
+        <color name="vote_mark_txt">#787777</color>
+        <color name="vote_person_table_red">#e6335f</color>
+        <!-- 缘分圈 -->
+        <color name="discover_item_divider_grey_color">#f0f0f0</color>
+        <color name="title_red_color">#df2753</color>
+        <!-- <color name="fate_circle_black_text_color">#777777</color> -->
+        <color name="fate_circle_black_text_color">#b6b6b6</color>
+        <color name="dynamic_name_blue_color">#196cc6</color>
+        <color name="dynamic_time_blue_color">#bcbcbc</color>
+        <color name="dynamic_delete_blue_color">#6cabf7</color>
+        <color name="dynamic_comment_name_blue_color">#5387e7</color>
+        <color name="dynamic_comment_black_color">#282828</color>
+        <color name="location_bg_color">#e7e7e7</color>
+        <!--<color name="dynamic_comment_bg_grey_color">#f0f1f2</color>-->
+        <color name="dynamic_notice_text_grey_color">#454545</color>
+        <color name="release_bg_grey_color">#ededf3</color>
+        <!-- <color name="comment_click_bg_color">#E4E4E4</color> -->
+        <color name="comment_click_bg_color">#c0d2e8</color>
+        <color name="comment_nickname_click_bg_color">#CCCAC6</color>
+        <color name="activity_desc_bg">#fff9e5</color>
+        <color name="activity_tag_color">#01aeff</color>
+        <color name="activity_tag_new_color">#F84356</color>
+        <color name="delete_comment_dialog_color">#3dc0dd</color>
+        <color name="activity_new_tag_color">#fb4052</color>
+        <!--<color name="activity_name_normal_color">#c18e96</color>-->
+        <color name="activity_name_bg_nomal_color">#7a7a7a</color>
+        <color name="activity_name_bg_select_color">#a8a8a8</color>
+        <color name="fate_divider_line_color">#eeeeee</color>
+        <color name="fate_divider_color">#efeeee</color>
+        <color name="fate_location_seleted">#6a7ca0</color>
+
+        <color name="navpage">#FFE1E8EB</color>
+
+        <color name="express_download_green">#3da526</color>
+        <color name="express_text_gray">#8d8d8d</color>
+        <!-- 他人相册页面置灰时的字颜色 -->
+        <color name="profile_photo_txt_disable">#8c8c8c</color>
+        <!-- 加载大图时文字的颜色 -->
+        <color name="loading_txt_color">#606060</color>
+
+        <!-- dialog -->
+        <color name="dialog_title_diving_line">#afafbd</color>
+        <color name="dialog_btn_send_normal">#00b0d4</color>
+        <color name="dialog_btn_send_press">#30b0cc</color>
+
+        <color name="dialog_btn_city_normal">#5ab588</color>
+        <color name="dialog_btn_city_press">#30b0cc</color>
+
+        <color name="dialog_prop_text_color">#585858</color>
+
+        <!-- 我的道具列表 -->
+        <color name="prop_name_color">#4c4c4c</color>
+
+        <!-- 佳缘提醒 -->
+        <color name="common_button_press">#30b0cc</color>
+        <color name="common_button">#50c9e4</color>
+        <!-- 每周话题选择 -->
+        <color name="topic_is_choose_color">#ff910f</color>
+        <color name="topic_not_choose_color">#12adfa</color>
+        <color name="topic_divider_color">#dddddd</color>
+
+        <!-- 他人资料页 -->
+        <!-- profile title bar color -->
+        <color name="profile_title_bar_bg_color">#dc2651</color>
+        <color name="profile_dividing_line">#eaeaea</color>
+        <color name="profile_menu_info_color">#5cbee7</color>
+        <color name="profile_menu_dynamic_color">#474747</color>
+        <color name="profile_nick_name_vip_color">#ffef65</color>
+        <color name="profile_bottom_menu_press_color">#f32b5c</color>
+
+        <color name="profile_gift_received_time_color">#a4a4a4</color>
+        <color name="profile_block_dividing_line_color">#f1f1f1</color>
+        <color name="profile_sesame_color">#4db78c</color>
+
+        <color name="progress_gray">#FFD8D8D8</color>
+        <color name="progress_gray_dark">#FF383838</color>
+        <color name="sesame_credit_green">#00c684</color>
+
+        <color name="callboard_color">#5e5e5e</color>
+
+        <color name="color_ff">#F0F0F0</color>
+        <color name="color_00">#8A000000</color>
+        <color name="publish_gray_text_color">#910a2a</color>
+
+
+        <color name="overlay">#AA1C1C1C</color>
+        <color name="blue_at_text_color">#52c4e8</color>
+        <color name="photo_frame_select_bg">#FDD5DE</color>
+        <color name="search_btn_text_color">#f96d8c</color>
+        <color name="search_bg_line_color">#cbcccd</color>
+
+        <!--新手任务绑定手机号-->
+        <color name="bindphone_bule_color">#31B7FF</color>
+        <!--<color name="bindphone_disable_bule_color">#ACDDFF</color>-->
+        <color name="bindphone_able_gray_color">#B8B9B9</color>
+        <color name="bindphone_able_gray_txt_color">#898A8A</color>
+        <color name="bindphone_disable_gray_color">#CCCCCC</color>
+        <color name="bindphone_hint_gray_color">#D0D0D0</color>
+
+        <color name="text_link_color_rece">#2e39fb</color>
+        <color name="text_link_color_send">#FFFFFF</color>
+
+        <!--俊男美女-->
+        <color name="header_gift_bg_color">#fff5fa</color>
+        <color name="header_gift_divider_color">#ffddee</color>
+        <color name="beauty_list_line_color">#e5d3d7</color>
+        <color name="newtask_blue_line_normal_color">#d4f2ff</color>
+        <!--碰面-->
+        <color name="meet_btn_color">#636363</color>
+        <color name="meet_text_color">#6b3825</color>
+        <!--领取卡券的对话框-->
+        <color name="coupon_title_text_color">#303030</color>
+        <color name="coupon_getdesc_text_color">#919191</color>
+        <color name="coupon_button_text_color">#2d2d2d</color>
+        <color name="coupon_price_text_color">#ffd966</color>
+
+        <!--交友状态-->
+        <color name="status_friend_select">#2de0d1</color>
+        <color name="status_friend_normal">#cccccc</color>
+        <color name="status_friend_title">#444444</color>
+
 </resources>

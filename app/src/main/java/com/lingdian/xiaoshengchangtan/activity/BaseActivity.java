@@ -18,7 +18,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
-        setContentView();
+        int resLayout=setContentView();
+        setContentView(resLayout);
         findViewByIds();
         requestService();
     }
