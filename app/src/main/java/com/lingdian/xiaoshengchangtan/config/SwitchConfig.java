@@ -24,4 +24,29 @@ public class SwitchConfig {
 
     public static final String DB_NAME="xsct.db";
 
+    //下载的状态
+    public static final int DOWNLOAD_STATUS_NO=0;
+    public static final int DOWNLOAD_STATUS_DOING=1;
+    public static final int DOWNLOAD_STATUS_PAUSE=2;
+    public static final int DOWNLOAD_STATUS_DONE=3;
+
+    /**
+     * 通过下载的状态 转化成str
+     * @param status
+     * @return
+     */
+    public static String getDownStatusStr(int status){
+        if(status==DOWNLOAD_STATUS_NO){
+            return "未下载";
+        }else if(status==DOWNLOAD_STATUS_DOING){
+            return "下载中";
+        }else if(status==DOWNLOAD_STATUS_PAUSE){
+            return "暂停中";
+        }else if(status==DOWNLOAD_STATUS_DONE){
+            return "已下载";
+        }else{
+            return "异常";
+        }
+    }
+
 }

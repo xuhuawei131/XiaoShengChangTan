@@ -37,6 +37,10 @@ public abstract class BaseDao<T> {
         }
     }
 
+    protected boolean isOpen() {
+        return helper == null ? false : helper.isOpen();
+    }
+
     public int add(T bean) {
         try {
             return baseDao.create(bean);

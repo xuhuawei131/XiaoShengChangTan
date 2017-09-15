@@ -36,7 +36,7 @@ public class FileBean {
     }
 
     private static String getFilePath(String fileName){
-        String fileDir= FileCache.getInstance().getFilePath().getAbsolutePath();
+        String fileDir= FileCache.getInstance().getDownloadFile().getAbsolutePath();
         return new File(fileDir,fileName).getAbsolutePath();
     }
 }

@@ -31,6 +31,7 @@ public abstract class BaseRefreshMoreViewActivity extends BaseActivity   {
 
     protected abstract void findRefreshMoreViewByIds();
 
+
     /**
      * 这里是拉去最新数据的时候 之前执行的操作
      * 返回值 决定了 doLongTimeTask执行在哪个线程里面

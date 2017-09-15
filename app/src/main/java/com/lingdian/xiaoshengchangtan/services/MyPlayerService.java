@@ -4,9 +4,8 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
-import android.support.annotation.IntDef;
 
-import com.lingdian.xiaoshengchangtan.bean.PageBean;
+import com.lingdian.xiaoshengchangtan.bean.DownLoadDbBean;
 import com.lingdian.xiaoshengchangtan.player.MyPlayer;
 
 /**
@@ -31,7 +30,7 @@ public class MyPlayerService extends Service {
         MyPlayer.getInstance().addMediaPlayerListener(listener);
     }
 
-    public static void startPlay(PageBean bean){
+    public static void startPlay(DownLoadDbBean bean){
 
 
     }

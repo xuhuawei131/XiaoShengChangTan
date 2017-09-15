@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.lingdian.xiaoshengchangtan.bean.PageBean;
+import com.lingdian.xiaoshengchangtan.bean.DownLoadDbBean;
 import com.lingdian.xiaoshengchangtan.viewholders.HomeCommViewHolder;
 
 import java.util.List;
@@ -15,15 +15,15 @@ import java.util.List;
 
 public class HomePageAdapter extends RecyclerView.Adapter<HomeCommViewHolder> {
 
-    private List<PageBean> arrayList;
+    private List<DownLoadDbBean> arrayList;
 
-    public HomePageAdapter(List<PageBean> arrayList){
+    public HomePageAdapter(List<DownLoadDbBean> arrayList){
         this.arrayList=arrayList;
     }
 
     @Override
     public HomeCommViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view=HomeCommViewHolder.createView(parent.getContext(),parent);
+        View view=HomeCommViewHolder.createView(parent);
         HomeCommViewHolder homeCommViewHolder=new HomeCommViewHolder(view);
         return homeCommViewHolder;
     }

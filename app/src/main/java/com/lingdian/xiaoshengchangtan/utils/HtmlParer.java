@@ -3,7 +3,7 @@ package com.lingdian.xiaoshengchangtan.utils;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.lingdian.xiaoshengchangtan.bean.PageBean;
+import com.lingdian.xiaoshengchangtan.bean.DownLoadDbBean;
 import com.lzy.okgo.model.Response;
 
 import org.jsoup.Jsoup;
@@ -63,9 +63,14 @@ public class HtmlParer {
         return null;
     }
 
-    public static List<PageBean> dealFileListResult(Response<String> response) {
+    /**
+     * 解析首页的item数据
+     * @param response
+     * @return
+     */
+    public static List<DownLoadDbBean> dealFileListResult(Response<String> response) {
         String url=response.getRawResponse().request().url().url().toString();
-        List<PageBean> arrayList = new ArrayList<>();
+        List<DownLoadDbBean> arrayList = new ArrayList<>();
 
         String html = response.body();
         Document documentAll = Jsoup.parse(html);
@@ -87,18 +92,22 @@ public class HtmlParer {
                 Element elementA = elementsLi.get(0);
                 Element elementSpan = elementsLi.get(1);
 
-                PageBean bean = new PageBean();
+                DownLoadDbBean bean = new DownLoadDbBean();
 
                 String link = elementA.attr("href");
                 String title = elementA.text();
                 String date = elementSpan.text();
 
+                if(TextUtils.isEmpty(title)||!title.contains("_")){
+                    continue;
+                }
                 bean.link = link;
                 bean.title = title;
 
                 bean.title = title;
                 bean.link = link;
                 bean.date = date;
+
                 arrayList.add(bean);
             }
         } else {

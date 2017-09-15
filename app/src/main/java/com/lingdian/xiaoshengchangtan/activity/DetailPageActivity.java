@@ -15,9 +15,8 @@ import android.widget.Toast;
 
 import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.bean.FileBean;
-import com.lingdian.xiaoshengchangtan.bean.PageBean;
+import com.lingdian.xiaoshengchangtan.bean.DownLoadDbBean;
 import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
-import com.lingdian.xiaoshengchangtan.customview.DiscView;
 import com.lingdian.xiaoshengchangtan.player.MyPlayer;
 import com.lingdian.xiaoshengchangtan.services.MusicService;
 import com.lingdian.xiaoshengchangtan.utils.DateUtils;
@@ -28,7 +27,7 @@ import static com.lingdian.xiaoshengchangtan.activity.NetEasyActivity.MUSIC_MESS
 
 public class DetailPageActivity extends AppCompatActivity {
 
-    private PageBean bean;
+    private DownLoadDbBean bean;
     private TextView text_title;
     private TextView text_date;
     private TextView text_status;
@@ -55,7 +54,7 @@ public class DetailPageActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        bean = (PageBean) getIntent().getSerializableExtra("bean");
+        bean = (DownLoadDbBean) getIntent().getSerializableExtra("bean");
         if (bean == null) {
             Toast.makeText(this, "bean not empty", Toast.LENGTH_SHORT).show();
             finish();

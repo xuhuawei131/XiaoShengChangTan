@@ -28,8 +28,8 @@ public class MyApp extends Application {
         initHttp();
         MyPlayer.getInstance().init(this);
         application=this;
-        DatabaseHelper.getHelper().init(this);
-        CrashHandler.getInstance().init(this);
+//        DatabaseHelper.getHelper().init();
+//        CrashHandler.getInstance().init(this);
     }
 
     private void initHttp() {

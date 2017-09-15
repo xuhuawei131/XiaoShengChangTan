@@ -66,10 +66,46 @@
         android:id="@+id/text_status"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
         android:layout_weight="1"
+        android:layout_marginTop="10dp"
         android:gravity="center" />
 
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        >
+        <RelativeLayout
+            android:id="@+id/rl_download"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/down_express_bg_selector"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/iv_download_arrow"
+                android:layout_width="15dp"
+                android:layout_height="20dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/down_express_arrow_selector" />
+
+            <TextView
+                android:id="@+id/bt_download"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_download_arrow"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="2dp"
+                android:gravity="center"
+                android:text="下载"
+                android:textColor="@color/text_color_selector"
+                android:textSize="14sp" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <!--底部-->
     <LinearLayout

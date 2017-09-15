@@ -1,6 +1,5 @@
 package com.lingdian.xiaoshengchangtan.db;
 
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
@@ -20,12 +19,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static DatabaseHelper instance = null;
     private Map<String, Dao> daos = null;
 
-    private Context context;
 
-    public void init(Context cotext){
-        this.context=cotext;
-
-    }
     private DatabaseHelper() {
         super(MyApp.application, SwitchConfig.DB_NAME, null, 2);
         daos = new HashMap<>();

@@ -2,21 +2,10 @@ package com.lingdian.xiaoshengchangtan.requests;
 
 import android.util.Log;
 
-import com.lingdian.xiaoshengchangtan.bean.PageBean;
-import com.lingdian.xiaoshengchangtan.requests.callback.OnBaseCallback;
 import com.lingdian.xiaoshengchangtan.utils.HtmlPageUrlUtils;
-import com.lingdian.xiaoshengchangtan.utils.HtmlParer;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by lingdian on 17/9/12.

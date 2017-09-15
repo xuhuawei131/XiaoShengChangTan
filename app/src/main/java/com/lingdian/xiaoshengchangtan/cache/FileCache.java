@@ -25,7 +25,7 @@ public class FileCache {
         return cache;
     }
 
-    public File getFilePath(){
+    public File getDownloadFile(){
         File file=new File(filePath);
         if(!file.exists()){
             file.mkdirs();
@@ -33,5 +33,7 @@ public class FileCache {
 
         return file;
     }
-
+    public String getDownloadPath(){
+        return getDownloadFile().getAbsolutePath();
+    }
 }

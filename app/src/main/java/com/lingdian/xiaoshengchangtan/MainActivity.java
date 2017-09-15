@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.lingdian.xiaoshengchangtan.activity.HomePageActivity;
 import com.lingdian.xiaoshengchangtan.activity.NetEasyActivity;
-import com.lingdian.xiaoshengchangtan.bean.PageBean;
+import com.lingdian.xiaoshengchangtan.bean.DownLoadDbBean;
 import com.lingdian.xiaoshengchangtan.player.MyPlayer;
 import com.lingdian.xiaoshengchangtan.utils.HtmlParer;
 import com.lzy.okgo.OkGo;
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fileUrl = HtmlParer.getPageDownFile(html);
     }
 
-    private List<PageBean> dealFileListResult(Response<String> response){
+    private List<DownLoadDbBean> dealFileListResult(Response<String> response){
 
 
         String html = response.body();
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Elements elementLiList=elementUl.children();
         int length=elementLiList.size();
 
-        List<PageBean> arrrayList=new ArrayList<>();
+        List<DownLoadDbBean> arrrayList=new ArrayList<>();
 
 
         for(int i=0;i<length;i++){
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Element elementA=elementsLi.get(0);
             Element elementSpan=elementsLi.get(1);
 
-            PageBean bean=new PageBean();
+            DownLoadDbBean bean=new DownLoadDbBean();
 
             String link=elementA.attr("href");
             String title=elementA.text();

@@ -2,7 +2,6 @@ package com.lingdian.xiaoshengchangtan.requests;
 
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.lingdian.xiaoshengchangtan.cache.FileCache;
 import com.lzy.okgo.OkGo;
@@ -23,7 +22,7 @@ public class DownFileRequest {
         if (TextUtils.isEmpty(fileUrl)) {
             return;
         }
-        String fileDirPath = FileCache.getInstance().getFilePath().getAbsolutePath();
+        String fileDirPath = FileCache.getInstance().getDownloadFile().getAbsolutePath();
 
         OkGo.<File>post(fileUrl).tag(this).execute(new FileCallback(fileDirPath, fileName) {
             @Override
