@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.lingdian.xiaoshengchangtan.activity.HomePageActivity;
 import com.lingdian.xiaoshengchangtan.activity.NetEasyActivity;
-import com.lingdian.xiaoshengchangtan.bean.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
 import com.lingdian.xiaoshengchangtan.player.MyPlayer;
 import com.lingdian.xiaoshengchangtan.utils.HtmlParer;
 import com.lzy.okgo.OkGo;

@@ -20,11 +20,13 @@
             <TextView
                 android:id="@+id/text_title"
                 android:text="title"
+                android:textColor="@color/BlackColor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/text_date"
                 android:text="Date"
+                android:textColor="@color/BlackColor"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -37,6 +39,7 @@
             <TextView
                 android:id="@+id/btn_down"
                 android:text="下载中"
+                android:textColor="@color/BlackColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -44,6 +47,7 @@
                 android:text="15%"
                 android:layout_marginRight="10dp"
                 android:textSize="17sp"
+                android:textColor="@color/BlackColor"
                 android:id="@+id/text_percent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

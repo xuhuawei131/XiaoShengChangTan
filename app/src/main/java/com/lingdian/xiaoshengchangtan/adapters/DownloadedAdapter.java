@@ -4,28 +4,30 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.viewholders.DownloadedViewholder;
 import com.lingdian.xiaoshengchangtan.viewholders.DownloadingViewholder;
 
 import java.util.List;
 
 /**
  * Created by lingdian on 17/9/15.
+ * 下载完成的适配器
  */
 
-public class DownloadingAdapter extends RecyclerView.Adapter<DownloadingViewholder> {
+public class DownloadedAdapter extends RecyclerView.Adapter<DownloadedViewholder> {
     private List<DownLoadDbBean>  arrayList;
-    public DownloadingAdapter(List<DownLoadDbBean>  arrayList){
+    public DownloadedAdapter(List<DownLoadDbBean>  arrayList){
         this.arrayList=arrayList;
     }
 
     @Override
-    public DownloadingViewholder onCreateViewHolder(ViewGroup parent, int viewType) {
-        DownloadingViewholder holder= DownloadingViewholder.getViewHolder(parent);
+    public DownloadedViewholder onCreateViewHolder(ViewGroup parent, int viewType) {
+        DownloadedViewholder holder= DownloadedViewholder.getViewHolder(parent);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(DownloadingViewholder holder, int position) {
+    public void onBindViewHolder(DownloadedViewholder holder, int position) {
         holder.setData(arrayList.get(position));
     }
 

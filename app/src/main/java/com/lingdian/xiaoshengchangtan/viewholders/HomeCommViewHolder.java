@@ -8,7 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lingdian.xiaoshengchangtan.R;
-import com.lingdian.xiaoshengchangtan.bean.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
+import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
 
 import org.simple.eventbus.EventBus;
 
@@ -60,13 +61,7 @@ public class HomeCommViewHolder extends RecyclerView.ViewHolder implements View.
             image_selected.setVisibility(View.GONE);
         }
 
-        if(bean.downStatus==0){
-            text_down.setText("未下载");
-        }else if(bean.downStatus==1){//
-            text_down.setText("下载中");
-        }else{
-            text_down.setText("已下载");
-        }
+        text_down.setText(SwitchConfig.getDownStatusStr(bean.downStatus));
     }
 
     @Override

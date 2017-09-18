@@ -1,14 +1,16 @@
-package com.lingdian.xiaoshengchangtan.db.bean;
+package com.lingdian.xiaoshengchangtan.db.tables;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
 
+import java.io.Serializable;
+
 /**
  * Created by lingdian on 17/9/13.
  */
 @DatabaseTable(tableName="download")
-public class DownLoadDbBean {
+public class DownLoadDbBean implements Serializable{
     /**
      * 主键
      */
@@ -58,10 +60,14 @@ public class DownLoadDbBean {
 
     }
 
-    public DownLoadDbBean(com.lingdian.xiaoshengchangtan.bean.DownLoadDbBean bean){
-        this.title=bean.title;
-        this.link=bean.link;
-        this.date=bean.date;
-    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        DownLoadDbBean that = (DownLoadDbBean) o;
+
+        return title != null ? title.equals(that.title) : that.title == null;
+
+    }
 }

@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.lingdian.xiaoshengchangtan.bean.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
 import com.lingdian.xiaoshengchangtan.viewholders.HomeCommViewHolder;
 
 import java.util.List;

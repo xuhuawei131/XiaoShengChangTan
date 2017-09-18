@@ -48,4 +48,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             mView.dismiss();
         }
     }
+    protected abstract void onMyDestory();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        onMyDestory();
+    }
 }

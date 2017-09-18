@@ -22,7 +22,10 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".activity.HomePageActivity" />
+        <activity android:name=".activity.HomePageActivity"
+            android:theme="@style/toolbar_AppTheme"
+            />
+
         <activity android:name=".activity.DetailPageActivity" />
         <activity android:name=".activity.NetEasyActivity" />
 

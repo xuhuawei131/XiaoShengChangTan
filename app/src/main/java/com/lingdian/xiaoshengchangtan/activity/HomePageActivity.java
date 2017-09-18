@@ -2,12 +2,21 @@ package com.lingdian.xiaoshengchangtan.activity;
 
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.adapters.HomePageAdapter;
-import com.lingdian.xiaoshengchangtan.bean.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
 import com.lingdian.xiaoshengchangtan.callbacks.ParserStringCallBack;
 import com.lingdian.xiaoshengchangtan.db.impls.DownLoadImple;
 import com.lingdian.xiaoshengchangtan.services.DownLoadService;
@@ -24,7 +33,14 @@ import org.simple.eventbus.Subscriber;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomePageActivity extends BaseRefreshMoreViewActivity implements View.OnClickListener {
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_DOWNLOADING_DELETE;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_DOWNLOADING_DONE;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_DOWNLOADING_ERROR;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_DOWNLOADING_START;
+import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS_DONE;
+import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS_WAITTING;
+
+public class HomePageActivity extends BaseRefreshMoreViewActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
 
     private List<DownLoadDbBean> arrayList;
     private int currentIndex = 0;
@@ -41,7 +57,8 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
     private static final String LABEL_EDIT = "编辑";
     //默认是否进入选中模式
     private boolean isEditStatus = false;
-
+    private DrawerLayout drawer;
+    private ActionBarDrawerToggle toggle;
     @Override
     protected void init() {
         EventBus.getDefault().register(this);
@@ -54,6 +71,19 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
 
     @Override
     protected void findRefreshMoreViewByIds() {
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle= new ActionBarDrawerToggle( this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        Resources resource=getBaseContext().getResources();
+        ColorStateList csl=resource.getColorStateList(R.color.navigation_menu_item_color);
+        navigationView.setItemTextColor(csl);
 
         text_title = (TextView) findViewById(R.id.text_title);
         text_title_left = (TextView) findViewById(R.id.text_title_left);
@@ -73,6 +103,7 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
 
     @Override
     protected void requestService() {
+        EventBus.getDefault().register(this);
         if (isDoingRequest) {
             return;
         }
@@ -113,35 +144,41 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
         });
     }
 
+    @Override
+    protected void onMyDestory() {
+        EventBus.getDefault().unregister(this);
+        drawer.removeDrawerListener(toggle);
+    }
+
     /**
      * 解析完数据之后 合并数据 处理本地数据库
      * @param dataList
      */
     private void dealDataCombinDb(List<DownLoadDbBean> dataList) {
-        List<com.lingdian.xiaoshengchangtan.db.bean.DownLoadDbBean> dbList = DownLoadImple.getInstance().getAllDownloadData();
+        List<DownLoadDbBean> dbList = DownLoadImple.getInstance().getAllDownloadData();
 
-        List<com.lingdian.xiaoshengchangtan.db.bean.DownLoadDbBean> updateList = new ArrayList<com.lingdian.xiaoshengchangtan.db.bean.DownLoadDbBean>();
+        List<DownLoadDbBean> updateList = new ArrayList<>();
 
         for (DownLoadDbBean item : dataList) {
 
             item.isEditStatus=isEditStatus;
 
             boolean isExit = false;
-            for (com.lingdian.xiaoshengchangtan.db.bean.DownLoadDbBean dbItem : dbList) {
+            for (DownLoadDbBean dbItem : dbList) {
                 if (item.title.endsWith(dbItem.title)) {
+                    item.downStatus=dbItem.downStatus;
+                    item.percent=dbItem.percent;
                     isExit = true;
                     break;
                 }
             }
             if (!isExit) {
-                com.lingdian.xiaoshengchangtan.db.bean.DownLoadDbBean newDbItem = new com.lingdian.xiaoshengchangtan.db.bean.DownLoadDbBean(item);
-                updateList.add(newDbItem);
+                updateList.add(item);
             }
         }
         if (updateList.size() > 0) {
-            DownLoadImple.getInstance().inserDownloadData(updateList);
+            DownLoadImple.getInstance().inserPageDownloadData(updateList);
         }
-
     }
 
     @Override
@@ -177,7 +214,31 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
     protected void doRefreshEndingTask(Object o) {
 
     }
+    @Subscriber(tag = TAG_DOWNLOADING_START)
+    private void onDownloadStart(DownLoadDbBean bean){
+        int index=arrayList.indexOf(bean);
+        arrayList.get(index).downStatus=bean.downStatus;
+        notifyDataSetChanged();
 
+    }
+    @Subscriber(tag = TAG_DOWNLOADING_DONE)
+    private void onDownloadDone(DownLoadDbBean bean){
+        int index=arrayList.indexOf(bean);
+        arrayList.get(index).downStatus=bean.downStatus;
+        notifyDataSetChanged();
+    }
+    @Subscriber(tag = TAG_DOWNLOADING_DELETE)
+    private void onDownloadDelete(DownLoadDbBean bean){
+        int index=arrayList.indexOf(bean);
+        arrayList.get(index).downStatus=bean.downStatus;
+        notifyDataSetChanged();
+    }
+    @Subscriber(tag = TAG_DOWNLOADING_ERROR)
+    private void onDownloadError(DownLoadDbBean bean){
+        int index=arrayList.indexOf(bean);
+        arrayList.get(index).downStatus=bean.downStatus;
+        notifyDataSetChanged();
+    }
 
     @Override
     protected void onMoreTask() {
@@ -238,11 +299,19 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
 
     @Subscriber(tag = "hometag")
     private void onItemClick(DownLoadDbBean bean) {
-        Intent intent = new Intent(this, DetailPageActivity.class);
-        intent.putExtra("bean", bean);
-        startActivity(intent);
+        if(isEditStatus){
+            itemChange(bean);
+        }else{
+            Intent intent = new Intent(this, DetailPageActivity.class);
+            intent.putExtra("bean", bean);
+            startActivity(intent);
+        }
     }
 
+    /**
+     * checkbox
+     * @param bean
+     */
     @Subscriber(tag = "itemChange")
     private void itemChange(DownLoadDbBean bean) {
         bean.isSelected = !bean.isSelected;
@@ -263,6 +332,16 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
         notifyDataSetChanged();
     }
 
+    /**
+     * 下载完成
+     * @param bean
+     */
+    @Subscriber(tag=TAG_DOWNLOADING_DONE)
+    private void onDownloadFinish(DownLoadDbBean bean){
+        int index=arrayList.indexOf(bean);
+        arrayList.get(index).downStatus=DOWNLOAD_STATUS_DONE;
+        notifyDataSetChanged();
+    }
     /**
      * 设置左边全选按钮的状态
      */
@@ -351,11 +430,27 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
         for (DownLoadDbBean bean : arrayList) {
             if (bean.isSelected) {
                 //添加到下载列表
+                bean.downStatus=DOWNLOAD_STATUS_WAITTING;
                 DownLoadService.addDownloadTask(bean);
                 bean.isSelected = false;
-                bean.downStatus = 1;
             }
         }
         notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        drawer.closeDrawer(GravityCompat.START);
+        if(id==R.id.item_one){
+            startActivity(new Intent(this,DownLoadingActivity.class));
+        }else if(id==R.id.item_two){
+            startActivity(new Intent(this,DownLoadedActivity.class));
+        }else if(id==R.id.item_three){
+
+        }else if(id==R.id.item_one){
+
+        }
+        return true;
     }
 }

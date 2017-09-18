@@ -3,7 +3,7 @@ package com.lingdian.xiaoshengchangtan.utils;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.lingdian.xiaoshengchangtan.bean.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
 import com.lzy.okgo.model.Response;
 
 import org.jsoup.Jsoup;

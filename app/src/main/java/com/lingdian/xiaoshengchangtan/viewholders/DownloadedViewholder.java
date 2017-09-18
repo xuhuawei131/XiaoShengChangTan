@@ -18,21 +18,19 @@ import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_DOWNLOADING_
 
 /**
  * Created by lingdian on 17/9/15.
+ * 下载完成
  */
 
-public class DownloadingViewholder extends ViewHolder implements View.OnClickListener {
+public class DownloadedViewholder extends ViewHolder implements View.OnClickListener {
 
-    private static final int layoutId= R.layout.adapter_downloading;
+    private static final int layoutId= R.layout.adapter_downloaded;
     private DownLoadDbBean bean;
 
     private TextView text_title;
     private TextView text_date;
     private TextView text_down;
-    private TextView text_percent;
-    private Button btn_pause;
     private Button btn_delete;
-    private int position;
-    public DownloadingViewholder(View itemView) {
+    public DownloadedViewholder(View itemView) {
         super(itemView);
         findViewByIds();
     }
@@ -42,13 +40,9 @@ public class DownloadingViewholder extends ViewHolder implements View.OnClickLis
         text_title=(TextView) itemView.findViewById(R.id.text_title);
         text_date=(TextView) itemView.findViewById(R.id.text_date);
         text_down =(TextView)itemView.findViewById(R.id.btn_down);
-        text_percent =(TextView)itemView.findViewById(R.id.text_percent);
 
-        btn_pause =(Button) itemView.findViewById(R.id.btn_pause);
         btn_delete =(Button) itemView.findViewById(R.id.btn_delete);
 
-
-        btn_pause.setOnClickListener(this);
         btn_delete.setOnClickListener(this);
     }
 
@@ -58,21 +52,17 @@ public class DownloadingViewholder extends ViewHolder implements View.OnClickLis
         text_title.setText(bean.title);
         text_date.setText(bean.date);
         text_down.setText(SwitchConfig.getDownStatusStr(bean.downStatus));
-        text_percent.setText(((int)(bean.percent*100))+"%");
     }
 
-    public static DownloadingViewholder getViewHolder(ViewGroup parent){
+    public static DownloadedViewholder getViewHolder(ViewGroup parent){
         LayoutInflater inflater=LayoutInflater.from(parent.getContext());
         View view= inflater.inflate(layoutId,parent,false);
-        return new DownloadingViewholder(view);
+        return new DownloadedViewholder(view);
     }
-
     @Override
     public void onClick(View v) {
         if(v==btn_delete){
             EventBus.getDefault().post(bean,TAG_DOWNLOADING_DELETE);
-        }else if(v==btn_pause){
-            Toast.makeText(itemView.getContext(),"暂不支持暂停，后续开放",Toast.LENGTH_SHORT).show();
         }
     }
 }

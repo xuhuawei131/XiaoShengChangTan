@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.bean.FileBean;
-import com.lingdian.xiaoshengchangtan.bean.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
 import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
 import com.lingdian.xiaoshengchangtan.player.MyPlayer;
 import com.lingdian.xiaoshengchangtan.services.MusicService;
