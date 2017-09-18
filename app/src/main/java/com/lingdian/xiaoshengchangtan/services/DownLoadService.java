@@ -142,8 +142,8 @@ public class DownLoadService extends Service {
                 EventBus.getDefault().post(bean,TAG_DOWNLOADING_DONE);
                 //下载完成
                 DownloadManager.getInstance().remoteWorkingList(bean);
+                DownLoadImple.getInstance().updateDownloadStatus(bean);
                 startNextDownload();
-
             }
 
             @Override

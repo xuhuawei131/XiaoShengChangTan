@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_DOWNLOADING_DELETE;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_DOWNLOADING_DONE;
+import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS_DONE;
 import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS_NO;
 
 /**
@@ -84,6 +86,13 @@ public class DownLoadedActivity extends BaseActivity {
         arrayList.remove(bean);
         bean.downStatus=DOWNLOAD_STATUS_NO;
         DownLoadImple.getInstance().updateDownloadStatus(bean);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Subscriber(tag = TAG_DOWNLOADING_DONE)
+    private void onDoneDownloaded(DownLoadDbBean bean){
+        arrayList.add(bean);
+        bean.downStatus=DOWNLOAD_STATUS_DONE;
         adapter.notifyDataSetChanged();
     }
 }

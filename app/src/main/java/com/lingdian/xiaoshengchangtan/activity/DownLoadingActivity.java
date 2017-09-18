@@ -91,17 +91,8 @@ public class DownLoadingActivity extends BaseActivity {
     }
     @Subscriber(tag = TAG_DOWNLOADING_DONE)
     private void onDownloaded(DownLoadDbBean bean){
-        int index=arrayList.indexOf(bean);
-        RecyclerView.ViewHolder holder=recyclerView.findViewHolderForAdapterPosition(index);
-
-        if(holder!=null){
-            DownLoadDbBean item=arrayList.get(index);
-            item.downStatus=bean.downStatus;
-            item.percent=bean.percent;
-//                adapter.notifyItemChanged(index);
-            DownloadingViewholder dHolder=(DownloadingViewholder)holder;
-            dHolder.setData(item);
-        }
+        arrayList.remove(bean);
+        adapter.notifyDataSetChanged();
     }
 
     @Subscriber(tag = TAG_DOWNLOADING_DELETE)
