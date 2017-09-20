@@ -65,9 +65,7 @@ public class DownLoadService extends Service {
 
     @Override
     public void onCreate() {
-
         EventBus.getDefault().register(this);
-
     }
 
     @Override
@@ -75,24 +73,29 @@ public class DownLoadService extends Service {
         if (intent != null) {
             DownLoadDbBean bean = (DownLoadDbBean) intent.getSerializableExtra("bean");
             boolean addOrDel=intent.getBooleanExtra("addOrDel",true);
-            boolean isExistWaitting = DownloadManager.getInstance().isExistWaittingQueue(bean);
-            boolean isExistWorkting = DownloadManager.getInstance().isExistWorkingQueue(bean);
+            if(bean!=null){
+                boolean isExistWaitting = DownloadManager.getInstance().isExistWaittingQueue(bean);
+                boolean isExistWorkting = DownloadManager.getInstance().isExistWorkingQueue(bean);
 
-            if (!isExistWaitting && !isExistWorkting) {
-                DownLoadImple.getInstance().updateDownloadStatus(bean);
-                DownloadManager.getInstance().addWaittingQueue(bean);
-                startNextDownload();
-            }else{//任务已存在
-                if(!addOrDel){
-                    if(isExistWaitting){
-                        DownloadManager.getInstance().remoteWaittingList(bean);
-                    }else{
-                        OkGo.getInstance().cancelTag(bean.title);
-                        DownloadManager.getInstance().remoteWorkingList(bean);
-                        startNextDownload();
+                if (!isExistWaitting && !isExistWorkting) {
+                    DownLoadImple.getInstance().updateDownloadStatus(bean);
+                    DownloadManager.getInstance().addWaittingQueue(bean);
+                    startNextDownload();
+                }else{//任务已存在
+                    if(!addOrDel){
+                        if(isExistWaitting){
+                            DownloadManager.getInstance().remoteWaittingList(bean);
+                        }else{
+                            OkGo.getInstance().cancelTag(bean.title);
+                            DownloadManager.getInstance().remoteWorkingList(bean);
+                            startNextDownload();
+                        }
                     }
                 }
+            }else{
+                startNextDownload();
             }
+
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -132,6 +135,7 @@ public class DownLoadService extends Service {
         request.tag(bean.title).execute(new MyFileCallback(fileBean.fileDownName) {
             @Override
             public void onSuccess(Response<File> response) {
+                response.getRawResponse().body().contentLength();
                 //下载完成
                 String filePath = response.body().getPath();
                 File downFile = new File(filePath);
@@ -143,6 +147,7 @@ public class DownLoadService extends Service {
                 //下载完成
                 DownloadManager.getInstance().remoteWorkingList(bean);
                 DownLoadImple.getInstance().updateDownloadStatus(bean);
+
                 startNextDownload();
             }
 

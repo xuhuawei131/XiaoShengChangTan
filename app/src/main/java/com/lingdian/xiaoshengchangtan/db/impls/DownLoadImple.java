@@ -83,6 +83,20 @@ public class DownLoadImple extends BaseDao<DownLoadDbBean> {
             return null;
         }
     }
+
+    public void updateDownloadPlayerStatus(DownLoadDbBean info){
+        try {
+            if (isOpen()) {
+                UpdateBuilder<DownLoadDbBean, Integer> ub = baseDao.updateBuilder();
+                ub.updateColumnValue("currentTime", info.currentTime);
+                ub.where().eq("title", info.title);
+                updateData(ub);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      *
      * @param info

@@ -50,6 +50,11 @@ dependencies {
     compile 'com.lzy.net:okgo:3.0.4'
     compile 'com.lzy.net:okrx:0.1.0'
     compile 'com.lzy.net:okserver:1.1.0'
+    /**
+     * 圆形图片
+     * https://github.com/xuhuawei131/CircleImageView
+     * */
+    compile 'de.hdodenhof:circleimageview:1.1.0'
 
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'

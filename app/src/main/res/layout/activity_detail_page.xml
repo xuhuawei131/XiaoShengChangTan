@@ -60,123 +60,129 @@
 
     </LinearLayout>
 
-
     <!--中间的view-->
-    <TextView
-        android:id="@+id/text_status"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="10dp"
-        android:gravity="center" />
-
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_height="0dp"
+    <RelativeLayout
         android:layout_weight="1"
         android:layout_width="match_parent"
-        >
-        <RelativeLayout
-            android:id="@+id/rl_download"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
+        android:layout_height="0dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_margin="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/zhongxiaobig"
+            app:border_width="4dp"
+            app:border_color="#FF000000"/>
+
+        <TextView
+            android:id="@+id/text_timer"
+            android:textColor="@color/WhiteColor"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/down_express_bg_selector"
-            android:gravity="center" >
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-            <ImageView
-                android:id="@+id/iv_download_arrow"
-                android:layout_width="15dp"
-                android:layout_height="20dp"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/down_express_arrow_selector" />
+        <TextView
+            android:id="@+id/text_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            android:gravity="center" />
+    </RelativeLayout>
 
-            <TextView
-                android:id="@+id/bt_download"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/iv_download_arrow"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="2dp"
-                android:gravity="center"
-                android:text="下载"
-                android:textColor="@color/text_color_selector"
-                android:textSize="14sp" />
-        </RelativeLayout>
-    </LinearLayout>
 
-    <!--底部-->
-    <LinearLayout
+    <SeekBar
+        android:id="@+id/musicSeekBar"
+        style="@style/neteasa_music_time_seek_bar_sytle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/layout_control"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp" />
+    <!--底部-->
+    <RelativeLayout
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="0"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
         android:gravity="center">
 
         <TextView
             android:id="@+id/text_currentTime"
             android:layout_width="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:layout_weight="0"
             android:gravity="center"
-            android:padding="8dp"
             android:text="00:00:00" />
-
-        <SeekBar
-            android:id="@+id/musicSeekBar"
-            style="@style/neteasa_music_time_seek_bar_sytle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingEnd="15dp"
-            android:paddingStart="15dp" />
-
         <TextView
             android:id="@+id/text_totalTime"
+            android:layout_alignParentRight="true"
             android:textColor="@android:color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
             android:gravity="center"
-            android:padding="8dp"
             android:text="00:00:00" />
-    </LinearLayout>
-
-    <LinearLayout
+    </RelativeLayout>
+    <!--控制按钮-->
+    <RelativeLayout
         android:id="@+id/layout_control"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingBottom="20dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:paddingTop="10dp">
 
-        <ImageView
-            android:id="@+id/ivLast"
+        <Button
+            android:id="@+id/btn_list"
+            android:text="列表"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_last" />
+            android:layout_height="wrap_content" />
 
-        <ImageView
-            android:id="@+id/ivPlayOrPause"
+        <LinearLayout
+            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/ic_pause" />
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/ivLast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_last" />
 
-        <ImageView
-            android:id="@+id/ivNext"
+            <ImageView
+                android:id="@+id/ivPlayOrPause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/ic_pause" />
+
+            <ImageView
+                android:id="@+id/ivNext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_next" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_menu"
+            android:text="菜单"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_next" />
-    </LinearLayout>
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 
 
 </LinearLayout>

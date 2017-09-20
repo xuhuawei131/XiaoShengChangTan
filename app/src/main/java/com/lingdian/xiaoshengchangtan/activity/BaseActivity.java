@@ -1,11 +1,18 @@
 package com.lingdian.xiaoshengchangtan.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
 import com.lingdian.xiaoshengchangtan.R;
 import com.roger.catloadinglibrary.CatLoadingView;
+
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.ACTION_EXIT_ALL_LIFE;
 
 /**
  * Created by lingdian on 17/9/13.
@@ -26,7 +33,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         findViewByIds();
         requestService();
 
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction(ACTION_EXIT_ALL_LIFE);
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,intentFilter);
+
     }
+
+    private BroadcastReceiver broadcastReceiver=new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            finish();
+        }
+    };
+
     protected void showProgressDialog(String content){
         if(TextUtils.isEmpty(content)){
             content="加载中...";
@@ -53,5 +72,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         onMyDestory();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
     }
 }

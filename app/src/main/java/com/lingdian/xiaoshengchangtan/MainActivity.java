@@ -12,7 +12,9 @@ import android.widget.Toast;
 import com.lingdian.xiaoshengchangtan.activity.HomePageActivity;
 import com.lingdian.xiaoshengchangtan.activity.NetEasyActivity;
 import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
-import com.lingdian.xiaoshengchangtan.player.MyPlayer;
+import com.lingdian.xiaoshengchangtan.enums.TimerType;
+import com.lingdian.xiaoshengchangtan.player.MyPlayerApi;
+import com.lingdian.xiaoshengchangtan.services.TimerService;
 import com.lingdian.xiaoshengchangtan.utils.HtmlParer;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.FileCallback;
@@ -69,7 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         View btn_junp_neteasy=findViewById(R.id.btn_junp_neteasy);
         btn_junp_neteasy.setOnClickListener(this);
 
-
+        View btn_test_timer=findViewById(R.id.btn_test_timer);
+        btn_test_timer.setOnClickListener(this);
 
         textResult = (TextView) findViewById(R.id.text_result);
     }
@@ -100,6 +103,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_junp_neteasy:
                 startActivity(new Intent(this, NetEasyActivity.class));
+                break;
+            case R.id.btn_test_timer:
+                TimerService.startTimer(TimerType.TIMER_TEST);
                 break;
 
         }
@@ -253,12 +259,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void playMusic(String fileUri) {
-        MyPlayer.getInstance().loadUri(fileUri);
+//        MyPlayerApi.getInstance().loadUri(fileUri);
 
     }
 
     private void stopMusic() {
-        MyPlayer.getInstance().stop();
+        MyPlayerApi.getInstance().stop();
     }
 
 

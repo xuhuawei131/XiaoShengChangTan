@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,12 +24,16 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".activity.HomePageActivity"
-            android:theme="@style/toolbar_AppTheme"
-            />
-
-        <activity android:name=".activity.DetailPageActivity" />
-        <activity android:name=".activity.NetEasyActivity" />
+        <activity
+            android:name=".activity.HomePageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/toolbar_AppTheme" />
+        <activity
+            android:name=".activity.DetailPageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.NetEasyActivity"
+            android:screenOrientation="portrait" />
 
         <service android:name=".services.MusicService" />
         <service
@@ -35,8 +41,17 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".activity.DownLoadingActivity" />
-        <activity android:name=".activity.DownLoadedActivity"></activity>
+        <activity
+            android:name=".activity.DownLoadingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.DownLoadedActivity"
+            android:screenOrientation="portrait" />
+
+        <service
+            android:name=".services.TimerService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>

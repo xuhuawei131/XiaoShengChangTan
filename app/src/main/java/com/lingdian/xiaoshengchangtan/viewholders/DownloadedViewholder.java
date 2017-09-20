@@ -1,5 +1,6 @@
 package com.lingdian.xiaoshengchangtan.viewholders;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lingdian.xiaoshengchangtan.R;
+import com.lingdian.xiaoshengchangtan.activity.DetailPageActivity;
 import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
 import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
 
@@ -42,7 +44,7 @@ public class DownloadedViewholder extends ViewHolder implements View.OnClickList
         text_down =(TextView)itemView.findViewById(R.id.btn_down);
 
         btn_delete =(Button) itemView.findViewById(R.id.btn_delete);
-
+        itemView.setOnClickListener(this);
         btn_delete.setOnClickListener(this);
     }
 
@@ -63,6 +65,11 @@ public class DownloadedViewholder extends ViewHolder implements View.OnClickList
     public void onClick(View v) {
         if(v==btn_delete){
             EventBus.getDefault().post(bean,TAG_DOWNLOADING_DELETE);
+        }else if(v==itemView){
+            Intent intent=new Intent();
+            intent.putExtra("bean",bean);
+            intent.setClass(itemView.getContext(),DetailPageActivity.class);
+            itemView.getContext().startActivity(intent);
         }
     }
 }

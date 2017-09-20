@@ -3,10 +3,10 @@ package com.lingdian.xiaoshengchangtan.player;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Environment;
 import android.util.Log;
 
 import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
+import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,16 +16,16 @@ import java.util.List;
  * Created by lingdian on 17/9/10.
  */
 
-public class MyPlayer {
-    private static MyPlayer myPlayer = null;
-
+public class MyPlayerApi {
+    private static MyPlayerApi myPlayerApi = null;
+    private DownLoadDbBean bean;
     private MediaPlayer player; // 定义多媒体对象
     private MediaCallBack callBack;
     private Context context;
     private List<MediaPlayerCallBack> callBackList;
     private MusicStatus currentStatus = MusicStatus.STOP;
 
-    private MyPlayer() {
+    private MyPlayerApi() {
         player = new MediaPlayer();
         callBackList = new ArrayList<>();
         callBack = new MediaCallBack();
@@ -38,34 +38,46 @@ public class MyPlayer {
         player.setOnSeekCompleteListener(callBack);
     }
 
-    public static MyPlayer getInstance() {
-        if (myPlayer == null) {
-            myPlayer = new MyPlayer();
+    public static MyPlayerApi getInstance() {
+        if (myPlayerApi == null) {
+            myPlayerApi = new MyPlayerApi();
         }
-        return myPlayer;
+        return myPlayerApi;
     }
 
     public void init(Context context1) {
         context = context1.getApplicationContext();
     }
 
-
+    /**
+     * 添加播放器监听
+     * @param listener
+     */
     public void addMediaPlayerListener(MediaPlayerCallBack listener) {
         if (!callBackList.contains(listener)) {
             callBackList.add(listener);
         }
     }
 
+    /**
+     * 移除监听
+     * @param listener
+     */
     public void removeMediaPlayerListener(MediaPlayerCallBack listener) {
         if (callBackList.contains(listener)) {
             callBackList.remove(listener);
         }
     }
 
-    public void loadUri(String url) {
+    /**
+     * 加载音频
+     * @param bean
+     * @param url
+     */
+    public void loadUri(DownLoadDbBean bean,String url) {
+        this.bean=bean;
         try {
             player.reset(); //重置多媒体
-//            Uri url = musicList.get(songNum);//得到当前播放音乐的路径
             //为多媒体对象设置播放路径
             if (url.startsWith("http")) {
                 Uri uri = Uri.parse(url);
@@ -84,7 +96,7 @@ public class MyPlayer {
      * 暂停与继续播放
      */
     public MusicStatus startOrPause(){
-        if (player.isPlaying()) {
+        if (isPlaying()) {
             player.pause();
             currentStatus = MusicStatus.PAUSE;
         } else {
@@ -99,7 +111,7 @@ public class MyPlayer {
      * 停止播放
      */
     public void stop() {
-        if (player.isPlaying()) {
+        if (isPlaying()) {
             player.stop();
             currentStatus=MusicStatus.STOP;
         }
@@ -112,7 +124,7 @@ public class MyPlayer {
         stop();
         player.release();
         player = null;
-        myPlayer = null;
+        myPlayerApi = null;
         currentStatus=MusicStatus.STOP;
     }
 
@@ -134,6 +146,9 @@ public class MyPlayer {
         player.setLooping(isLoop);
     }
 
+    public void seek(int position) {
+        player.seekTo(position);
+    }
 
     /**
      * 音乐当前的状态：只有播放、暂停、停止三种
@@ -155,7 +170,7 @@ public class MyPlayer {
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
             for (MediaPlayerCallBack item : callBackList) {
-                item.onCompletion(mediaPlayer);
+                item.onCompletion(mediaPlayer,bean);
             }
         }
 
@@ -167,9 +182,8 @@ public class MyPlayer {
          */
         @Override
         public void onBufferingUpdate(MediaPlayer mediaPlayer, int percent) {
-            Log.v("xhw", "onBufferingUpdate percent " + percent);
             for (MediaPlayerCallBack item : callBackList) {
-                item.onBufferingUpdate(mediaPlayer, percent);
+                item.onBufferingUpdate(mediaPlayer, percent,bean);
             }
         }
 
@@ -184,7 +198,7 @@ public class MyPlayer {
         @Override
         public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
             for (MediaPlayerCallBack item : callBackList) {
-                item.onError(mediaPlayer, i, i1);
+                item.onError(mediaPlayer, i, i1,bean);
             }
             return false;
         }
@@ -198,7 +212,7 @@ public class MyPlayer {
         @Override
         public void onSeekComplete(MediaPlayer mediaPlayer) {
             for (MediaPlayerCallBack item : callBackList) {
-                item.onSeekComplete(mediaPlayer);
+                item.onSeekComplete(mediaPlayer,bean);
             }
         }
 
@@ -210,11 +224,14 @@ public class MyPlayer {
          */
         @Override
         public void onPrepared(MediaPlayer mediaPlayer) {
-            for (MediaPlayerCallBack item : callBackList) {
-                item.onPrepared(mediaPlayer);
-            }
-            if (SwitchConfig.isSkipHead) {
+            if (SwitchConfig.isSkipHead&&bean.currentTime==0) {
                 player.seekTo(SwitchConfig.SkipHeadTime);
+            }else{
+                player.seekTo(bean.currentTime);
+            }
+
+            for (MediaPlayerCallBack item : callBackList) {
+                item.onPrepared(mediaPlayer,bean);
             }
 
         }
@@ -227,16 +244,25 @@ public class MyPlayer {
         player.start();
     }
 
+    /**
+     * 获取当前播放的位置
+     * @return
+     */
+    public int getCurrentPosition(){
+        return player.getCurrentPosition();
+    }
+
+
     public interface MediaPlayerCallBack {
-        public void onCompletion(MediaPlayer mediaPlayer);
+        public void onCompletion(MediaPlayer mediaPlayer,DownLoadDbBean bean);
 
-        public void onBufferingUpdate(MediaPlayer mediaPlayer, int percent);
+        public void onBufferingUpdate(MediaPlayer mediaPlayer, int percent,DownLoadDbBean bean);
 
-        public boolean onError(MediaPlayer mediaPlayer, int i, int i1);
+        public boolean onError(MediaPlayer mediaPlayer, int i, int i1,DownLoadDbBean bean);
 
-        public void onSeekComplete(MediaPlayer mediaPlayer);
+        public void onSeekComplete(MediaPlayer mediaPlayer,DownLoadDbBean bean);
 
-        public void onPrepared(MediaPlayer mediaPlayer);
+        public void onPrepared(MediaPlayer mediaPlayer,DownLoadDbBean bean);
     }
 
 }

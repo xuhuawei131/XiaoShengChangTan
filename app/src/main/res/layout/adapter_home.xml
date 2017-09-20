@@ -44,10 +44,10 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/image_selected"
+        android:id="@+id/image_down"
         android:layout_marginRight="10dp"
-        android:src="@drawable/icon_msg_toggle_false"
-        android:layout_width="30dp"
-        android:layout_height="30dp" />
+        android:src="@drawable/down_express_arrow_selector"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
 
 </LinearLayout>

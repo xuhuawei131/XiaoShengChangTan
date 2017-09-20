@@ -53,8 +53,7 @@ public class DownLoadDbBean implements Serializable{
     @DatabaseField
     public String link;
 
-    public boolean isEditStatus=false;//是否进入编辑状态
-    public boolean isSelected=false;//是否选中
+    public int buffet_percent;
 
     public DownLoadDbBean(){
 

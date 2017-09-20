@@ -1,12 +1,5 @@
 package com.lingdian.xiaoshengchangtan.activity;
 
-import android.content.Intent;
-import android.media.MediaPlayer;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -17,15 +10,28 @@ import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.bean.FileBean;
 import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
 import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
-import com.lingdian.xiaoshengchangtan.player.MyPlayer;
-import com.lingdian.xiaoshengchangtan.services.MusicService;
+import com.lingdian.xiaoshengchangtan.enums.TimerType;
+import com.lingdian.xiaoshengchangtan.services.MyPlayerService;
+import com.lingdian.xiaoshengchangtan.services.TimerService;
 import com.lingdian.xiaoshengchangtan.utils.DateUtils;
+
+import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 
 import java.io.File;
 
-import static com.lingdian.xiaoshengchangtan.activity.NetEasyActivity.MUSIC_MESSAGE;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.ACTION_ALARM_TIMER_PROGRESS;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_BUFFER;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_COMPLETION;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_ERROR;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_SERVICE_PAUSE_OR_START;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_PREPARE;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_PROGRESS;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_SERVICE_SEEK;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_SEEK_COMPLETION;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_STARTOR_PAUSE;
 
-public class DetailPageActivity extends AppCompatActivity {
+public class DetailPageActivity extends BaseActivity {
 
     private DownLoadDbBean bean;
     private TextView text_title;
@@ -44,17 +50,13 @@ public class DetailPageActivity extends AppCompatActivity {
     private ImageView ivNext;
     private ImageView ivPlayOrPause;
     private boolean isContinue=false;
+    private TextView text_timer;
+    private View btn_list;
+    private View btn_menu;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initData();
-        setContentView(R.layout.activity_detail_page);
-        findviewByIds();
-        requestService();
-    }
-
-    private void initData() {
+    protected void init() {
         bean = (DownLoadDbBean) getIntent().getSerializableExtra("bean");
+
         if (bean == null) {
             Toast.makeText(this, "bean not empty", Toast.LENGTH_SHORT).show();
             finish();
@@ -73,8 +75,13 @@ public class DetailPageActivity extends AppCompatActivity {
         }
     }
 
-    private void findviewByIds() {
+    @Override
+    protected int setContentView() {
+        return R.layout.activity_detail_page;
+    }
 
+    @Override
+    protected void findViewByIds() {
         ivLast = (ImageView) findViewById(R.id.ivLast);
         ivPlayOrPause = (ImageView) findViewById(R.id.ivPlayOrPause);
         ivNext = (ImageView) findViewById(R.id.ivNext);
@@ -87,16 +94,25 @@ public class DetailPageActivity extends AppCompatActivity {
         text_title = (TextView) findViewById(R.id.text_title);
         text_date = (TextView) findViewById(R.id.text_date);
         text_status = (TextView) findViewById(R.id.text_status);
+        text_timer=(TextView)findViewById(R.id.text_timer);
         text_currentTime = (TextView) findViewById(R.id.text_currentTime);
         text_totalTime = (TextView) findViewById(R.id.text_totalTime);
 
+        btn_list=findViewById(R.id.btn_list);
+        btn_menu=findViewById(R.id.btn_menu);
+        btn_list.setOnClickListener(onClickListener);
+        btn_menu.setOnClickListener(onClickListener);
+
         mSeekBar.setOnSeekBarChangeListener(seekBarChangeListener);
-        MyPlayer.getInstance().addMediaPlayerListener(mediaPlayerCallBack);
     }
 
-    private void requestService() {
+    @Override
+    protected void requestService() {
+        EventBus.getDefault().register(this);
+
         text_title.setText(fileBean.fileName);
         text_date.setText(bean.date);
+
         StringBuilder sb = new StringBuilder();
         sb.append("url:")
                 .append(SwitchConfig.URL_HOME).append(bean.link)
@@ -108,105 +124,21 @@ public class DetailPageActivity extends AppCompatActivity {
                 .append("fileUrl:").append(fileBean.fileUrl);
         text_status.setText(sb.toString());
 
-       //加载数据url
-        MyPlayer.getInstance().loadUri(url);
+        MyPlayerService.startPlay(bean);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stopUpdateSeekBarProgree();
-    }
-
-    private void play() {
-        optMusic(MusicService.ACTION_OPT_MUSIC_PLAY);
-        startUpdateSeekBarProgress();
-    }
-
-    private void pause() {
-        optMusic(MusicService.ACTION_OPT_MUSIC_PAUSE);
-        ivPlayOrPause.setImageResource(R.drawable.ic_play);
-        stopUpdateSeekBarProgree();
-    }
-
-    private void stop() {
-        ivPlayOrPause.setImageResource(R.drawable.ic_play);
-        stopUpdateSeekBarProgree();
-        reset();
-    }
-
-    private void next() {
-        optMusic(MusicService.ACTION_OPT_MUSIC_NEXT);
-        reset();
-    }
-
-    private void last() {
-        optMusic(MusicService.ACTION_OPT_MUSIC_LAST);
-        reset();
-    }
-
-
-    private void reset() {
-        stopUpdateSeekBarProgree();
-        mSeekBar.setProgress(0);
-        text_currentTime.setText(DateUtils.duration2Time(0));
-        text_totalTime.setText(DateUtils.duration2Time(0));
+    protected void onMyDestory() {
+        EventBus.getDefault().unregister(this);
 
     }
-
-    private void complete(boolean isOver) {
-        if (isOver) {
-//            mDisc.stop();
-        } else {
-//            mDisc.next();
-        }
-    }
-
-    private void optMusic(final String action) {
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(action));
-    }
-
-
-    private Handler mMusicHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            mSeekBar.setProgress(mSeekBar.getProgress() + 1000);
-            text_currentTime.setText(DateUtils.duration2Time(mSeekBar.getProgress()));
-            startUpdateSeekBarProgress();
-        }
-    };
-
-    private void startUpdateSeekBarProgress() {
-        /*避免重复发送Message*/
-        stopUpdateSeekBarProgree();
-        mMusicHandler.sendEmptyMessageDelayed(0, 1000);
-    }
-
-    private void stopUpdateSeekBarProgree() {
-        mMusicHandler.removeMessages(MUSIC_MESSAGE);
-    }
-
-    private void seekTo(int position) {
-        Intent intent = new Intent(MusicService.ACTION_OPT_MUSIC_SEEK_TO);
-        intent.putExtra(MusicService.PARAM_MUSIC_SEEK_TO, position);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
-
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.ivPlayOrPause:
-                    MyPlayer.MusicStatus status=MyPlayer.getInstance().startOrPause();
-                    if(status== MyPlayer.MusicStatus.PAUSE){
-                        ivPlayOrPause.setImageResource(R.drawable.ic_play);
-                        stopUpdateSeekBarProgree();
-                    }else{
-                        ivPlayOrPause.setImageResource(R.drawable.ic_pause);
-                        startUpdateSeekBarProgress();
-                    }
+                    EventBus.getDefault().post("",TAG_PLAY_SERVICE_PAUSE_OR_START);
                     break;
                 case R.id.ivNext:
 
@@ -214,55 +146,63 @@ public class DetailPageActivity extends AppCompatActivity {
                 case R.id.ivLast:
 
                     break;
+                case R.id.btn_list:
 
+                    break;
+                case R.id.btn_menu:
+
+                    break;
             }
         }
     };
 
-
-    /**
-     * 音频播放的回调
-     */
-    private MyPlayer.MediaPlayerCallBack mediaPlayerCallBack = new MyPlayer.MediaPlayerCallBack() {
-
-        @Override
-        public void onCompletion(MediaPlayer mediaPlayer) {
-
-        }
-
-        @Override
-        public void onBufferingUpdate(MediaPlayer mediaPlayer, int percent) {
-
-        }
-
-        @Override
-        public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-            return false;
-        }
-
-        @Override
-        public void onSeekComplete(MediaPlayer mediaPlayer) {
-
-        }
-
-        @Override
-        public void onPrepared(MediaPlayer mediaPlayer) {
-            int during=mediaPlayer.getDuration();
-            mSeekBar.setMax(during);
-            text_totalTime.setText(DateUtils.duration2Time(during));
-        }
-    };
-
-
-    private void playStatus(){
-        MyPlayer.getInstance().startPlay();
-        startUpdateSeekBarProgress();
-
+    @Subscriber(tag = ACTION_ALARM_TIMER_PROGRESS)
+    private void onAlarmTimerUpate(int leftTimer){
+        text_timer.setText(DateUtils.duration2TimeBySecond(leftTimer));
     }
-    private void pauseStatus(){
 
-
+    @Subscriber(tag=TAG_PLAY_UI_STARTOR_PAUSE)
+    private void onUIPauseOrStart(boolean isStart){
+        if(isStart){
+            ivPlayOrPause.setImageResource(R.drawable.ic_play);
+        }else{
+            ivPlayOrPause.setImageResource(R.drawable.ic_pause);
+        }
     }
+    @Subscriber(tag= TAG_PLAY_UI_PROGRESS)
+    private void onUpdateProgress(int currentPosition){
+        mSeekBar.setProgress(currentPosition);
+        text_currentTime.setText(DateUtils.duration2TimeByMicSecond(currentPosition));
+    }
+    @Subscriber(tag= TAG_PLAY_UI_ERROR)
+    private void onError(DownLoadDbBean bean){
+        mSeekBar.setMax(bean.totalTime);
+        text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
+    }
+    @Subscriber(tag= TAG_PLAY_UI_BUFFER)
+    private void onBufferingUpdate(DownLoadDbBean bean){
+        mSeekBar.setMax(bean.totalTime);
+        text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
+    }
+    @Subscriber(tag= TAG_PLAY_UI_SEEK_COMPLETION)
+    private void onSeekComplete(DownLoadDbBean bean){
+        mSeekBar.setMax(bean.totalTime);
+        text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
+    }
+
+    @Subscriber(tag= TAG_PLAY_UI_COMPLETION)
+    private void onCompletion(DownLoadDbBean bean){
+        mSeekBar.setMax(bean.totalTime);
+        text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
+    }
+
+    @Subscriber(tag= TAG_PLAY_UI_PREPARE)
+    private void onPrepared(DownLoadDbBean bean){
+        TimerService.startTimer(TimerType.TIMER_TEST);
+        mSeekBar.setMax(bean.totalTime);
+        text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
+    }
+
 
     /**
      * 拖动进度条的回调
@@ -270,7 +210,7 @@ public class DetailPageActivity extends AppCompatActivity {
     private SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            text_currentTime.setText(DateUtils.duration2Time(progress));
+            text_currentTime.setText(DateUtils.duration2TimeByMicSecond(progress));
         }
 
         @Override
@@ -279,8 +219,7 @@ public class DetailPageActivity extends AppCompatActivity {
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            seekTo(seekBar.getProgress());
-            startUpdateSeekBarProgress();
+            EventBus.getDefault().post(seekBar.getProgress(), TAG_PLAY_SERVICE_SEEK);
         }
     };
 

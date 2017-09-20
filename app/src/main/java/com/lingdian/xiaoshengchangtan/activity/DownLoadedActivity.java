@@ -5,12 +5,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.adapters.DownloadedAdapter;
 import com.lingdian.xiaoshengchangtan.adapters.DownloadingAdapter;
 import com.lingdian.xiaoshengchangtan.bean.FileBean;
 import com.lingdian.xiaoshengchangtan.cache.DownloadManager;
+import com.lingdian.xiaoshengchangtan.customview.EmptyRecyclerView;
 import com.lingdian.xiaoshengchangtan.db.impls.DownLoadImple;
 import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
 import com.lingdian.xiaoshengchangtan.decoration.ItemDecoration;
@@ -48,8 +51,12 @@ public class DownLoadedActivity extends BaseActivity {
 
     @Override
     protected void findViewByIds() {
-        recyclerView= (RecyclerView) findViewById(R.id.recyclerView);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
 
+        recyclerView= (RecyclerView) findViewById(R.id.recyclerView);
+//        recyclerView.setEmptyView(R.id.textEmptyView,this);
         layoutManager=new LinearLayoutManager(this);
 
         recyclerView.setLayoutManager(layoutManager);
@@ -66,13 +73,23 @@ public class DownLoadedActivity extends BaseActivity {
         List<DownLoadDbBean> dbList= DownLoadImple.getInstance().getDownloadedList();
         arrayList.addAll(dbList);
         adapter.notifyDataSetChanged();
-
+        notifyAdapter();
         EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onMyDestory() {
         EventBus.getDefault().unregister(this);
+    }
+
+
+    private void notifyAdapter() {
+        int length = arrayList.size();
+        if (length == 0) {
+            findViewById(R.id.textEmptyView).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.textEmptyView).setVisibility(View.GONE);
+        }
     }
 
     @Subscriber(tag = TAG_DOWNLOADING_DELETE)
@@ -85,8 +102,10 @@ public class DownLoadedActivity extends BaseActivity {
         }
         arrayList.remove(bean);
         bean.downStatus=DOWNLOAD_STATUS_NO;
+
         DownLoadImple.getInstance().updateDownloadStatus(bean);
         adapter.notifyDataSetChanged();
+        notifyAdapter();
     }
 
     @Subscriber(tag = TAG_DOWNLOADING_DONE)
@@ -94,5 +113,6 @@ public class DownLoadedActivity extends BaseActivity {
         arrayList.add(bean);
         bean.downStatus=DOWNLOAD_STATUS_DONE;
         adapter.notifyDataSetChanged();
+        notifyAdapter();
     }
 }

@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.lingdian.xiaoshengchangtan.customview.EmptyRecyclerView;
 import com.lingdian.xiaoshengchangtan.customview.moreview.EndlessRecyclerOnScrollListener;
 import com.lingdian.xiaoshengchangtan.customview.moreview.HeaderAndFooterRecyclerViewAdapter;
 import com.lingdian.xiaoshengchangtan.customview.moreview.LoadingFooter;

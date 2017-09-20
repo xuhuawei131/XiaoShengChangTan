@@ -3,8 +3,7 @@ package com.lingdian.xiaoshengchangtan;
 import android.app.Application;
 
 import com.lingdian.xiaoshengchangtan.crash.CrashHandler;
-import com.lingdian.xiaoshengchangtan.db.DatabaseHelper;
-import com.lingdian.xiaoshengchangtan.player.MyPlayer;
+import com.lingdian.xiaoshengchangtan.player.MyPlayerApi;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
@@ -26,7 +25,7 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         initHttp();
-        MyPlayer.getInstance().init(this);
+        MyPlayerApi.getInstance().init(this);
         application=this;
 //        DatabaseHelper.getHelper().init();
         CrashHandler.getInstance().init(this);
