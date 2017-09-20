@@ -1,5 +1,6 @@
 package com.lingdian.xiaoshengchangtan.activity;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 
 import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.bean.FileBean;
+import com.lingdian.xiaoshengchangtan.customview.MyMenuDialog;
 import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
 import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
 import com.lingdian.xiaoshengchangtan.enums.TimerType;
@@ -35,7 +37,6 @@ public class DetailPageActivity extends BaseActivity {
 
     private DownLoadDbBean bean;
     private TextView text_title;
-    private TextView text_date;
     private TextView text_status;
     private SeekBar mSeekBar;
 
@@ -53,8 +54,11 @@ public class DetailPageActivity extends BaseActivity {
     private TextView text_timer;
     private View btn_list;
     private View btn_menu;
+    private MyMenuDialog dialog;
     @Override
     protected void init() {
+
+
         bean = (DownLoadDbBean) getIntent().getSerializableExtra("bean");
 
         if (bean == null) {
@@ -92,11 +96,17 @@ public class DetailPageActivity extends BaseActivity {
 
         mSeekBar = (SeekBar) findViewById(R.id.musicSeekBar);
         text_title = (TextView) findViewById(R.id.text_title);
-        text_date = (TextView) findViewById(R.id.text_date);
         text_status = (TextView) findViewById(R.id.text_status);
         text_timer=(TextView)findViewById(R.id.text_timer);
         text_currentTime = (TextView) findViewById(R.id.text_currentTime);
         text_totalTime = (TextView) findViewById(R.id.text_totalTime);
+
+
+        View btn_back=findViewById(R.id.btn_back);
+        btn_back.setOnClickListener(onClickListener);
+
+        View btn_share=findViewById(R.id.btn_share);
+        btn_share.setOnClickListener(onClickListener);
 
         btn_list=findViewById(R.id.btn_list);
         btn_menu=findViewById(R.id.btn_menu);
@@ -111,7 +121,6 @@ public class DetailPageActivity extends BaseActivity {
         EventBus.getDefault().register(this);
 
         text_title.setText(fileBean.fileName);
-        text_date.setText(bean.date);
 
         StringBuilder sb = new StringBuilder();
         sb.append("url:")
@@ -147,11 +156,24 @@ public class DetailPageActivity extends BaseActivity {
 
                     break;
                 case R.id.btn_list:
-
+                    Intent intent=new Intent(DetailPageActivity.this,HomePageActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
                     break;
                 case R.id.btn_menu:
+                    if (dialog==null){
+                        dialog=new MyMenuDialog(DetailPageActivity.this);
+                    }
+                    dialog.showDialog();
+                    break;
+                case R.id.btn_back:
+                    finish();
+                    break;
+                case R.id.btn_share:
 
                     break;
+
             }
         }
     };

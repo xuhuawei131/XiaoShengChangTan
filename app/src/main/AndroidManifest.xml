@@ -52,6 +52,12 @@
             android:name=".services.TimerService"
             android:enabled="true"
             android:exported="false" />
+
+        <activity
+            android:name=".activity.MyMainActivity"
+            android:label="@string/title_activity_my_main"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activity.SplashActivity"></activity>
     </application>
 
 </manifest>

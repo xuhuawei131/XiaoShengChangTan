@@ -14,15 +14,15 @@
         android:id="@+id/layout_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:layout_weight="0">
 
-        <Button
+        <ImageView
             android:id="@+id/btn_back"
+            android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_weight="0"
-            android:text="BACK" />
+            android:src="@drawable/navi_back_selector" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -43,20 +43,19 @@
                 android:singleLine="true" />
 
             <TextView
-                android:id="@+id/text_date"
+                android:id="@+id/text_subTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:focusable="true"
+                android:text="晓声长谈电台版"
                 android:gravity="center" />
         </LinearLayout>
 
-        <Button
+        <ImageView
             android:id="@+id/btn_share"
+            android:layout_marginRight="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:text="SHARE" />
+            android:src="@drawable/ic_channel_share" />
 
     </LinearLayout>
 
@@ -76,9 +75,16 @@
             app:border_width="4dp"
             app:border_color="#FF000000"/>
 
+
         <TextView
             android:id="@+id/text_timer"
+            android:background="@drawable/ic_play_timer_new"
             android:textColor="@color/WhiteColor"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingRight="8dp"
+            android:text="00:00:00"
+            android:paddingLeft="30dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="20dp"
@@ -141,9 +147,9 @@
         android:paddingRight="10dp"
         android:paddingTop="10dp">
 
-        <Button
+        <ImageView
             android:id="@+id/btn_list"
-            android:text="列表"
+            android:src="@drawable/ic_play_schedule"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
@@ -163,8 +169,6 @@
                 android:id="@+id/ivPlayOrPause"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
                 android:src="@drawable/ic_pause" />
 
             <ImageView
@@ -175,9 +179,9 @@
 
         </LinearLayout>
 
-        <Button
+        <ImageView
             android:id="@+id/btn_menu"
-            android:text="菜单"
+            android:src="@drawable/ic_play_more"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"

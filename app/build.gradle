@@ -29,7 +29,6 @@ dependencies {
      * CatLoadingView
      * https://github.com/Rogero0o/CatLoadingView
      */
-    compile 'com.roger.catloadinglibrary:catloadinglibrary:1.0.1'
 
     //必须使用
     //RxJava扩展支持，根据需要添加
@@ -41,21 +40,21 @@ dependencies {
     compile files('libs/ormlite-core-4.48.jar')
     compile files('libs/ormlite-android-4.48.jar')
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-
     /**jsoup html 解析器*/
-    compile 'org.jsoup:jsoup:1.10.3'
 
-    compile 'com.lzy.net:okgo:3.0.4'
-    compile 'com.lzy.net:okrx:0.1.0'
-    compile 'com.lzy.net:okserver:1.1.0'
     /**
      * 圆形图片
      * https://github.com/xuhuawei131/CircleImageView
      * */
-    compile 'de.hdodenhof:circleimageview:1.1.0'
 
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.roger.catloadinglibrary:catloadinglibrary:1.0.1'
+    compile 'org.jsoup:jsoup:1.10.3'
+    compile 'com.lzy.net:okgo:3.0.4'
+    compile 'com.lzy.net:okrx:0.1.0'
+    compile 'com.lzy.net:okserver:1.1.0'
+    compile 'de.hdodenhof:circleimageview:1.1.0'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:design:25.3.1'
