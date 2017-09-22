@@ -24,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.lingdian.xiaoshengchangtan.MainActivity;
 import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.bean.MusicData;
 import com.lingdian.xiaoshengchangtan.customview.BackgourndAnimationRelativeLayout;

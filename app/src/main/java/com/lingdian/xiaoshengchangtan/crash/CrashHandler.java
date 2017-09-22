@@ -189,7 +189,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     private String writeFile(String sb) throws Exception {
         String time = formatter.format(new Date());
-        String fileName = "crash-" + time + ".log";
+        String fileName = "crash-" + time + ".txt";
             String path = getGlobalpath();
             File dir = new File(path);
             if (!dir.exists())
@@ -197,6 +197,8 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
             FileOutputStream fos = new FileOutputStream(path + fileName, true);
             fos.write(sb.getBytes());
+            String end="/n********************************************";
+            fos.write(end.getBytes());
             fos.flush();
             fos.close();
         return fileName;
@@ -213,7 +215,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     /**
      * 文件删除
-     * @param day 文件保存天数
+     * @param autoClearDay 文件保存天数
      */
     public void autoClear(final int autoClearDay) {
 //        FileUtil.delete(getGlobalpath(), new FilenameFilter() {

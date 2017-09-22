@@ -5,7 +5,7 @@ package com.lingdian.xiaoshengchangtan.enums;
  */
 
 public enum TimerType {
-    TIMER_TEST(1),//30分钟
+    TIMER_TEST(1),//1分钟
     TIMER_30(30),//30分钟
     TIMER_60(60),//60分钟
     TIMER_90(90),//90分钟

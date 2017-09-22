@@ -85,6 +85,9 @@ public class DownLoadImple extends BaseDao<DownLoadDbBean> {
     }
 
     public void updateDownloadPlayerStatus(DownLoadDbBean info){
+        if(info==null){
+            return;
+        }
         try {
             if (isOpen()) {
                 UpdateBuilder<DownLoadDbBean, Integer> ub = baseDao.updateBuilder();
@@ -97,6 +100,22 @@ public class DownLoadImple extends BaseDao<DownLoadDbBean> {
         }
     }
 
+    /**
+     * 更新总共的时间
+     * @param info
+     */
+    public void updateDownloadDuring(DownLoadDbBean info){
+        try {
+            if (isOpen()) {
+                UpdateBuilder<DownLoadDbBean, Integer> ub = baseDao.updateBuilder();
+                ub.updateColumnValue("totalTime", info.totalTime);
+                ub.where().eq("title", info.title);
+                updateData(ub);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      *
      * @param info

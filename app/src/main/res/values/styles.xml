@@ -7,6 +7,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+<style name="popstyle">
+    <item name="android:layout_width">0dp</item>
+    <item name="android:layout_weight">1</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textColor">@color/WhiteColor</item>
+    <item name="android:padding">5dp</item>
+    <item name="android:gravity">center</item>
+    <item name="android:textSize">15sp</item>
+
+</style>
+
+
     <!-- Base application theme. -->
     <style name="AppTheme_NetEasy" parent="AppTheme">
         <item name="windowNoTitle">true</item>
@@ -46,6 +59,12 @@
         <item name="android:textSize">16sp</item>
 
     </style>
+
+    <style name="splashTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+    </style>
+
 
     <style name="neteasa_music_time_text_sytle">
         <item name="android:layout_width">wrap_content</item>

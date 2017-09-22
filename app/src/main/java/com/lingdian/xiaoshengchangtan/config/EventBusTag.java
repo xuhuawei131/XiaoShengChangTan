@@ -10,8 +10,7 @@ public class EventBusTag {
     public static final String TAG_DOWNLOADING_DONE="finish_download";
     public static final String TAG_DOWNLOADING_DELETE="delete_download";
     public static final String TAG_DOWNLOADING_ERROR="error_download";
-
-
+    public static final String TAG_DOWNLOADING_ITEM_CLICK="item_click";
     public static final String TAG_DOWNLOADING_ADD="add_download";
     public static final String TAG_HOME_ITEM_CLICK="home_item";
 
@@ -23,6 +22,8 @@ public class EventBusTag {
     public static final String TAG_PLAY_SERVICE_PAUSE_OR_START ="play_pause_start";
 
     public static final String TAG_PLAY_SERVICE_TIMER="play_service_timer";
+
+
 
 
 
@@ -40,18 +41,31 @@ public class EventBusTag {
 
     public static final String TAG_PLAY_UI_SEEK_COMPLETION ="play_seek_completion";
 
-    public static final String TAG_PLAY_UI_GET_INFO ="play_get_info";
-
-
-    public static final String ACTION_ALARM="com.xuhuawei.alarm";
-
-    public static final String ACTION_ALARM_TIMER_PROGRESS="com.xuhuawei.alarm.progress";
+    /**播放新的音乐 更新ui**/
+    public static final String TAG_PLAY_UI_START_NEW_MUSIC ="play_new_music";
 
 
 
 
+    public static final String ACTION_ALARM_TIMER_UI_UPDATE ="com.xuhuawei.alarm.progress";
+
+
+    public static final String ACTION_VIEWHOLDER_TIMER="COM.VIEWHOLDER.TIMER";
+
+    public static final String SERVICE_ACTION_TIMER_ALARM ="com.xuhuawei.alarm";
+
+    public static final String SERVICE_ACTION_TIMER_ADD ="action_service_timer";
+
+    public static final String  SERVICE_ACTION_PLAYER="action_service_player";
 
     //----------------------退出的广播-------------------------
+
+
+
+
     public static final String  ACTION_EXIT_ALL_LIFE="exit_all_life";
+
+
+
 
 }

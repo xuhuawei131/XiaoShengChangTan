@@ -18,9 +18,6 @@ public class SwitchConfig {
     //跳过头的时间  毫秒
     public static int SkipHeadTime =300000;//
 
-    /**是否播放完退出全部**/
-    public static boolean isPlayExit=false;
-
 
     public static final String URL_HOME="http://gb.jlradio.net";
     //下载的音频文件 文件夹路径

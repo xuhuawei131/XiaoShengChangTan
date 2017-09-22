@@ -53,6 +53,7 @@ public class DownLoadDbBean implements Serializable{
     @DatabaseField
     public String link;
 
+    public boolean isPlaying=false;
     public int buffet_percent;
 
     public DownLoadDbBean(){

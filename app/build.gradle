@@ -42,24 +42,47 @@ dependencies {
 
     /**jsoup html 解析器*/
 
+
+
+    compile 'com.android.support:appcompat-v7:25.3.1'
+
     /**
      * 圆形图片
      * https://github.com/xuhuawei131/CircleImageView
      * */
+    
 
+    /**https://github.com/xuhuawei131/SwipeBackLayout***/
+    
     compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:appcompat-v7:25.3.1'
+
+
+
+
     compile 'com.roger.catloadinglibrary:catloadinglibrary:1.0.1'
+
+
+
+
     compile 'org.jsoup:jsoup:1.10.3'
+
+
+
     compile 'com.lzy.net:okgo:3.0.4'
     compile 'com.lzy.net:okrx:0.1.0'
     compile 'com.lzy.net:okserver:1.1.0'
+
+
     compile 'de.hdodenhof:circleimageview:1.1.0'
+
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:percent:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
     compile 'org.simple:androideventbus:1.0.5.1'
+
+    compile 'me.imid.swipebacklayout.lib:library:1.0.0'
     testCompile 'junit:junit:4.12'
 }

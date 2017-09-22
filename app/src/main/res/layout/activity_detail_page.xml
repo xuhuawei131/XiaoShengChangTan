@@ -14,15 +14,15 @@
         android:id="@+id/layout_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_weight="0">
-
+        android:layout_weight="0"
+        android:gravity="center">
+        <!--返回-->
         <ImageView
             android:id="@+id/btn_back"
-            android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/navi_back_selector" />
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/play_navi_back" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -46,61 +46,53 @@
                 android:id="@+id/text_subTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="晓声长谈电台版"
-                android:gravity="center" />
+                android:gravity="center"
+                android:text="晓声长谈电台版" />
         </LinearLayout>
-
+        <!--分享-->
         <ImageView
             android:id="@+id/btn_share"
-            android:layout_marginRight="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
             android:src="@drawable/ic_channel_share" />
 
     </LinearLayout>
 
     <!--中间的view-->
     <RelativeLayout
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <!--中间的图标-->
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profile_image"
-            android:layout_margin="25dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="25dp"
             android:src="@drawable/zhongxiaobig"
-            app:border_width="4dp"
-            app:border_color="#FF000000"/>
+            app:border_color="#FF000000"
+            app:border_width="4dp" />
 
-
+        <!--定时器-->
         <TextView
             android:id="@+id/text_timer"
-            android:background="@drawable/ic_play_timer_new"
-            android:textColor="@color/WhiteColor"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:paddingRight="8dp"
-            android:text="00:00:00"
-            android:paddingLeft="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/text_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginTop="10dp"
-            android:gravity="center" />
+            android:background="@drawable/ic_play_timer_new"
+            android:paddingBottom="8dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:text="00:00:00"
+            android:textColor="@color/WhiteColor"
+            android:visibility="gone" />
     </RelativeLayout>
 
-
+    <!--拖动条-->
     <SeekBar
         android:id="@+id/musicSeekBar"
         style="@style/neteasa_music_time_seek_bar_sytle"
@@ -110,30 +102,31 @@
         android:paddingStart="10dp" />
     <!--底部-->
     <RelativeLayout
-        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_weight="0"
+        android:gravity="center"
         android:paddingEnd="10dp"
-        android:paddingStart="10dp"
-        android:gravity="center">
-
+        android:paddingStart="10dp">
+        <!--播放的时间-->
         <TextView
             android:id="@+id/text_currentTime"
             android:layout_width="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
+            android:layout_alignParentLeft="true"
             android:gravity="center"
-            android:text="00:00:00" />
+            android:text="00:00:00"
+            android:textColor="@android:color/white" />
+        <!--总共时间-->
         <TextView
             android:id="@+id/text_totalTime"
-            android:layout_alignParentRight="true"
-            android:textColor="@android:color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:gravity="center"
-            android:text="00:00:00" />
+            android:text="00:00:00"
+            android:textColor="@android:color/white" />
     </RelativeLayout>
     <!--控制按钮-->
     <RelativeLayout
@@ -146,19 +139,20 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="10dp">
-
+        <!--播放列表-->
         <ImageView
             android:id="@+id/btn_list"
-            android:src="@drawable/ic_play_schedule"
-            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_play_schedule" />
+        <!--控制器-->
         <LinearLayout
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
             <ImageView
                 android:id="@+id/ivLast"
                 android:layout_width="wrap_content"
@@ -178,14 +172,14 @@
                 android:src="@drawable/ic_next" />
 
         </LinearLayout>
-
+        <!--菜单-->
         <ImageView
             android:id="@+id/btn_menu"
-            android:src="@drawable/ic_play_more"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_play_more" />
     </RelativeLayout>
 
 

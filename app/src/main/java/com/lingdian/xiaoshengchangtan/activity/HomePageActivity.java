@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.adapters.HomePageAdapter;
 import com.lingdian.xiaoshengchangtan.cache.DownloadManager;
+import com.lingdian.xiaoshengchangtan.config.SingleData;
 import com.lingdian.xiaoshengchangtan.customview.EmptyRecyclerView;
 import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
 import com.lingdian.xiaoshengchangtan.callbacks.ParserStringCallBack;
@@ -322,8 +323,10 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Nav
 
     @Subscriber(tag = TAG_HOME_ITEM_CLICK)
     private void onItemClick(DownLoadDbBean bean) {
+        SingleData.getInstance().setCurrentList(arrayList);
+        MyPlayerService.startPlay(bean);
+
         Intent intent = new Intent(this, DetailPageActivity.class);
-        intent.putExtra("bean", bean);
         startActivity(intent);
     }
 

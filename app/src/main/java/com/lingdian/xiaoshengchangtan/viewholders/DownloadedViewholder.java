@@ -17,6 +17,7 @@ import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
 import org.simple.eventbus.EventBus;
 
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_DOWNLOADING_DELETE;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_DOWNLOADING_ITEM_CLICK;
 
 /**
  * Created by lingdian on 17/9/15.
@@ -66,10 +67,8 @@ public class DownloadedViewholder extends ViewHolder implements View.OnClickList
         if(v==btn_delete){
             EventBus.getDefault().post(bean,TAG_DOWNLOADING_DELETE);
         }else if(v==itemView){
-            Intent intent=new Intent();
-            intent.putExtra("bean",bean);
-            intent.setClass(itemView.getContext(),DetailPageActivity.class);
-            itemView.getContext().startActivity(intent);
+            EventBus.getDefault().post(bean,TAG_DOWNLOADING_ITEM_CLICK);
+
         }
     }
 }

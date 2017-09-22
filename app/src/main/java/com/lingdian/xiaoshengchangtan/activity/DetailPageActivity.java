@@ -9,12 +9,12 @@ import android.widget.Toast;
 
 import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.bean.FileBean;
+import com.lingdian.xiaoshengchangtan.bean.TimerBean;
+import com.lingdian.xiaoshengchangtan.config.SingleData;
 import com.lingdian.xiaoshengchangtan.customview.MyMenuDialog;
 import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
-import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
 import com.lingdian.xiaoshengchangtan.enums.TimerType;
 import com.lingdian.xiaoshengchangtan.services.MyPlayerService;
-import com.lingdian.xiaoshengchangtan.services.TimerService;
 import com.lingdian.xiaoshengchangtan.utils.DateUtils;
 
 import org.simple.eventbus.EventBus;
@@ -22,7 +22,8 @@ import org.simple.eventbus.Subscriber;
 
 import java.io.File;
 
-import static com.lingdian.xiaoshengchangtan.config.EventBusTag.ACTION_ALARM_TIMER_PROGRESS;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.ACTION_ALARM_TIMER_UI_UPDATE;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.ACTION_VIEWHOLDER_TIMER;
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_BUFFER;
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_COMPLETION;
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_ERROR;
@@ -32,14 +33,13 @@ import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_PROG
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_SERVICE_SEEK;
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_SEEK_COMPLETION;
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_STARTOR_PAUSE;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_START_NEW_MUSIC;
 
 public class DetailPageActivity extends BaseActivity {
 
     private DownLoadDbBean bean;
     private TextView text_title;
-    private TextView text_status;
     private SeekBar mSeekBar;
-
 
     private TextView text_currentTime;
     private TextView text_totalTime;
@@ -50,33 +50,15 @@ public class DetailPageActivity extends BaseActivity {
     private ImageView ivLast;
     private ImageView ivNext;
     private ImageView ivPlayOrPause;
-    private boolean isContinue=false;
     private TextView text_timer;
     private View btn_list;
     private View btn_menu;
     private MyMenuDialog dialog;
+    private boolean isDowned = false;
+
     @Override
     protected void init() {
 
-
-        bean = (DownLoadDbBean) getIntent().getSerializableExtra("bean");
-
-        if (bean == null) {
-            Toast.makeText(this, "bean not empty", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
-        fileBean = FileBean.checkData(bean.title);
-
-        if (fileBean == null) {
-            finish();
-        } else {
-            if (new File(fileBean.filePath).exists()) {
-                url = fileBean.filePath;
-            } else {
-                url = fileBean.fileUrl;
-            }
-        }
     }
 
     @Override
@@ -96,44 +78,40 @@ public class DetailPageActivity extends BaseActivity {
 
         mSeekBar = (SeekBar) findViewById(R.id.musicSeekBar);
         text_title = (TextView) findViewById(R.id.text_title);
-        text_status = (TextView) findViewById(R.id.text_status);
-        text_timer=(TextView)findViewById(R.id.text_timer);
+        text_timer = (TextView) findViewById(R.id.text_timer);
         text_currentTime = (TextView) findViewById(R.id.text_currentTime);
         text_totalTime = (TextView) findViewById(R.id.text_totalTime);
 
-
-        View btn_back=findViewById(R.id.btn_back);
+        View btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(onClickListener);
 
-        View btn_share=findViewById(R.id.btn_share);
+        View btn_share = findViewById(R.id.btn_share);
         btn_share.setOnClickListener(onClickListener);
 
-        btn_list=findViewById(R.id.btn_list);
-        btn_menu=findViewById(R.id.btn_menu);
+        btn_list = findViewById(R.id.btn_list);
+        btn_menu = findViewById(R.id.btn_menu);
         btn_list.setOnClickListener(onClickListener);
         btn_menu.setOnClickListener(onClickListener);
 
         mSeekBar.setOnSeekBarChangeListener(seekBarChangeListener);
     }
 
+
     @Override
     protected void requestService() {
         EventBus.getDefault().register(this);
+        setData();
 
-        text_title.setText(fileBean.fileName);
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("url:")
-                .append(SwitchConfig.URL_HOME).append(bean.link)
-                .append("\n")
-                .append("fileName:").append(fileBean.fileName)
-                .append("\n")
-                .append("filePath:").append(fileBean.filePath)
-                .append("\n")
-                .append("fileUrl:").append(fileBean.fileUrl);
-        text_status.setText(sb.toString());
-
-        MyPlayerService.startPlay(bean);
+//        Observable.just("Anima")
+//                .subscribeOn(Schedulers.io())
+//                .delay(500, TimeUnit.MILLISECONDS)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<String>() {
+//                    @Override
+//                    public void call(String s) {
+////                        MyPlayerService.startPlay(bean);
+//                    }
+//                });
     }
 
     @Override
@@ -145,27 +123,28 @@ public class DetailPageActivity extends BaseActivity {
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.ivPlayOrPause:
-                    EventBus.getDefault().post("",TAG_PLAY_SERVICE_PAUSE_OR_START);
+                    EventBus.getDefault().post("", TAG_PLAY_SERVICE_PAUSE_OR_START);
                     break;
                 case R.id.ivNext:
-
+                    MyPlayerService.startPlayNext();
                     break;
                 case R.id.ivLast:
-
+                    MyPlayerService.startPlayLast();
                     break;
                 case R.id.btn_list:
-                    Intent intent=new Intent(DetailPageActivity.this,HomePageActivity.class);
+                    Intent intent = new Intent(DetailPageActivity.this, HomePageActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
                     break;
                 case R.id.btn_menu:
-                    if (dialog==null){
-                        dialog=new MyMenuDialog(DetailPageActivity.this);
+                    if (dialog == null) {
+                        dialog = new MyMenuDialog(DetailPageActivity.this);
+                        dialog.setOnDialogItemClick(dialogItemClick);
                     }
-                    dialog.showDialog();
+                    dialog.showDialog(isDowned);
                     break;
                 case R.id.btn_back:
                     finish();
@@ -178,53 +157,91 @@ public class DetailPageActivity extends BaseActivity {
         }
     };
 
-    @Subscriber(tag = ACTION_ALARM_TIMER_PROGRESS)
-    private void onAlarmTimerUpate(int leftTimer){
-        text_timer.setText(DateUtils.duration2TimeBySecond(leftTimer));
+    @Subscriber(tag = TAG_PLAY_UI_START_NEW_MUSIC)
+    private void onPlayNewMusic(DownLoadDbBean bean) {
+        setData();
+    }
+    @Subscriber(tag = ACTION_ALARM_TIMER_UI_UPDATE)
+    private void onAlarmTimerUpate(int leftTimer) {
+        if (leftTimer <= 0) {
+            text_timer.setVisibility(View.GONE);
+        } else {
+            text_timer.setVisibility(View.VISIBLE);
+            text_timer.setText(DateUtils.duration2TimeBySecond(leftTimer));
+        }
     }
 
-    @Subscriber(tag=TAG_PLAY_UI_STARTOR_PAUSE)
-    private void onUIPauseOrStart(boolean isStart){
-        if(isStart){
+    @Subscriber(tag = TAG_PLAY_UI_STARTOR_PAUSE)
+    private void onUIPauseOrStart(boolean isStart) {
+        if (isStart) {
             ivPlayOrPause.setImageResource(R.drawable.ic_play);
-        }else{
+        } else {
             ivPlayOrPause.setImageResource(R.drawable.ic_pause);
         }
     }
-    @Subscriber(tag= TAG_PLAY_UI_PROGRESS)
-    private void onUpdateProgress(int currentPosition){
+
+    @Subscriber(tag = TAG_PLAY_UI_PROGRESS)
+    private void onUpdateProgress(int currentPosition) {
         mSeekBar.setProgress(currentPosition);
         text_currentTime.setText(DateUtils.duration2TimeByMicSecond(currentPosition));
     }
-    @Subscriber(tag= TAG_PLAY_UI_ERROR)
-    private void onError(DownLoadDbBean bean){
-        mSeekBar.setMax(bean.totalTime);
-        text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
-    }
-    @Subscriber(tag= TAG_PLAY_UI_BUFFER)
-    private void onBufferingUpdate(DownLoadDbBean bean){
-        mSeekBar.setMax(bean.totalTime);
-        text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
-    }
-    @Subscriber(tag= TAG_PLAY_UI_SEEK_COMPLETION)
-    private void onSeekComplete(DownLoadDbBean bean){
+
+    @Subscriber(tag = TAG_PLAY_UI_ERROR)
+    private void onError(DownLoadDbBean bean) {
         mSeekBar.setMax(bean.totalTime);
         text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
     }
 
-    @Subscriber(tag= TAG_PLAY_UI_COMPLETION)
-    private void onCompletion(DownLoadDbBean bean){
+    @Subscriber(tag = TAG_PLAY_UI_BUFFER)
+    private void onBufferingUpdate(DownLoadDbBean bean) {
         mSeekBar.setMax(bean.totalTime);
         text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
     }
 
-    @Subscriber(tag= TAG_PLAY_UI_PREPARE)
-    private void onPrepared(DownLoadDbBean bean){
-        TimerService.startTimer(TimerType.TIMER_TEST);
+    @Subscriber(tag = TAG_PLAY_UI_SEEK_COMPLETION)
+    private void onSeekComplete(DownLoadDbBean bean) {
         mSeekBar.setMax(bean.totalTime);
         text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
     }
 
+    @Subscriber(tag = TAG_PLAY_UI_COMPLETION)
+    private void onCompletion(DownLoadDbBean bean) {
+        mSeekBar.setMax(bean.totalTime);
+        text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
+    }
+
+    @Subscriber(tag = TAG_PLAY_UI_PREPARE)
+    private void onPrepared(DownLoadDbBean bean) {
+//        MyPlayerService.startTimer(TimerType.TIMER_30);
+        mSeekBar.setMax(bean.totalTime);
+        text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
+    }
+
+    @Subscriber(tag = ACTION_VIEWHOLDER_TIMER)
+    private void onSetTimer(TimerBean bean) {
+        if (bean.timerType == TimerType.TIMER_CANCEL) {
+            text_timer.setVisibility(View.GONE);
+        } else {
+            text_timer.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setData() {
+        bean= SingleData.getInstance().getDownLoadDbBean();
+        fileBean = FileBean.checkData(bean.title);
+        if (fileBean == null) {
+            finish();
+        } else {
+            if (new File(fileBean.filePath).exists()) {
+                url = fileBean.filePath;
+                isDowned = true;
+            } else {
+                url = fileBean.fileUrl;
+                isDowned = false;
+            }
+        }
+        text_title.setText(fileBean.fileName);
+    }
 
     /**
      * 拖动进度条的回调
@@ -242,6 +259,17 @@ public class DetailPageActivity extends BaseActivity {
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
             EventBus.getDefault().post(seekBar.getProgress(), TAG_PLAY_SERVICE_SEEK);
+        }
+    };
+
+    private MyMenuDialog.OnDialogItemClick dialogItemClick = new MyMenuDialog.OnDialogItemClick() {
+        @Override
+        public void onDialogItem(int index) {
+            if (index == 2) {
+                startActivity(new Intent(DetailPageActivity.this, SelectTimerActivity.class));
+            } else {
+                Toast.makeText(DetailPageActivity.this, "暂不支持！", Toast.LENGTH_SHORT).show();
+            }
         }
     };
 

@@ -1,5 +1,6 @@
 package com.lingdian.xiaoshengchangtan.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,11 +14,13 @@ import com.lingdian.xiaoshengchangtan.adapters.DownloadedAdapter;
 import com.lingdian.xiaoshengchangtan.adapters.DownloadingAdapter;
 import com.lingdian.xiaoshengchangtan.bean.FileBean;
 import com.lingdian.xiaoshengchangtan.cache.DownloadManager;
+import com.lingdian.xiaoshengchangtan.config.SingleData;
 import com.lingdian.xiaoshengchangtan.customview.EmptyRecyclerView;
 import com.lingdian.xiaoshengchangtan.db.impls.DownLoadImple;
 import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
 import com.lingdian.xiaoshengchangtan.decoration.ItemDecoration;
 import com.lingdian.xiaoshengchangtan.services.DownLoadService;
+import com.lingdian.xiaoshengchangtan.services.MyPlayerService;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -28,6 +31,7 @@ import java.util.List;
 
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_DOWNLOADING_DELETE;
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_DOWNLOADING_DONE;
+import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_DOWNLOADING_ITEM_CLICK;
 import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS_DONE;
 import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS_NO;
 
@@ -114,5 +118,16 @@ public class DownLoadedActivity extends BaseActivity {
         bean.downStatus=DOWNLOAD_STATUS_DONE;
         adapter.notifyDataSetChanged();
         notifyAdapter();
+//        MyPlayerService.addPlayList(arrayList);
+    }
+    @Subscriber(tag = TAG_DOWNLOADING_ITEM_CLICK)
+    private void onDoneItemClick(DownLoadDbBean bean){
+
+        SingleData.getInstance().setCurrentList(arrayList);
+        MyPlayerService.startPlay(bean);
+
+        Intent intent=new Intent();
+        intent.setClass(this,DetailPageActivity.class);
+        this.startActivity(intent);
     }
 }

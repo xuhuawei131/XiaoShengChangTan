@@ -1,4 +1,4 @@
-package com.lingdian.xiaoshengchangtan;
+package com.lingdian.xiaoshengchangtan.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -9,12 +9,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lingdian.xiaoshengchangtan.activity.HomePageActivity;
-import com.lingdian.xiaoshengchangtan.activity.NetEasyActivity;
+import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
 import com.lingdian.xiaoshengchangtan.enums.TimerType;
 import com.lingdian.xiaoshengchangtan.player.MyPlayerApi;
-import com.lingdian.xiaoshengchangtan.services.TimerService;
+import com.lingdian.xiaoshengchangtan.services.MyPlayerService;
 import com.lingdian.xiaoshengchangtan.utils.HtmlParer;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.FileCallback;
@@ -105,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(this, NetEasyActivity.class));
                 break;
             case R.id.btn_test_timer:
-                TimerService.startTimer(TimerType.TIMER_TEST);
+                MyPlayerService.startTimer(TimerType.TIMER_TEST);
                 break;
 
         }

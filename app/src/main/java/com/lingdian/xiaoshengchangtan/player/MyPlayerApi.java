@@ -3,7 +3,6 @@ package com.lingdian.xiaoshengchangtan.player;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.util.Log;
 
 import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
 import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
@@ -18,7 +17,12 @@ import java.util.List;
 
 public class MyPlayerApi {
     private static MyPlayerApi myPlayerApi = null;
-    private DownLoadDbBean bean;
+    /**
+     * 目前正在播放的bean
+     */
+    private DownLoadDbBean currentBean;
+
+
     private MediaPlayer player; // 定义多媒体对象
     private MediaCallBack callBack;
     private Context context;
@@ -69,13 +73,15 @@ public class MyPlayerApi {
         }
     }
 
+
+
     /**
      * 加载音频
      * @param bean
      * @param url
      */
     public void loadUri(DownLoadDbBean bean,String url) {
-        this.bean=bean;
+        this.currentBean =bean;
         try {
             player.reset(); //重置多媒体
             //为多媒体对象设置播放路径
@@ -146,7 +152,11 @@ public class MyPlayerApi {
         player.setLooping(isLoop);
     }
 
-    public void seek(int position) {
+    /**
+     *调整进度
+     * @param position
+     */
+    public void seekTo(int position) {
         player.seekTo(position);
     }
 
@@ -170,7 +180,7 @@ public class MyPlayerApi {
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
             for (MediaPlayerCallBack item : callBackList) {
-                item.onCompletion(mediaPlayer,bean);
+                item.onCompletion(mediaPlayer, currentBean);
             }
         }
 
@@ -183,7 +193,7 @@ public class MyPlayerApi {
         @Override
         public void onBufferingUpdate(MediaPlayer mediaPlayer, int percent) {
             for (MediaPlayerCallBack item : callBackList) {
-                item.onBufferingUpdate(mediaPlayer, percent,bean);
+                item.onBufferingUpdate(mediaPlayer, percent, currentBean);
             }
         }
 
@@ -198,7 +208,7 @@ public class MyPlayerApi {
         @Override
         public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
             for (MediaPlayerCallBack item : callBackList) {
-                item.onError(mediaPlayer, i, i1,bean);
+                item.onError(mediaPlayer, i, i1, currentBean);
             }
             return false;
         }
@@ -212,7 +222,7 @@ public class MyPlayerApi {
         @Override
         public void onSeekComplete(MediaPlayer mediaPlayer) {
             for (MediaPlayerCallBack item : callBackList) {
-                item.onSeekComplete(mediaPlayer,bean);
+                item.onSeekComplete(mediaPlayer, currentBean);
             }
         }
 
@@ -224,14 +234,8 @@ public class MyPlayerApi {
          */
         @Override
         public void onPrepared(MediaPlayer mediaPlayer) {
-            if (SwitchConfig.isSkipHead&&bean.currentTime==0) {
-                player.seekTo(SwitchConfig.SkipHeadTime);
-            }else{
-                player.seekTo(bean.currentTime);
-            }
-
             for (MediaPlayerCallBack item : callBackList) {
-                item.onPrepared(mediaPlayer,bean);
+                item.onPrepared(mediaPlayer, currentBean);
             }
 
         }
