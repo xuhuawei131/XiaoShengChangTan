@@ -8,8 +8,9 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.lingdian.xiaoshengchangtan.MyApp;
 import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
-import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
-import com.lingdian.xiaoshengchangtan.db.impls.DownLoadImple;
+import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
+import com.lingdian.xiaoshengchangtan.db.impls.PageInfoImple;
+import com.xhwbaselibrary.caches.MyAppContext;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 
     private DatabaseHelper() {
-        super(MyApp.application, SwitchConfig.DB_NAME, null, 2);
+        super(MyAppContext.getInstance().getContext(), SwitchConfig.DB_NAME, null, 2);
         daos = new HashMap<>();
     }
 
@@ -29,7 +30,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database,
                          ConnectionSource connectionSource) {
         try {
-            TableUtils.createTable(connectionSource, DownLoadDbBean.class);
+            TableUtils.createTable(connectionSource, PageInfoDbBean.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -39,7 +40,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database,
                           ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
-            TableUtils.dropTable(connectionSource, DownLoadDbBean.class, true);
+            TableUtils.dropTable(connectionSource, PageInfoDbBean.class, true);
             onCreate(database, connectionSource);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -83,7 +84,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void close() {
         super.close();
         daos.clear();
-        DownLoadImple.getInstance().destory();
+        PageInfoImple.getInstance().destory();
         instance = null;
     }
 

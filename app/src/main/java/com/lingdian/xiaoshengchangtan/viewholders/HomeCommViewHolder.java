@@ -9,13 +9,12 @@ import android.widget.TextView;
 
 import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
-import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 
 import org.simple.eventbus.EventBus;
 
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_DOWNLOADING_ADD;
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_HOME_ITEM_CLICK;
-import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS_ERROR;
 import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS_NO;
 
 /**
@@ -23,7 +22,7 @@ import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS
  */
 
 public class HomeCommViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    private DownLoadDbBean bean;
+    private PageInfoDbBean bean;
     private TextView text_title;
     private TextView text_date;
     private TextView text_down;
@@ -46,7 +45,7 @@ public class HomeCommViewHolder extends RecyclerView.ViewHolder implements View.
         LayoutInflater inflater=LayoutInflater.from(parent.getContext());
         return inflater.inflate(layoutId,parent,false);
     }
-    public void setData(DownLoadDbBean bean){
+    public void setData(PageInfoDbBean bean){
         this.bean=bean;
         text_title.setText(bean.title);
         text_date.setText(bean.date);

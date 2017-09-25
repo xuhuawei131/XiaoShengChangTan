@@ -32,6 +32,7 @@ public class SwitchConfig {
     public static final int DOWNLOAD_STATUS_WAITTING=3;
     public static final int DOWNLOAD_STATUS_DONE=4;
     public static final int DOWNLOAD_STATUS_ERROR=5;
+    public static final int DOWNLOAD_STATUS_PREPARE=6;
 
     /**
      * 通过下载的状态 转化成str

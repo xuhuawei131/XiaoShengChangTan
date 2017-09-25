@@ -3,9 +3,8 @@ package com.lingdian.xiaoshengchangtan.adapters;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.viewholders.DownloadedViewholder;
-import com.lingdian.xiaoshengchangtan.viewholders.DownloadingViewholder;
 
 import java.util.List;
 
@@ -15,8 +14,8 @@ import java.util.List;
  */
 
 public class DownloadedAdapter extends RecyclerView.Adapter<DownloadedViewholder> {
-    private List<DownLoadDbBean>  arrayList;
-    public DownloadedAdapter(List<DownLoadDbBean>  arrayList){
+    private List<PageInfoDbBean>  arrayList;
+    public DownloadedAdapter(List<PageInfoDbBean>  arrayList){
         this.arrayList=arrayList;
     }
 

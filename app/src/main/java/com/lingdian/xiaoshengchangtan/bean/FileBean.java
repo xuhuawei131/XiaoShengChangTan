@@ -19,7 +19,7 @@ public class FileBean {
     public String fileDownName;
     public String fileDownPath;
 
-    public static FileBean checkData(String fileTitle){
+    public static FileBean newInstance(String fileTitle){
         String array[]=fileTitle.split("_");
         if(array.length>1){
             FileBean bean=new FileBean();

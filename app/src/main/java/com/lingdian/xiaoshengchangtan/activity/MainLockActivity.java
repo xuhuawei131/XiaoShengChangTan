@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.config.SingleData;
-import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.services.MyPlayerService;
 
 import org.simple.eventbus.EventBus;
@@ -71,13 +71,13 @@ public class MainLockActivity extends SwipeBackBaseActivity {
     }
 
     @Subscriber(tag=TAG_PLAY_UI_START_NEW_MUSIC)
-    private void onGetMusicInfo(DownLoadDbBean bean){
+    private void onGetMusicInfo(PageInfoDbBean bean){
         setData();
     }
 
 
     @Subscriber(tag=TAG_PLAY_UI_PREPARE)
-    private void onPlayerPrepare(DownLoadDbBean bean){
+    private void onPlayerPrepare(PageInfoDbBean bean){
         setData();
     }
 
@@ -91,7 +91,7 @@ public class MainLockActivity extends SwipeBackBaseActivity {
     }
 
     @Subscriber(tag=TAG_PLAY_UI_ERROR)
-    private void onUIError(DownLoadDbBean bean){
+    private void onUIError(PageInfoDbBean bean){
         if(bean.isPlaying){
             ivPlayOrPause.setImageResource(R.drawable.ic_play);
         }else{
@@ -100,7 +100,7 @@ public class MainLockActivity extends SwipeBackBaseActivity {
     }
 
     private void setData(){
-        DownLoadDbBean bean=SingleData.getInstance().getDownLoadDbBean();
+        PageInfoDbBean bean=SingleData.getInstance().getDownLoadDbBean();
         if(bean!=null){
             text_title.setText(bean.title);
             btn_subTitle.setText("晓声长谈电台版");

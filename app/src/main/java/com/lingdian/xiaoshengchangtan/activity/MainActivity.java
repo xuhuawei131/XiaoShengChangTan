@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lingdian.xiaoshengchangtan.R;
-import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.enums.TimerType;
 import com.lingdian.xiaoshengchangtan.player.MyPlayerApi;
 import com.lingdian.xiaoshengchangtan.services.MyPlayerService;
@@ -20,6 +20,7 @@ import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.model.Response;
+import com.xhwbaselibrary.caches.MyNetStatusHepler;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -73,6 +74,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         View btn_test_timer=findViewById(R.id.btn_test_timer);
         btn_test_timer.setOnClickListener(this);
 
+        View btn_netchange=findViewById(R.id.btn_netchange);
+        btn_netchange.setOnClickListener(this);
+
         textResult = (TextView) findViewById(R.id.text_result);
     }
 
@@ -106,6 +110,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_test_timer:
                 MyPlayerService.startTimer(TimerType.TIMER_TEST);
                 break;
+            case R.id.btn_netchange:
+                checkNetStatus();
+                break;
 
         }
     }
@@ -137,15 +144,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-
     private void dealPageResult(Response<String> response) {
         Log.v("xhw", "onSuccess");
         String html = response.body();
 //        InputStream inputStream=response.getRawResponse().body().byteStream();
         fileUrl = HtmlParer.getPageDownFile(html);
     }
-
-    private List<DownLoadDbBean> dealFileListResult(Response<String> response){
+    private List<PageInfoDbBean> dealFileListResult(Response<String> response){
 
 
         String html = response.body();
@@ -158,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Elements elementLiList=elementUl.children();
         int length=elementLiList.size();
 
-        List<DownLoadDbBean> arrrayList=new ArrayList<>();
+        List<PageInfoDbBean> arrrayList=new ArrayList<>();
 
 
         for(int i=0;i<length;i++){
@@ -169,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Element elementA=elementsLi.get(0);
             Element elementSpan=elementsLi.get(1);
 
-            DownLoadDbBean bean=new DownLoadDbBean();
+            PageInfoDbBean bean=new PageInfoDbBean();
 
             String link=elementA.attr("href");
             String title=elementA.text();
@@ -186,8 +191,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return arrrayList;
     }
-
-
     private void requestNetFileList() {
         OkGo.<String>post(homeUrl).tag(this).execute(new StringCallback() {
             @Override
@@ -253,18 +256,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
     }
-
-
-
-
     private void playMusic(String fileUri) {
 //        MyPlayerApi.getInstance().loadUri(fileUri);
 
     }
-
     private void stopMusic() {
         MyPlayerApi.getInstance().stop();
     }
+    private void checkNetStatus(){
+        boolean isConnected=MyNetStatusHepler.getInstance().isNetConnected();
+        if(isConnected){
+            boolean isWifi=MyNetStatusHepler.getInstance().hasWifi();
+            if(isWifi){
+                textResult.setText("Wifi 连接");
+            }else{
+                textResult.setText("4G 连接");
+            }
+        }else{
+            textResult.setText("无网络连接");
+        }
 
+    }
 
 }

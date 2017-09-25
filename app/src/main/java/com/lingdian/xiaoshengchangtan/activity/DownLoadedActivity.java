@@ -2,8 +2,6 @@ package com.lingdian.xiaoshengchangtan.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -11,15 +9,11 @@ import android.view.View;
 
 import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.adapters.DownloadedAdapter;
-import com.lingdian.xiaoshengchangtan.adapters.DownloadingAdapter;
 import com.lingdian.xiaoshengchangtan.bean.FileBean;
-import com.lingdian.xiaoshengchangtan.cache.DownloadManager;
 import com.lingdian.xiaoshengchangtan.config.SingleData;
-import com.lingdian.xiaoshengchangtan.customview.EmptyRecyclerView;
-import com.lingdian.xiaoshengchangtan.db.impls.DownLoadImple;
-import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.impls.PageInfoImple;
+import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.decoration.ItemDecoration;
-import com.lingdian.xiaoshengchangtan.services.DownLoadService;
 import com.lingdian.xiaoshengchangtan.services.MyPlayerService;
 
 import org.simple.eventbus.EventBus;
@@ -41,7 +35,7 @@ import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS
 public class DownLoadedActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private DownloadedAdapter adapter;
-    private List<DownLoadDbBean> arrayList;
+    private List<PageInfoDbBean> arrayList;
     private RecyclerView.LayoutManager layoutManager;
     @Override
     protected void init() {
@@ -74,7 +68,7 @@ public class DownLoadedActivity extends BaseActivity {
 
     @Override
     protected void requestService() {
-        List<DownLoadDbBean> dbList= DownLoadImple.getInstance().getDownloadedList();
+        List<PageInfoDbBean> dbList= PageInfoImple.getInstance().getDownloadedList();
         arrayList.addAll(dbList);
         adapter.notifyDataSetChanged();
         notifyAdapter();
@@ -97,8 +91,8 @@ public class DownLoadedActivity extends BaseActivity {
     }
 
     @Subscriber(tag = TAG_DOWNLOADING_DELETE)
-    private void onDeleteDownloaded(DownLoadDbBean bean){
-        FileBean fileBean=FileBean.checkData(bean.title);
+    private void onDeleteDownloaded(PageInfoDbBean bean){
+        FileBean fileBean=FileBean.newInstance(bean.title);
 
         File file=new File(fileBean.fileDownPath);
         if (file.exists()){
@@ -107,13 +101,13 @@ public class DownLoadedActivity extends BaseActivity {
         arrayList.remove(bean);
         bean.downStatus=DOWNLOAD_STATUS_NO;
 
-        DownLoadImple.getInstance().updateDownloadStatus(bean);
+        PageInfoImple.getInstance().updateDownloadStatus(bean);
         adapter.notifyDataSetChanged();
         notifyAdapter();
     }
 
     @Subscriber(tag = TAG_DOWNLOADING_DONE)
-    private void onDoneDownloaded(DownLoadDbBean bean){
+    private void onDoneDownloaded(PageInfoDbBean bean){
         arrayList.add(bean);
         bean.downStatus=DOWNLOAD_STATUS_DONE;
         adapter.notifyDataSetChanged();
@@ -121,7 +115,7 @@ public class DownLoadedActivity extends BaseActivity {
 //        MyPlayerService.addPlayList(arrayList);
     }
     @Subscriber(tag = TAG_DOWNLOADING_ITEM_CLICK)
-    private void onDoneItemClick(DownLoadDbBean bean){
+    private void onDoneItemClick(PageInfoDbBean bean){
 
         SingleData.getInstance().setCurrentList(arrayList);
         MyPlayerService.startPlay(bean);

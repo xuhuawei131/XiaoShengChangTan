@@ -19,10 +19,11 @@ import com.lingdian.xiaoshengchangtan.MyApp;
 import com.lingdian.xiaoshengchangtan.activity.MainLockActivity;
 import com.lingdian.xiaoshengchangtan.config.SingleData;
 import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
-import com.lingdian.xiaoshengchangtan.db.impls.DownLoadImple;
-import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.impls.PageInfoImple;
+import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.enums.TimerType;
 import com.lingdian.xiaoshengchangtan.player.MyPlayerApi;
+import com.xhwbaselibrary.caches.MyAppContext;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -52,7 +53,7 @@ public class MyPlayerService extends Service {
 
     public static void startTimer(TimerType timerType) {
         SingleData.getInstance().setCurrentTimerType(timerType);
-        Context context = MyApp.application;
+        Context context = MyAppContext.getInstance().getContext();
         Intent intent = new Intent(context, MyPlayerService.class);
         intent.setAction(SERVICE_ACTION_TIMER_ADD);
         context.startService(intent);
@@ -64,8 +65,8 @@ public class MyPlayerService extends Service {
      *
      * @param bean
      */
-    public static void startPlay(DownLoadDbBean bean) {
-        Context context = MyApp.application;
+    public static void startPlay(PageInfoDbBean bean) {
+        Context context = MyAppContext.getInstance().getContext();
         Intent intent = new Intent(context, MyPlayerService.class);
         intent.setAction(SERVICE_ACTION_PLAYER);
         intent.putExtra("bean", bean);
@@ -73,12 +74,12 @@ public class MyPlayerService extends Service {
     }
 
     public static void startPlayNext(){
-        DownLoadDbBean bean=SingleData.getInstance().getNextMusic();
+        PageInfoDbBean bean=SingleData.getInstance().getNextMusic();
         startPlay(bean);
     }
 
     public static void startPlayLast(){
-        DownLoadDbBean bean=SingleData.getInstance().getLastMusic();
+        PageInfoDbBean bean=SingleData.getInstance().getLastMusic();
         startPlay(bean);
     }
     @Override
@@ -115,7 +116,7 @@ public class MyPlayerService extends Service {
             if (!TextUtils.isEmpty(action)) {
                 //播放音频
                 if (SERVICE_ACTION_PLAYER.equals(action)) {
-                    DownLoadDbBean bean = (DownLoadDbBean) intent.getSerializableExtra("bean");
+                    PageInfoDbBean bean = (PageInfoDbBean) intent.getSerializableExtra("bean");
                     if (bean != null) {
                         SingleData.getInstance().playNewMusic(bean);
                     }
@@ -125,7 +126,7 @@ public class MyPlayerService extends Service {
                     if (currentTimerType != null) {
                         stopAlarm();
                         if(currentTimerType ==TimerType.TIMER_END){
-                            DownLoadDbBean currentBean=SingleData.getInstance().getDownLoadDbBean();
+                            PageInfoDbBean currentBean=SingleData.getInstance().getDownLoadDbBean();
                             if(currentBean!=null){
                                 startAlarm(currentBean.totalTime);
                             }
@@ -159,8 +160,8 @@ public class MyPlayerService extends Service {
 
         stopAlarm();
 
-        DownLoadDbBean currentBean=SingleData.getInstance().getDownLoadDbBean();
-        DownLoadImple.getInstance().updateDownloadPlayerStatus(currentBean);
+        PageInfoDbBean currentBean=SingleData.getInstance().getDownLoadDbBean();
+        PageInfoImple.getInstance().updateDownloadPlayerStatus(currentBean);
 
         MyPlayerApi.getInstance().removeMediaPlayerListener(listener);
         MyPlayerApi.getInstance().destory();
@@ -209,7 +210,7 @@ public class MyPlayerService extends Service {
     private void onHandPauseOrStart(String item) {
         MyPlayerApi.MusicStatus status = MyPlayerApi.getInstance().startOrPause();
 
-        DownLoadDbBean currentBean=SingleData.getInstance().getDownLoadDbBean();
+        PageInfoDbBean currentBean=SingleData.getInstance().getDownLoadDbBean();
         if (status == MyPlayerApi.MusicStatus.PAUSE) {
             currentBean.isPlaying = false;
 
@@ -248,7 +249,7 @@ public class MyPlayerService extends Service {
      */
     private MyPlayerApi.MediaPlayerCallBack listener = new MyPlayerApi.MediaPlayerCallBack() {
         @Override
-        public void onCompletion(MediaPlayer mediaPlayer, DownLoadDbBean bean) {
+        public void onCompletion(MediaPlayer mediaPlayer, PageInfoDbBean bean) {
             EventBus.getDefault().post(bean, TAG_PLAY_UI_COMPLETION);
 
             if (SingleData.getInstance().getCurrentTimerType() ==TimerType.TIMER_END) {
@@ -259,15 +260,15 @@ public class MyPlayerService extends Service {
         }
 
         @Override
-        public void onBufferingUpdate(MediaPlayer mediaPlayer, int percent, DownLoadDbBean bean) {
+        public void onBufferingUpdate(MediaPlayer mediaPlayer, int percent, PageInfoDbBean bean) {
             bean.buffet_percent = percent;
             EventBus.getDefault().post(bean, TAG_PLAY_UI_BUFFER);
         }
 
         @Override
-        public boolean onError(MediaPlayer mediaPlayer, int i, int i1, DownLoadDbBean bean) {
+        public boolean onError(MediaPlayer mediaPlayer, int i, int i1, PageInfoDbBean bean) {
 
-            DownLoadDbBean currentBean=SingleData.getInstance().getDownLoadDbBean();
+            PageInfoDbBean currentBean=SingleData.getInstance().getDownLoadDbBean();
             currentBean.isPlaying = false;
 
             EventBus.getDefault().post(bean, TAG_PLAY_UI_ERROR);
@@ -275,15 +276,15 @@ public class MyPlayerService extends Service {
         }
 
         @Override
-        public void onSeekComplete(MediaPlayer mediaPlayer, DownLoadDbBean bean) {
+        public void onSeekComplete(MediaPlayer mediaPlayer, PageInfoDbBean bean) {
             EventBus.getDefault().post(bean, TAG_PLAY_UI_SEEK_COMPLETION);
         }
 
         @Override
-        public void onPrepared(MediaPlayer mediaPlayer, DownLoadDbBean bean) {
+        public void onPrepared(MediaPlayer mediaPlayer, PageInfoDbBean bean) {
             int during = mediaPlayer.getDuration();
 
-            DownLoadDbBean currentBean=SingleData.getInstance().getDownLoadDbBean();
+            PageInfoDbBean currentBean=SingleData.getInstance().getDownLoadDbBean();
             currentBean.totalTime = during;
             currentBean.isPlaying = true;
 
@@ -293,7 +294,7 @@ public class MyPlayerService extends Service {
                 MyPlayerApi.getInstance().seekTo(currentBean.currentTime);
             }
 
-            DownLoadImple.getInstance().updateDownloadDuring(currentBean);
+            PageInfoImple.getInstance().updateDownloadDuring(currentBean);
 
             MyPlayerApi.getInstance().startPlay();
 

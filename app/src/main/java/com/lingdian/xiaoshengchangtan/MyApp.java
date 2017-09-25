@@ -9,6 +9,7 @@ import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
+import com.xhwbaselibrary.MyBaseApp;
 
 import java.util.concurrent.TimeUnit;
 
@@ -19,17 +20,21 @@ import okhttp3.OkHttpClient;
  * Created by lingdian on 17/9/8.
  */
 
-public class MyApp extends Application {
-    public static MyApp application;
+public class MyApp extends MyBaseApp {
     @Override
     public void onCreate() {
         super.onCreate();
+//        DatabaseHelper.getHelper().init();
+    }
+
+    @Override
+    public void onlyInitOnce() {
         initHttp();
         MyPlayerApi.getInstance().init(this);
-        application=this;
-//        DatabaseHelper.getHelper().init();
-        CrashHandler.getInstance().init(this);
     }
+
+
+
 
     private void initHttp() {
         //必须调用初始化

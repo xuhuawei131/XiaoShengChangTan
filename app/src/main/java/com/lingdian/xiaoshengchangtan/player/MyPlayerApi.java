@@ -5,7 +5,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 
 import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
-import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class MyPlayerApi {
     /**
      * 目前正在播放的bean
      */
-    private DownLoadDbBean currentBean;
+    private PageInfoDbBean currentBean;
 
 
     private MediaPlayer player; // 定义多媒体对象
@@ -80,7 +80,7 @@ public class MyPlayerApi {
      * @param bean
      * @param url
      */
-    public void loadUri(DownLoadDbBean bean,String url) {
+    public void loadUri(PageInfoDbBean bean, String url) {
         this.currentBean =bean;
         try {
             player.reset(); //重置多媒体
@@ -258,15 +258,15 @@ public class MyPlayerApi {
 
 
     public interface MediaPlayerCallBack {
-        public void onCompletion(MediaPlayer mediaPlayer,DownLoadDbBean bean);
+        public void onCompletion(MediaPlayer mediaPlayer,PageInfoDbBean bean);
 
-        public void onBufferingUpdate(MediaPlayer mediaPlayer, int percent,DownLoadDbBean bean);
+        public void onBufferingUpdate(MediaPlayer mediaPlayer, int percent,PageInfoDbBean bean);
 
-        public boolean onError(MediaPlayer mediaPlayer, int i, int i1,DownLoadDbBean bean);
+        public boolean onError(MediaPlayer mediaPlayer, int i, int i1,PageInfoDbBean bean);
 
-        public void onSeekComplete(MediaPlayer mediaPlayer,DownLoadDbBean bean);
+        public void onSeekComplete(MediaPlayer mediaPlayer,PageInfoDbBean bean);
 
-        public void onPrepared(MediaPlayer mediaPlayer,DownLoadDbBean bean);
+        public void onPrepared(MediaPlayer mediaPlayer,PageInfoDbBean bean);
     }
 
 }

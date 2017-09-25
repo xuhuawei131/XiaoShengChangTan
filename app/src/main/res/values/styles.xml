@@ -57,7 +57,24 @@
     <style name="MyMenuTextStyle" parent="Base.AlertDialog.AppCompat.Light">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">16sp</item>
+    </style>
 
+    <style name="navi_left_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:textColor">@color/BlackColor</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="navi_left_line">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+
+        <item name="android:background">@color/gray</item>
     </style>
 
     <style name="splashTheme" parent="Theme.AppCompat.Light.NoActionBar">

@@ -12,7 +12,7 @@ import com.lingdian.xiaoshengchangtan.bean.FileBean;
 import com.lingdian.xiaoshengchangtan.bean.TimerBean;
 import com.lingdian.xiaoshengchangtan.config.SingleData;
 import com.lingdian.xiaoshengchangtan.customview.MyMenuDialog;
-import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.enums.TimerType;
 import com.lingdian.xiaoshengchangtan.services.MyPlayerService;
 import com.lingdian.xiaoshengchangtan.utils.DateUtils;
@@ -37,7 +37,7 @@ import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_STAR
 
 public class DetailPageActivity extends BaseActivity {
 
-    private DownLoadDbBean bean;
+    private PageInfoDbBean bean;
     private TextView text_title;
     private SeekBar mSeekBar;
 
@@ -158,7 +158,7 @@ public class DetailPageActivity extends BaseActivity {
     };
 
     @Subscriber(tag = TAG_PLAY_UI_START_NEW_MUSIC)
-    private void onPlayNewMusic(DownLoadDbBean bean) {
+    private void onPlayNewMusic(PageInfoDbBean bean) {
         setData();
     }
     @Subscriber(tag = ACTION_ALARM_TIMER_UI_UPDATE)
@@ -187,31 +187,31 @@ public class DetailPageActivity extends BaseActivity {
     }
 
     @Subscriber(tag = TAG_PLAY_UI_ERROR)
-    private void onError(DownLoadDbBean bean) {
+    private void onError(PageInfoDbBean bean) {
         mSeekBar.setMax(bean.totalTime);
         text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
     }
 
     @Subscriber(tag = TAG_PLAY_UI_BUFFER)
-    private void onBufferingUpdate(DownLoadDbBean bean) {
+    private void onBufferingUpdate(PageInfoDbBean bean) {
         mSeekBar.setMax(bean.totalTime);
         text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
     }
 
     @Subscriber(tag = TAG_PLAY_UI_SEEK_COMPLETION)
-    private void onSeekComplete(DownLoadDbBean bean) {
+    private void onSeekComplete(PageInfoDbBean bean) {
         mSeekBar.setMax(bean.totalTime);
         text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
     }
 
     @Subscriber(tag = TAG_PLAY_UI_COMPLETION)
-    private void onCompletion(DownLoadDbBean bean) {
+    private void onCompletion(PageInfoDbBean bean) {
         mSeekBar.setMax(bean.totalTime);
         text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
     }
 
     @Subscriber(tag = TAG_PLAY_UI_PREPARE)
-    private void onPrepared(DownLoadDbBean bean) {
+    private void onPrepared(PageInfoDbBean bean) {
 //        MyPlayerService.startTimer(TimerType.TIMER_30);
         mSeekBar.setMax(bean.totalTime);
         text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
@@ -228,7 +228,7 @@ public class DetailPageActivity extends BaseActivity {
 
     private void setData() {
         bean= SingleData.getInstance().getDownLoadDbBean();
-        fileBean = FileBean.checkData(bean.title);
+        fileBean = FileBean.newInstance(bean.title);
         if (fileBean == null) {
             finish();
         } else {

@@ -1,18 +1,15 @@
 package com.lingdian.xiaoshengchangtan.viewholders;
 
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.lingdian.xiaoshengchangtan.R;
-import com.lingdian.xiaoshengchangtan.activity.DetailPageActivity;
 import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
-import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 
 import org.simple.eventbus.EventBus;
 
@@ -27,7 +24,7 @@ import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_DOWNLOADING_
 public class DownloadedViewholder extends ViewHolder implements View.OnClickListener {
 
     private static final int layoutId= R.layout.adapter_downloaded;
-    private DownLoadDbBean bean;
+    private PageInfoDbBean bean;
 
     private TextView text_title;
     private TextView text_date;
@@ -49,7 +46,7 @@ public class DownloadedViewholder extends ViewHolder implements View.OnClickList
         btn_delete.setOnClickListener(this);
     }
 
-    public void setData(DownLoadDbBean bean){
+    public void setData(PageInfoDbBean bean){
         this.bean=bean;
 
         text_title.setText(bean.title);

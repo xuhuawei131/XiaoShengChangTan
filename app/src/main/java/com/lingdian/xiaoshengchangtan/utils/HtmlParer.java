@@ -3,7 +3,7 @@ package com.lingdian.xiaoshengchangtan.utils;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lzy.okgo.model.Response;
 
 import org.jsoup.Jsoup;
@@ -68,9 +68,9 @@ public class HtmlParer {
      * @param response
      * @return
      */
-    public static List<DownLoadDbBean> dealFileListResult(Response<String> response) {
+    public static List<PageInfoDbBean> dealFileListResult(Response<String> response) {
         String url=response.getRawResponse().request().url().url().toString();
-        List<DownLoadDbBean> arrayList = new ArrayList<>();
+        List<PageInfoDbBean> arrayList = new ArrayList<>();
 
         String html = response.body();
         Document documentAll = Jsoup.parse(html);
@@ -92,7 +92,7 @@ public class HtmlParer {
                 Element elementA = elementsLi.get(0);
                 Element elementSpan = elementsLi.get(1);
 
-                DownLoadDbBean bean = new DownLoadDbBean();
+                PageInfoDbBean bean = new PageInfoDbBean();
 
                 String link = elementA.attr("href");
                 String title = elementA.text();

@@ -30,7 +30,7 @@
         <activity
             android:name=".activity.HomePageActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/toolbar_AppTheme" />
         <activity
             android:name=".activity.DetailPageActivity"
             android:screenOrientation="portrait" />
@@ -66,7 +66,12 @@
             android:launchMode="singleInstance"
             android:taskAffinity="com.example.suoping.lockscreen"
             android:theme="@style/splashTheme" />
-        <activity android:name=".activity.SelectTimerActivity"></activity>
+        <activity android:name=".activity.SelectTimerActivity" />
+
+        <service
+            android:name=".services.NetStatusChangeService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

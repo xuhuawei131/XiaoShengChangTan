@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.viewholders.HomeCommViewHolder;
 
 import java.util.List;
@@ -15,9 +15,9 @@ import java.util.List;
 
 public class HomePageAdapter extends RecyclerView.Adapter<HomeCommViewHolder> {
 
-    private List<DownLoadDbBean> arrayList;
+    private List<PageInfoDbBean> arrayList;
 
-    public HomePageAdapter(List<DownLoadDbBean> arrayList){
+    public HomePageAdapter(List<PageInfoDbBean> arrayList){
         this.arrayList=arrayList;
     }
 

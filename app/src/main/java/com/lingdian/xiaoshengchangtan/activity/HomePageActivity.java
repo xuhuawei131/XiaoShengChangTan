@@ -3,27 +3,20 @@ package com.lingdian.xiaoshengchangtan.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.content.res.Resources;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.adapters.HomePageAdapter;
 import com.lingdian.xiaoshengchangtan.cache.DownloadManager;
 import com.lingdian.xiaoshengchangtan.config.SingleData;
-import com.lingdian.xiaoshengchangtan.customview.EmptyRecyclerView;
-import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.callbacks.ParserStringCallBack;
-import com.lingdian.xiaoshengchangtan.db.impls.DownLoadImple;
+import com.lingdian.xiaoshengchangtan.db.impls.PageInfoImple;
 import com.lingdian.xiaoshengchangtan.services.DownLoadService;
 import com.lingdian.xiaoshengchangtan.services.MyPlayerService;
 import com.lingdian.xiaoshengchangtan.utils.HtmlPageUrlUtils;
@@ -48,9 +41,12 @@ import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_HOME_ITEM_CL
 import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS_DONE;
 import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS_WAITTING;
 
-public class HomePageActivity extends BaseRefreshMoreViewActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+/**
+ * 首页面
+ */
+public class HomePageActivity extends BaseRefreshMoreViewActivity implements View.OnClickListener {
 
-    private List<DownLoadDbBean> arrayList;
+    private List<PageInfoDbBean> arrayList;
     private int currentIndex = 0;
     private boolean isDoingRequest = false;
 
@@ -58,6 +54,7 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Nav
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private boolean  isFirstRequest=true;
+
 
     @Override
     protected void init() {
@@ -85,10 +82,17 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Nav
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        Resources resource = getBaseContext().getResources();
-        ColorStateList csl = resource.getColorStateList(R.color.navigation_menu_item_color);
-        navigationView.setItemTextColor(csl);
+        View headerLayout = navigationView.inflateHeaderView(R.layout.layout_navi_left);
+
+        View text_downloading=headerLayout.findViewById(R.id.text_downloading);
+        View text_downloaded=headerLayout.findViewById(R.id.text_downloaded);
+        View text_setting=headerLayout.findViewById(R.id.text_setting);
+        View text_exit=headerLayout.findViewById(R.id.text_exit);
+
+        text_downloading.setOnClickListener(this);
+        text_downloaded.setOnClickListener(this);
+        text_setting.setOnClickListener(this);
+        text_exit.setOnClickListener(this);
 
 
         arrayList = new ArrayList<>();
@@ -104,23 +108,22 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Nav
         }
         isDoingRequest = true;
 
-        OkGo.<String>post(HtmlPageUrlUtils.getPageUrlByIndex(0)).tag(this).execute(new ParserStringCallBack<List<DownLoadDbBean>>() {
+        OkGo.<String>post(HtmlPageUrlUtils.getPageUrlByIndex(0)).tag(this).execute(new ParserStringCallBack<List<PageInfoDbBean>>() {
             @Override
-            public List<DownLoadDbBean> parserJson(Response<String> response) {
-                List<DownLoadDbBean> dataList = HtmlParer.dealFileListResult(response);
+            public List<PageInfoDbBean> parserJson(Response<String> response) {
+                List<PageInfoDbBean> dataList = HtmlParer.dealFileListResult(response);
                 dealDataCombinDb(dataList);
                 return dataList;
             }
-
             @Override
-            public void onResultComing(List<DownLoadDbBean> response) {
+            public void onResultComing(List<PageInfoDbBean> response) {
                 arrayList.clear();
                 arrayList.addAll(response);
 
                 disProgressDialog();
                 isDoingRequest = false;
                 notifyDataSetChanged();
-                notifyAdapter();
+                notifyEmptyAdapter();
                 setRefreshFinish();
                 if(isFirstRequest){
                     isFirstRequest=false;
@@ -138,7 +141,7 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Nav
             public void onError(Response<String> response) {
                 super.onError(response);
                 int code = response.code();
-                notifyAdapter();
+                notifyEmptyAdapter();
                 disProgressDialog();
             }
         });
@@ -154,7 +157,7 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Nav
      * 如果列表中 有等待中的数据 那么显示对话框
      */
     private void showWaittingDialog(){
-        List<DownLoadDbBean> dbList =DownloadManager.getInstance().getAllDownList();
+        List<PageInfoDbBean> dbList =DownloadManager.getInstance().getAllDownList();
         if(dbList.size()>0){
             AlertDialog.Builder builder=new AlertDialog.Builder(this);
             builder.setTitle("是否下载？").setMessage("您有未完成任务，是否下载？").setNegativeButton("确定", new DialogInterface.OnClickListener() {
@@ -168,8 +171,10 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Nav
         }
     }
 
-
-    private void notifyAdapter() {
+    /**
+     * 空提醒
+     */
+    private void notifyEmptyAdapter() {
         int length = arrayList.size();
         if (length == 0) {
             findViewById(R.id.textEmptyView).setVisibility(View.VISIBLE);
@@ -183,17 +188,16 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Nav
      *
      * @param dataList
      */
-    private void dealDataCombinDb(List<DownLoadDbBean> dataList) {
-        List<DownLoadDbBean> dbList = DownLoadImple.getInstance().getAllDownloadData();
-
-        List<DownLoadDbBean> updateList = new ArrayList<>();
-
-        for (DownLoadDbBean item : dataList) {
+    private void dealDataCombinDb(List<PageInfoDbBean> dataList) {
+        List<PageInfoDbBean> dbList = PageInfoImple.getInstance().getAllDownloadData();
+        List<PageInfoDbBean> updateList = new ArrayList<>();
+        for (PageInfoDbBean item : dataList) {
             boolean isExit = false;
-            for (DownLoadDbBean dbItem : dbList) {
+            for (PageInfoDbBean dbItem : dbList) {
                 if (item.title.endsWith(dbItem.title)) {
                     item.downStatus = dbItem.downStatus;
                     item.currentTime=dbItem.currentTime;
+                    item.totalTime=dbItem.totalTime;
                     item.percent = dbItem.percent;
                     isExit = true;
                     break;
@@ -204,7 +208,7 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Nav
             }
         }
         if (updateList.size() > 0) {
-            DownLoadImple.getInstance().inserPageDownloadData(updateList);
+            PageInfoImple.getInstance().inserPageDownloadData(updateList);
         }
     }
 
@@ -213,7 +217,6 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Nav
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
-
 
     @Override
     protected int getJRefreshLayoutId() {
@@ -236,36 +239,31 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Nav
         requestService();
         return null;
     }
-
     @Override
-    protected void doRefreshEndingTask(Object o) {
-
-    }
-
+    protected void doRefreshEndingTask(Object o) {}
     @Subscriber(tag = TAG_DOWNLOADING_START)
-    private void onDownloadStart(DownLoadDbBean bean) {
+    private void onDownloadStart(PageInfoDbBean bean) {
         int index = arrayList.indexOf(bean);
         arrayList.get(index).downStatus = bean.downStatus;
         notifyDataSetChanged();
-
     }
 
     @Subscriber(tag = TAG_DOWNLOADING_DONE)
-    private void onDownloadDone(DownLoadDbBean bean) {
+    private void onDownloadDone(PageInfoDbBean bean) {
         int index = arrayList.indexOf(bean);
         arrayList.get(index).downStatus = bean.downStatus;
         notifyDataSetChanged();
     }
 
     @Subscriber(tag = TAG_DOWNLOADING_DELETE)
-    private void onDownloadDelete(DownLoadDbBean bean) {
+    private void onDownloadDelete(PageInfoDbBean bean) {
         int index = arrayList.indexOf(bean);
         arrayList.get(index).downStatus = bean.downStatus;
         notifyDataSetChanged();
     }
 
     @Subscriber(tag = TAG_DOWNLOADING_ERROR)
-    private void onDownloadError(DownLoadDbBean bean) {
+    private void onDownloadError(PageInfoDbBean bean) {
         int index = arrayList.indexOf(bean);
         arrayList.get(index).downStatus = bean.downStatus;
         notifyDataSetChanged();
@@ -277,17 +275,15 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Nav
             return;
         }
         isDoingRequest = true;
-
-        OkGo.<String>post(HtmlPageUrlUtils.getPageUrlByIndex(currentIndex)).tag(this).execute(new ParserStringCallBack<List<DownLoadDbBean>>() {
+        OkGo.<String>post(HtmlPageUrlUtils.getPageUrlByIndex(currentIndex)).tag(this).execute(new ParserStringCallBack<List<PageInfoDbBean>>() {
             @Override
-            public List<DownLoadDbBean> parserJson(Response response) {
-                List<DownLoadDbBean> dataList = HtmlParer.dealFileListResult(response);
+            public List<PageInfoDbBean> parserJson(Response response) {
+                List<PageInfoDbBean> dataList = HtmlParer.dealFileListResult(response);
                 dealDataCombinDb(dataList);
                 return dataList;
             }
-
             @Override
-            public void onResultComing(List<DownLoadDbBean> list) {
+            public void onResultComing(List<PageInfoDbBean> list) {
                 if (list.size() != 0) {
                     currentIndex++;
                     arrayList.addAll(list);
@@ -295,7 +291,6 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Nav
                 } else {
                     hasMore = false;
                 }
-
                 isDoingRequest = false;
                 notifyDataSetChanged();
                 if (hasMore) {
@@ -304,7 +299,6 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Nav
                     showEndingFootView();
                 }
             }
-
             @Override
             public void onError(Response<String> response) {
                 super.onError(response);
@@ -313,63 +307,48 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Nav
                 showErrorFootView();
             }
         });
-
     }
-
     @Override
     public void onClick(View v) {
+        if(v.getId()==R.id.text_downloaded){
+            startActivity(new Intent(this, DownLoadedActivity.class));
+        }else if(v.getId()==R.id.text_downloading){
+            startActivity(new Intent(this, DownLoadingActivity.class));
+        }else if(v.getId()==R.id.text_setting){
+
+        }else if(v.getId()==R.id.text_exit){
+            finish();
+            stopService(new Intent(this, MyPlayerService.class));
+        }
 
     }
-
     @Subscriber(tag = TAG_HOME_ITEM_CLICK)
-    private void onItemClick(DownLoadDbBean bean) {
+    private void onItemClick(PageInfoDbBean bean) {
         SingleData.getInstance().setCurrentList(arrayList);
         MyPlayerService.startPlay(bean);
 
         Intent intent = new Intent(this, DetailPageActivity.class);
         startActivity(intent);
     }
-
-
     /**
      * 下载完成
      *
      * @param bean
      */
     @Subscriber(tag = TAG_DOWNLOADING_DONE)
-    private void onDownloadFinish(DownLoadDbBean bean) {
+    private void onDownloadFinish(PageInfoDbBean bean) {
         int index = arrayList.indexOf(bean);
         arrayList.get(index).downStatus = DOWNLOAD_STATUS_DONE;
         notifyDataSetChanged();
     }
 
     @Subscriber(tag = TAG_DOWNLOADING_ADD)
-    private void onStartDownloadTask(DownLoadDbBean bean) {
+    private void onStartDownloadTask(PageInfoDbBean bean) {
         //添加到下载列表
         bean.downStatus = DOWNLOAD_STATUS_WAITTING;
         notifyDataSetChanged();
-
         DownLoadService.addDownloadTask(bean);
     }
 
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        item.setChecked(false);
-        drawer.closeDrawer(GravityCompat.START);
-        if (id == R.id.item_one) {
-            startActivity(new Intent(this, DownLoadingActivity.class));
-        } else if (id == R.id.item_two) {
-            startActivity(new Intent(this, DownLoadedActivity.class));
-        } else if (id == R.id.item_three) {
-
-        } else if (id == R.id.item_one) {
-
-        }else if (id == R.id.item2_one) {
-            finish();
-            stopService(new Intent(this, MyPlayerService.class));
-        }
-        return true;
-    }
 }

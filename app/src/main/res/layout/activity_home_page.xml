@@ -34,84 +34,39 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
+                <com.lingdian.xiaoshengchangtan.customview.refreshview.HWRefreshLayout
+                    android:id="@+id/refreshLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-            <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="48dp"-->
-            <!--android:background="@color/colorPrimary"-->
-            <!--android:paddingLeft="15dp"-->
-            <!--android:paddingRight="15dp">-->
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </com.lingdian.xiaoshengchangtan.customview.refreshview.HWRefreshLayout>
 
-            <!--<TextView-->
-            <!--android:id="@+id/text_title_left"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:lines="1"-->
-            <!--android:text="全选"-->
-            <!--android:textColor="@color/WhiteColor"-->
-            <!--android:textSize="15sp"-->
-            <!--android:visibility="gone" />-->
-
-            <!--<TextView-->
-            <!--android:id="@+id/text_title"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerInParent="true"-->
-            <!--android:lines="1"-->
-            <!--android:text="首页"-->
-            <!--android:textColor="@color/WhiteColor"-->
-            <!--android:textSize="18sp" />-->
-
-            <!--<TextView-->
-            <!--android:id="@+id/text_title_right"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:lines="1"-->
-            <!--android:text="编辑"-->
-            <!--android:textColor="@color/WhiteColor"-->
-            <!--android:textSize="15sp" />-->
-
-            <!--</RelativeLayout>-->
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <com.lingdian.xiaoshengchangtan.customview.refreshview.HWRefreshLayout
-        android:id="@+id/refreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </com.lingdian.xiaoshengchangtan.customview.refreshview.HWRefreshLayout>
-    <TextView
-        android:id="@+id/textEmptyView"
-        android:text="数据为空！"
-        android:visibility="gone"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-</FrameLayout>
-
-
+                <TextView
+                    android:id="@+id/textEmptyView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="数据为空！"
+                    android:visibility="gone" />
+            </FrameLayout>
         </LinearLayout>
-
         <android.support.design.widget.NavigationView
             android:id="@+id/nav_view"
             android:layout_width="240dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="#ffffff"
-            app:headerLayout="@layout/layout_header"
             app:itemIconTint="@color/colorPrimary"
             app:itemTextColor="@color/colorPrimary"
-            app:menu="@menu/navi_menu" />
+             />
     </android.support.v4.widget.DrawerLayout>
 </LinearLayout>
 

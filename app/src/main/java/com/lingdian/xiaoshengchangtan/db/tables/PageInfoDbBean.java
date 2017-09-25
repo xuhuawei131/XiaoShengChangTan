@@ -9,8 +9,8 @@ import java.io.Serializable;
 /**
  * Created by lingdian on 17/9/13.
  */
-@DatabaseTable(tableName="download")
-public class DownLoadDbBean implements Serializable{
+@DatabaseTable(tableName="pageinfo")
+public class PageInfoDbBean implements Serializable{
     /**
      * 主键
      */
@@ -19,21 +19,6 @@ public class DownLoadDbBean implements Serializable{
     /**标题*/
     @DatabaseField
     public String title;
-    /**文件下载地址*/
-    @DatabaseField
-    public String fileUrl;
-    /**文件下载地址*/
-    @DatabaseField
-    public String filePath;
-    /**文件名称*/
-    @DatabaseField
-    public String fileName;
-    /**文件大小*/
-    @DatabaseField
-    public long fileSize;
-    /**文件已经下载大小*/
-    @DatabaseField
-    public long fileDownSize;
     /**下载的进度**/
     @DatabaseField
     public float percent;
@@ -56,7 +41,7 @@ public class DownLoadDbBean implements Serializable{
     public boolean isPlaying=false;
     public int buffet_percent;
 
-    public DownLoadDbBean(){
+    public PageInfoDbBean(){
 
     }
 
@@ -65,7 +50,7 @@ public class DownLoadDbBean implements Serializable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        DownLoadDbBean that = (DownLoadDbBean) o;
+        PageInfoDbBean that = (PageInfoDbBean) o;
 
         return title != null ? title.equals(that.title) : that.title == null;
 

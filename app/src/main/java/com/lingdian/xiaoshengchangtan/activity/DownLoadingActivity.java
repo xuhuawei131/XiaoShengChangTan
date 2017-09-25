@@ -1,8 +1,6 @@
 package com.lingdian.xiaoshengchangtan.activity;
 
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -12,9 +10,8 @@ import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.adapters.DownloadingAdapter;
 import com.lingdian.xiaoshengchangtan.bean.FileBean;
 import com.lingdian.xiaoshengchangtan.cache.DownloadManager;
-import com.lingdian.xiaoshengchangtan.customview.EmptyRecyclerView;
-import com.lingdian.xiaoshengchangtan.db.impls.DownLoadImple;
-import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.impls.PageInfoImple;
+import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.decoration.ItemDecoration;
 import com.lingdian.xiaoshengchangtan.services.DownLoadService;
 import com.lingdian.xiaoshengchangtan.viewholders.DownloadingViewholder;
@@ -38,7 +35,7 @@ public class DownLoadingActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
     private DownloadingAdapter adapter;
-    private List<DownLoadDbBean> arrayList;
+    private List<PageInfoDbBean> arrayList;
     private RecyclerView.LayoutManager layoutManager;
 
     @Override
@@ -95,12 +92,12 @@ public class DownLoadingActivity extends BaseActivity {
     }
 
     @Subscriber(tag = TAG_DOWNLOADING_UPDATE)
-    private void onDownloadingChange(DownLoadDbBean bean) {
+    private void onDownloadingChange(PageInfoDbBean bean) {
         int index = arrayList.indexOf(bean);
         RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(index);
 
         if (holder != null) {
-            DownLoadDbBean item = arrayList.get(index);
+            PageInfoDbBean item = arrayList.get(index);
             item.downStatus = bean.downStatus;
             item.percent = bean.percent;
 //                adapter.notifyItemChanged(index);
@@ -110,15 +107,15 @@ public class DownLoadingActivity extends BaseActivity {
     }
 
     @Subscriber(tag = TAG_DOWNLOADING_DONE)
-    private void onDownloaded(DownLoadDbBean bean) {
+    private void onDownloaded(PageInfoDbBean bean) {
         arrayList.remove(bean);
         adapter.notifyDataSetChanged();
         notifyAdapter();
     }
 
     @Subscriber(tag = TAG_DOWNLOADING_DELETE)
-    private void onDeleteDownloaded(DownLoadDbBean bean) {
-        FileBean fileBean = FileBean.checkData(bean.title);
+    private void onDeleteDownloaded(PageInfoDbBean bean) {
+        FileBean fileBean = FileBean.newInstance(bean.title);
 
         File file = new File(fileBean.fileDownPath);
         if (file.exists()) {
@@ -126,7 +123,7 @@ public class DownLoadingActivity extends BaseActivity {
         }
         arrayList.remove(bean);
         bean.downStatus = DOWNLOAD_STATUS_NO;
-        DownLoadImple.getInstance().updateDownloadStatus(bean);
+        PageInfoImple.getInstance().updateDownloadStatus(bean);
         adapter.notifyDataSetChanged();
         notifyAdapter();
         DownLoadService.deleteDownloadTask(bean);

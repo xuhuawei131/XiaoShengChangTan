@@ -2,8 +2,8 @@ package com.lingdian.xiaoshengchangtan.cache;
 
 import android.util.Log;
 
-import com.lingdian.xiaoshengchangtan.db.impls.DownLoadImple;
-import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.impls.PageInfoImple;
+import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +22,9 @@ import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS
 public class DownloadManager {
     private static final DownloadManager ourInstance = new DownloadManager();
     //等待队列
-    private Queue<DownLoadDbBean> waittingQueue;
+    private Queue<PageInfoDbBean> waittingQueue;
     //下载队列
-    private List<DownLoadDbBean> workingList;
+    private List<PageInfoDbBean> workingList;
 
     public static DownloadManager getInstance() {
         return ourInstance;
@@ -33,8 +33,8 @@ public class DownloadManager {
     private DownloadManager() {
         waittingQueue = new ConcurrentLinkedQueue<>();
 
-        List<DownLoadDbBean> dbList= DownLoadImple.getInstance().getDownloadList();
-        for (DownLoadDbBean bean:dbList){
+        List<PageInfoDbBean> dbList= PageInfoImple.getInstance().getDownloadList();
+        for (PageInfoDbBean bean:dbList){
             waittingQueue.add(bean);
         }
 
@@ -47,12 +47,12 @@ public class DownloadManager {
      * 获取当前下载列表
      * @return
      */
-    public List<DownLoadDbBean> getAllDownList(){
-        List<DownLoadDbBean> allDownList=new ArrayList<>();
-        for (DownLoadDbBean bean:workingList){
+    public List<PageInfoDbBean> getAllDownList(){
+        List<PageInfoDbBean> allDownList=new ArrayList<>();
+        for (PageInfoDbBean bean:workingList){
             allDownList.add(bean);
         }
-        for (DownLoadDbBean bean:waittingQueue){
+        for (PageInfoDbBean bean:waittingQueue){
             allDownList.add(bean);
         }
         return allDownList;
@@ -63,7 +63,7 @@ public class DownloadManager {
      * @param bean
      * @return
      */
-    public boolean addWaittingQueue(DownLoadDbBean bean){
+    public boolean addWaittingQueue(PageInfoDbBean bean){
         if(!isExistWaittingQueue(bean)){
             bean.downStatus=DOWNLOAD_STATUS_WAITTING;
             waittingQueue.add(bean);
@@ -78,7 +78,7 @@ public class DownloadManager {
      * @param bean
      * @return
      */
-    public boolean addWorkingList(DownLoadDbBean bean){
+    public boolean addWorkingList(PageInfoDbBean bean){
         if(!isExistWorkingQueue(bean)){
             Log.v("xhw","addWorkingList bean"+bean.title);
             bean.downStatus=DOWNLOAD_STATUS_DOING;
@@ -94,11 +94,11 @@ public class DownloadManager {
      * @param bean
      * @return
      */
-    public boolean isExistWaittingQueue(DownLoadDbBean bean){
+    public boolean isExistWaittingQueue(PageInfoDbBean bean){
         return waittingQueue.contains(bean);
     }
 
-    public boolean isExistWorkingQueue(DownLoadDbBean bean){
+    public boolean isExistWorkingQueue(PageInfoDbBean bean){
         return workingList.contains(bean);
     }
 
@@ -117,16 +117,16 @@ public class DownloadManager {
         return waittingQueue.isEmpty();
     }
 
-    public DownLoadDbBean pollWaittingQueue(){
+    public PageInfoDbBean pollWaittingQueue(){
         return waittingQueue.poll();
     }
 
 
-    public boolean remoteWaittingList(DownLoadDbBean bean){
+    public boolean remoteWaittingList(PageInfoDbBean bean){
         return waittingQueue.remove(bean);
     }
 
-    public boolean remoteWorkingList(DownLoadDbBean bean){
+    public boolean remoteWorkingList(PageInfoDbBean bean){
         return workingList.remove(bean);
     }
 

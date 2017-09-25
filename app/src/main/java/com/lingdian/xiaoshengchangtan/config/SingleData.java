@@ -1,7 +1,7 @@
 package com.lingdian.xiaoshengchangtan.config;
 
 import com.lingdian.xiaoshengchangtan.bean.FileBean;
-import com.lingdian.xiaoshengchangtan.db.tables.DownLoadDbBean;
+import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.enums.TimerType;
 import com.lingdian.xiaoshengchangtan.player.MyPlayerApi;
 
@@ -21,9 +21,9 @@ import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_STAR
 public class SingleData {
 
     private static SingleData instance=null;
-    private DownLoadDbBean currentBean;
+    private PageInfoDbBean currentBean;
     //设置当前的播放列表
-    private List<DownLoadDbBean> currentList;
+    private List<PageInfoDbBean> currentList;
     private TimerType currentTimerType;
     private SingleData(){
         currentTimerType=TimerType.TIMER_CANCEL;
@@ -49,11 +49,11 @@ public class SingleData {
     }
 
 
-    public DownLoadDbBean getDownLoadDbBean(){
+    public PageInfoDbBean getDownLoadDbBean(){
         return currentBean;
     }
 
-    public List<DownLoadDbBean> getCurrentList() {
+    public List<PageInfoDbBean> getCurrentList() {
         return currentList;
     }
 
@@ -63,18 +63,18 @@ public class SingleData {
         }
     }
 
-    public void setCurrentList(List<DownLoadDbBean> currentList) {
+    public void setCurrentList(List<PageInfoDbBean> currentList) {
         this.currentList = currentList;
     }
 
 
-    public void playNewMusic(DownLoadDbBean bean){
+    public void playNewMusic(PageInfoDbBean bean){
         if (currentBean != null) {
             if (!currentBean.title.equals(bean.title)) {
                 currentBean = bean;
                 EventBus.getDefault().post(bean,TAG_PLAY_UI_START_NEW_MUSIC);
 
-                FileBean fileBean = FileBean.checkData(bean.title);
+                FileBean fileBean = FileBean.newInstance(bean.title);
                 String url;
                 if (new File(fileBean.filePath).exists()) {
                     url = fileBean.filePath;
@@ -88,7 +88,7 @@ public class SingleData {
             currentBean = bean;
             EventBus.getDefault().post(bean,TAG_PLAY_UI_START_NEW_MUSIC);
 
-            FileBean fileBean = FileBean.checkData(bean.title);
+            FileBean fileBean = FileBean.newInstance(bean.title);
             String url;
             if (new File(fileBean.filePath).exists()) {
                 url = fileBean.filePath;
@@ -100,7 +100,7 @@ public class SingleData {
         }
     }
 
-    public DownLoadDbBean getNextMusic(){
+    public PageInfoDbBean getNextMusic(){
         if(currentList!=null&&currentList.size()>0){
             int index=0;
             if(currentBean!=null){
@@ -118,7 +118,7 @@ public class SingleData {
         return null;
     }
 
-    public DownLoadDbBean getLastMusic(){
+    public PageInfoDbBean getLastMusic(){
         if(currentList!=null&&currentList.size()>0){
             int index=0;
             if(currentBean!=null){
