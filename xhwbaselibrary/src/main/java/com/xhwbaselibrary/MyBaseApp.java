@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.xhwbaselibrary.caches.MyAppContext;
 import com.xhwbaselibrary.caches.MyNetStatusHepler;
+import com.xhwbaselibrary.caches.OkGoHelper;
 import com.xhwbaselibrary.crashes.CrashHandler;
 
 
@@ -24,7 +25,7 @@ public abstract class MyBaseApp extends Application {
             MyAppContext.getInstance().init(this);
             CrashHandler.getInstance();
             MyNetStatusHepler.getInstance().register();
-
+            new OkGoHelper().startInit();
             onlyInitOnce();
         }
     }
