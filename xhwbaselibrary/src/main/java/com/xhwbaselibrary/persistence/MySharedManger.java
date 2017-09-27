@@ -3,6 +3,7 @@ package com.xhwbaselibrary.persistence;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.xhwbaselibrary.base.MyEntry;
 import com.xhwbaselibrary.caches.MyAppContext;
 
 import java.util.Map;
@@ -34,12 +35,11 @@ public class MySharedManger {
 
     /**
      * 设置shared
-     * @param map
+     * @param entry
      */
-    private void putKeyAndValue(Map<String, Objects> map) {
-        if (map != null) {
+    public void putKeyAndValue(MyEntry entry) {
+        if (entry != null) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            for (Map.Entry<String, Objects> entry : map.entrySet()) {
                 Object value = entry.getValue();
                 String key = entry.getKey();
                 if (value instanceof Integer) {
@@ -57,7 +57,6 @@ public class MySharedManger {
                 }else{//不支持的类型
 
                 }
-            }
             editor.apply();
         }
     }

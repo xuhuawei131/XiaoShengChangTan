@@ -8,7 +8,7 @@ import java.util.Calendar;
 
 public class DateUtils {
 
-    public boolean isSameDay(long time1,long time2){
+    public static boolean isSameDay(long time1,long time2){
         Calendar calendar1=Calendar.getInstance();
         calendar1.setTimeInMillis(time1);
 
