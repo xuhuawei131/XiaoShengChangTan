@@ -1,6 +1,11 @@
 package com.lingdian.xiaoshengchangtan.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +20,9 @@ import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.decoration.ItemDecoration;
 import com.lingdian.xiaoshengchangtan.services.DownLoadService;
 import com.lingdian.xiaoshengchangtan.viewholders.DownloadingViewholder;
+import com.xhwbaselibrary.configs.BaseAction;
+import com.xhwbaselibrary.enums.NetStatusType;
+import com.xhwbaselibrary.tools.MyLocalBroadcast;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -70,11 +78,15 @@ public class DownLoadingActivity extends BaseActivity {
 
     @Override
     protected void requestService() {
+
         arrayList.addAll(DownloadManager.getInstance().getAllDownList());
         adapter.notifyDataSetChanged();
+        notifyAdapter();
 
         EventBus.getDefault().register(this);
-        notifyAdapter();
+
+        IntentFilter intentFilter=new IntentFilter(BaseAction.LOCAL_ACTION_NET_STATUS_CHANGE);
+        MyLocalBroadcast.getInstance().register(intentFilter,broadcastReceiver);
     }
 
     private void notifyAdapter() {
@@ -89,6 +101,7 @@ public class DownLoadingActivity extends BaseActivity {
     @Override
     protected void onMyDestory() {
         EventBus.getDefault().unregister(this);
+        MyLocalBroadcast.getInstance().unRegister(broadcastReceiver);
     }
 
     @Subscriber(tag = TAG_DOWNLOADING_UPDATE)
@@ -100,7 +113,6 @@ public class DownLoadingActivity extends BaseActivity {
             PageInfoDbBean item = arrayList.get(index);
             item.downStatus = bean.downStatus;
             item.percent = bean.percent;
-//                adapter.notifyItemChanged(index);
             DownloadingViewholder dHolder = (DownloadingViewholder) holder;
             dHolder.setData(item);
         }
@@ -128,4 +140,23 @@ public class DownLoadingActivity extends BaseActivity {
         notifyAdapter();
         DownLoadService.deleteDownloadTask(bean);
     }
+
+
+    private BroadcastReceiver broadcastReceiver=new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent!=null){
+                NetStatusType type=(NetStatusType)intent.getSerializableExtra("type");
+                if(type!=null){
+                    if (type==NetStatusType.NETSTATUS_MOBILE){//连接到4G状态
+
+                    }else if(type==NetStatusType.NETSTATUS_WIFI){//连接到wifi状态
+
+                    }else{//无网络
+
+                    }
+                }
+            }
+        }
+    };
 }

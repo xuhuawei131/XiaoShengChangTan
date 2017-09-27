@@ -1,8 +1,10 @@
 package com.lingdian.xiaoshengchangtan.services;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -23,6 +25,9 @@ import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.PostRequest;
 import com.lzy.okgo.request.base.Request;
 import com.xhwbaselibrary.caches.MyAppContext;
+import com.xhwbaselibrary.configs.BaseAction;
+import com.xhwbaselibrary.enums.NetStatusType;
+import com.xhwbaselibrary.tools.MyLocalBroadcast;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -47,20 +52,22 @@ public class DownLoadService extends Service {
         Context contxt = MyAppContext.getInstance().getContext();
         if (contxt != null) {
             Intent intent = new Intent(contxt, DownLoadService.class);
-            intent.putExtra("addOrDel",true);
+            intent.putExtra("addOrDel", true);
             intent.putExtra("bean", bean);
             contxt.startService(intent);
         }
     }
-    public static void deleteDownloadTask(PageInfoDbBean bean){
+
+    public static void deleteDownloadTask(PageInfoDbBean bean) {
         Context contxt = MyAppContext.getInstance().getContext();
         if (contxt != null) {
             Intent intent = new Intent(contxt, DownLoadService.class);
-            intent.putExtra("addOrDel",false);
+            intent.putExtra("addOrDel", false);
             intent.putExtra("bean", bean);
             contxt.startService(intent);
         }
     }
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -69,14 +76,17 @@ public class DownLoadService extends Service {
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
+
+        IntentFilter intentFilter = new IntentFilter(BaseAction.LOCAL_ACTION_NET_STATUS_CHANGE);
+        MyLocalBroadcast.getInstance().register(intentFilter, broadcastReceiver);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             PageInfoDbBean bean = (PageInfoDbBean) intent.getSerializableExtra("bean");
-            boolean addOrDel=intent.getBooleanExtra("addOrDel",true);
-            if(bean!=null){
+            boolean addOrDel = intent.getBooleanExtra("addOrDel", true);
+            if (bean != null) {
                 boolean isExistWaitting = DownloadManager.getInstance().isExistWaittingQueue(bean);
                 boolean isExistWorkting = DownloadManager.getInstance().isExistWorkingQueue(bean);
 
@@ -84,28 +94,29 @@ public class DownLoadService extends Service {
                     PageInfoImple.getInstance().updateDownloadStatus(bean);
                     DownloadManager.getInstance().addWaittingQueue(bean);
                     startNextDownload();
-                }else{//任务已存在
-                    if(!addOrDel){
-                        if(isExistWaitting){
+                } else {//任务已存在
+                    if (!addOrDel) {
+                        if (isExistWaitting) {
                             DownloadManager.getInstance().remoteWaittingList(bean);
-                        }else{
+                        } else {
                             OkGo.getInstance().cancelTag(bean.title);
                             DownloadManager.getInstance().remoteWorkingList(bean);
                             startNextDownload();
                         }
                     }
                 }
-            }else{
+            } else {
                 startNextDownload();
             }
-
         }
         return super.onStartCommand(intent, flags, startId);
     }
 
 
+    /**
+     * 开始下一个任务
+     */
     public synchronized void startNextDownload() {
-
         while (DownloadManager.getInstance().getWorkingLenght() <= num) {
             if (!DownloadManager.getInstance().isEmptyWaitting()) {
                 PageInfoDbBean task = DownloadManager.getInstance().pollWaittingQueue();
@@ -132,14 +143,13 @@ public class DownLoadService extends Service {
             Toast.makeText(this, "url not empty!", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        PostRequest request=OkGo.<File>post(fileUrl);
-        DownloadInfoDbBean info=DownloadInfoImple.getInstance().getDownloadList(bean.title);
+        PostRequest request = OkGo.<File>post(fileUrl);
+        DownloadInfoDbBean info = DownloadInfoImple.getInstance().getDownloadList(bean.title);
         DownLoadBeanTask task;
-        if(info!=null){
-            task= new DownLoadBeanTask(info);
-        }else{
-            task=new DownLoadBeanTask(bean.title);
+        if (info != null) {
+            task = new DownLoadBeanTask(info);
+        } else {
+            task = new DownLoadBeanTask(bean.title);
         }
 
         request.tag(bean.title).execute(new MyFileCallback(task) {
@@ -151,9 +161,9 @@ public class DownLoadService extends Service {
                 File downFile = new File(filePath);
                 downFile.renameTo(new File(FileCache.getInstance().getDownloadPath(), fileBean.fileName));
 
-                bean.downStatus=DOWNLOAD_STATUS_DONE;
-                bean.percent=1;
-                EventBus.getDefault().post(bean,TAG_DOWNLOADING_DONE);
+                bean.downStatus = DOWNLOAD_STATUS_DONE;
+                bean.percent = 1;
+                EventBus.getDefault().post(bean, TAG_DOWNLOADING_DONE);
                 //下载完成
                 DownloadManager.getInstance().remoteWorkingList(bean);
                 PageInfoImple.getInstance().updateDownloadStatus(bean);
@@ -164,7 +174,7 @@ public class DownLoadService extends Service {
             @Override
             public void onStart(Request<File, ? extends Request> request) {
                 super.onStart(request);
-                EventBus.getDefault().post(bean,TAG_DOWNLOADING_START);
+                EventBus.getDefault().post(bean, TAG_DOWNLOADING_START);
             }
 
             @Override
@@ -172,8 +182,8 @@ public class DownLoadService extends Service {
                 super.onError(response);
                 int code = response.code();
 
-                bean.downStatus=DOWNLOAD_STATUS_ERROR;
-                EventBus.getDefault().post(bean,TAG_DOWNLOADING_ERROR);
+                bean.downStatus = DOWNLOAD_STATUS_ERROR;
+                EventBus.getDefault().post(bean, TAG_DOWNLOADING_ERROR);
                 //下载完成
                 DownloadManager.getInstance().remoteWorkingList(bean);
                 startNextDownload();
@@ -190,9 +200,9 @@ public class DownLoadService extends Service {
             public void downloadProgress(Progress progress) {
                 super.downloadProgress(progress);
                 float progressPercent = progress.fraction;
-                bean.percent=progressPercent;
+                bean.percent = progressPercent;
 
-                EventBus.getDefault().post(bean,TAG_DOWNLOADING_UPDATE);
+                EventBus.getDefault().post(bean, TAG_DOWNLOADING_UPDATE);
             }
         });
 
@@ -203,6 +213,7 @@ public class DownLoadService extends Service {
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        MyLocalBroadcast.getInstance().unRegister(broadcastReceiver);
     }
 
     @Subscriber(tag = "onStartTask")
@@ -221,4 +232,24 @@ public class DownLoadService extends Service {
         startNextDownload();
     }
 
+    /**
+     * 网络状态监听
+     */
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                NetStatusType type = (NetStatusType) intent.getSerializableExtra("type");
+                if (type != null) {
+                    if (type == NetStatusType.NETSTATUS_MOBILE) {//连接到4G状态
+
+                    } else if (type == NetStatusType.NETSTATUS_WIFI) {//连接到wifi状态
+
+                    } else {//无网络
+
+                    }
+                }
+            }
+        }
+    };
 }

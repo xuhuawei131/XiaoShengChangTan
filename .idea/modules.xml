@@ -3,10 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/XiaoShengChangTan.iml" filepath="$PROJECT_DIR$/XiaoShengChangTan.iml" />
-      <module fileurl="file://$PROJECT_DIR$/XiaoShengChangTan.iml" filepath="$PROJECT_DIR$/XiaoShengChangTan.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/xhwbaselibrary/xhwbaselibrary.iml" filepath="$PROJECT_DIR$/xhwbaselibrary/xhwbaselibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/xhwbaselibrary/xhwbaselibrary.iml" filepath="$PROJECT_DIR$/xhwbaselibrary/xhwbaselibrary.iml" />
     </modules>
   </component>
