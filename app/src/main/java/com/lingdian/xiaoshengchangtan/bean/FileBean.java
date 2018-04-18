@@ -9,7 +9,8 @@ import java.io.File;
  */
 
 public class FileBean {
-    private static final String URL="http://live.jlradio.net:80/VodFiles//am738/%s/2000007200_mp4/200000_7200_543210K.mp4";
+//    private static final String URL="http://live.jlradio.net:80/VodFiles//am738/%s/2000007200_mp4/200000_7200_543210K.mp4";
+    private static final String URL="http://live.jlradio.net:80/VodFiles//am738/%s/1200005400_mp4/120000_5400_543210K.mp4";
 
     public String fileUrl;
 

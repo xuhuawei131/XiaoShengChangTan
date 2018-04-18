@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.lingdian.xiaoshengchangtan.customview.EmptyRecyclerView;
 import com.lingdian.xiaoshengchangtan.customview.moreview.EndlessRecyclerOnScrollListener;
 import com.lingdian.xiaoshengchangtan.customview.moreview.HeaderAndFooterRecyclerViewAdapter;
 import com.lingdian.xiaoshengchangtan.customview.moreview.LoadingFooter;
@@ -28,7 +27,7 @@ import rx.schedulers.Schedulers;
 public abstract class BaseRefreshMoreViewActivity extends BaseActivity   {
     protected HWRefreshLayout refresh_layout;
     private static final int MAX_PAGE_NUM=20;
-    protected abstract int getJRefreshLayoutId();
+    protected abstract int getRefreshLayoutId();
 
     protected abstract void findRefreshMoreViewByIds();
 
@@ -71,7 +70,7 @@ public abstract class BaseRefreshMoreViewActivity extends BaseActivity   {
 
     @Override
     protected final void findViewByIds() {
-        refresh_layout = (HWRefreshLayout) findViewById(getJRefreshLayoutId());
+        refresh_layout = (HWRefreshLayout) findViewById(getRefreshLayoutId());
         if (refresh_layout != null) {
             refresh_layout.setOnRefreshListener(onRefreshListener);
         }

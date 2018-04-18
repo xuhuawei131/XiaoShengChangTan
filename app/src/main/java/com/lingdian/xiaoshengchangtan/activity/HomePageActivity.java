@@ -221,7 +221,7 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
     }
 
     @Override
-    protected int getJRefreshLayoutId() {
+    protected int getRefreshLayoutId() {
         return R.id.refreshLayout;
     }
 

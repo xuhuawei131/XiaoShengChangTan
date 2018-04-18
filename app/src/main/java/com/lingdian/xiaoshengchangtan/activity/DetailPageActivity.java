@@ -1,6 +1,7 @@
 package com.lingdian.xiaoshengchangtan.activity;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -16,11 +17,21 @@ import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.enums.TimerType;
 import com.lingdian.xiaoshengchangtan.services.MyPlayerService;
 import com.lingdian.xiaoshengchangtan.utils.DateUtils;
+import com.lingdian.xiaoshengchangtan.utils.HtmlParer;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.ACTION_ALARM_TIMER_UI_UPDATE;
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.ACTION_VIEWHOLDER_TIMER;
@@ -35,6 +46,10 @@ import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_SEEK
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_STARTOR_PAUSE;
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_START_NEW_MUSIC;
 
+/**
+ *
+ * 播放的详情页面
+ */
 public class DetailPageActivity extends BaseActivity {
 
     private PageInfoDbBean bean;
@@ -102,16 +117,42 @@ public class DetailPageActivity extends BaseActivity {
         EventBus.getDefault().register(this);
         setData();
 
-//        Observable.just("Anima")
-//                .subscribeOn(Schedulers.io())
-//                .delay(500, TimeUnit.MILLISECONDS)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Action1<String>() {
-//                    @Override
-//                    public void call(String s) {
-////                        MyPlayerService.startPlay(bean);
-//                    }
-//                });
+
+
+        OkGo.<String>post(url).tag(this).execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dealPageResult(response);
+            }
+
+            @Override
+            public void onCacheSuccess(Response<String> response) {
+                dealPageResult(response);
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+                super.onError(response);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+
+
+
+        Observable.just("Anima")
+                .subscribeOn(Schedulers.io())
+                .delay(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        MyPlayerService.startPlay(bean);
+                    }
+                });
     }
 
     @Override
@@ -119,6 +160,17 @@ public class DetailPageActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
 
     }
+
+
+    private void dealPageResult(Response<String> response) {
+        Log.v("xhw", "onSuccess");
+        String html = response.body();
+//        InputStream inputStream=response.getRawResponse().body().byteStream();
+       String fileUrl = HtmlParer.getPageDownFile(html);
+    }
+
+
+
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override

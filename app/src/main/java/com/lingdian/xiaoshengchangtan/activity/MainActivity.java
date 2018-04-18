@@ -31,7 +31,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * 主页面列表
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String url = "http://gb.jlradio.net/misc/2017-09/06/cms187770article.shtml";
     private static final String homeUrl="http://gb.jlradio.net/misc/node_153_2.shtml";
@@ -117,6 +119,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * 请求单个网页的数据
+     */
     private void requestNetPageData() {
         OkGo.<String>post(url).tag(this).execute(new StringCallback() {
             @Override
