@@ -101,10 +101,13 @@ public class HtmlParer {
                 if(TextUtils.isEmpty(title)||!title.contains("_")){
                     continue;
                 }
+
+
                 bean.link = link;
                 bean.title = title;
 
                 bean.title = title;
+                bean.itemId=MyUtils.getStrMD5(title);
                 bean.link = link;
                 bean.date = date;
 

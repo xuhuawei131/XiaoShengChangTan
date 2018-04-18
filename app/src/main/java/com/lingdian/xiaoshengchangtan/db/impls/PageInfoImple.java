@@ -2,6 +2,7 @@ package com.lingdian.xiaoshengchangtan.db.impls;
 
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
+import com.lingdian.xiaoshengchangtan.db.tables.DownloadInfoDbBean;
 import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 
 import java.sql.SQLException;
@@ -14,6 +15,7 @@ import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS
 
 /**
  * Created by lingdian on 17/9/13.
+ * 数据缓存
  */
 
 public class PageInfoImple extends BaseDao<PageInfoDbBean> {
@@ -61,7 +63,24 @@ public class PageInfoImple extends BaseDao<PageInfoDbBean> {
             return null;
         }
     }
-
+    /**
+     *
+     * 更改下载的路径
+     * @param itemId
+     * @param fileUrl
+     */
+    public void updateDownloadFileUrl(String itemId, String fileUrl){
+        try {
+            if (isOpen()) {
+                UpdateBuilder<PageInfoDbBean, Integer> ub = baseDao.updateBuilder();
+                ub.updateColumnValue("fileUrl", fileUrl);
+                ub.where().eq("itemId", itemId);
+                updateData(ub);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * 获取已经下载的文件列表
      * @return
@@ -89,7 +108,7 @@ public class PageInfoImple extends BaseDao<PageInfoDbBean> {
             if (isOpen()) {
                 UpdateBuilder<PageInfoDbBean, Integer> ub = baseDao.updateBuilder();
                 ub.updateColumnValue("currentTime", info.currentTime);
-                ub.where().eq("title", info.title);
+                ub.where().eq("itemId", info.itemId);
                 updateData(ub);
             }
         } catch (SQLException e) {
@@ -98,15 +117,16 @@ public class PageInfoImple extends BaseDao<PageInfoDbBean> {
     }
 
     /**
-     * 更新总共的时间
-     * @param info
+     *  更新总共的时间
+     * @param itemId
+     * @param totalTime
      */
-    public void updateDownloadDuring(PageInfoDbBean info){
+    public void updateDownloadDuring(String itemId,int totalTime){
         try {
             if (isOpen()) {
                 UpdateBuilder<PageInfoDbBean, Integer> ub = baseDao.updateBuilder();
-                ub.updateColumnValue("totalTime", info.totalTime);
-                ub.where().eq("title", info.title);
+                ub.updateColumnValue("totalTime", totalTime);
+                ub.where().eq("itemId", itemId);
                 updateData(ub);
             }
         } catch (SQLException e) {
@@ -122,7 +142,7 @@ public class PageInfoImple extends BaseDao<PageInfoDbBean> {
             if (isOpen()) {
                 UpdateBuilder<PageInfoDbBean, Integer> ub = baseDao.updateBuilder();
                 ub.updateColumnValue("downStatus", info.downStatus);
-                ub.where().eq("title", info.title);
+                ub.where().eq("itemId", info.itemId);
                 updateData(ub);
             }
         } catch (SQLException e) {

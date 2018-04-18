@@ -15,6 +15,7 @@ import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS
 
 /**
  * Created by lingdian on 17/9/13.
+ * 下载的进度管理
  */
 
 public class DownloadInfoImple extends BaseDao<DownloadInfoDbBean> {
@@ -47,11 +48,11 @@ public class DownloadInfoImple extends BaseDao<DownloadInfoDbBean> {
      * 获取下载列表数据
      * @return
      */
-    public  DownloadInfoDbBean getDownloadList(String title) {
+    public  DownloadInfoDbBean getDownloadList(String itemId) {
         try {
             if (isOpen()) {
                 QueryBuilder<DownloadInfoDbBean, Integer> qb = baseDao.queryBuilder();
-                qb.where().eq("title", title);
+                qb.where().eq("itemId", itemId);
                 List<DownloadInfoDbBean> list= getQuerryInfo(qb);
                 if(list!=null&&list.size()>0){
                     return list.get(0);
@@ -84,35 +85,38 @@ public class DownloadInfoImple extends BaseDao<DownloadInfoDbBean> {
         }
     }
 
+
     /**
      *
      * 更新下载的状态
-     * @param title
+     * @param itemId
      * @param downStatus
      */
-    public void updateDownloadStatus(String title, int downStatus){
+    public void updateDownloadStatus(String itemId, int downStatus){
         try {
             if (isOpen()) {
                 UpdateBuilder<DownloadInfoDbBean, Integer> ub = baseDao.updateBuilder();
                 ub.updateColumnValue("downStatus", downStatus);
-                ub.where().eq("title", title);
+                ub.where().eq("itemId", itemId);
                 updateData(ub);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+
     /**
      * 更新总共的时间
-     * @param title
+     * @param itemId
      * @param totalSize
      */
-    public synchronized void updateDownloadTotalSize(String title,long totalSize){
+    public synchronized void updateDownloadTotalSize(String itemId,long totalSize){
         try {
             if (isOpen()) {
                 UpdateBuilder<DownloadInfoDbBean, Integer> ub = baseDao.updateBuilder();
                 ub.updateColumnValue("totalSize", totalSize);
-                ub.where().eq("title", title);
+                ub.where().eq("itemId", itemId);
                 updateData(ub);
             }
         } catch (SQLException e) {
@@ -121,15 +125,15 @@ public class DownloadInfoImple extends BaseDao<DownloadInfoDbBean> {
     }
     /**
      * 更新总共的时间
-     * @param title
+     * @param itemId
      * @param fileDownSize
      */
-    public synchronized void updateDownloadSize(String title,long fileDownSize){
+    public synchronized void updateDownloadSize(String itemId,long fileDownSize){
         try {
             if (isOpen()) {
                 UpdateBuilder<DownloadInfoDbBean, Integer> ub = baseDao.updateBuilder();
                 ub.updateColumnValue("fileDownSize", fileDownSize);
-                ub.where().eq("title", title);
+                ub.where().eq("itemId", itemId);
                 updateData(ub);
             }
         } catch (SQLException e) {
@@ -137,7 +141,7 @@ public class DownloadInfoImple extends BaseDao<DownloadInfoDbBean> {
         }
     }
     /**
-     *
+     *更改下载状态
      * @param info
      */
     public void updateDownloadStatus(PageInfoDbBean info){
@@ -145,13 +149,14 @@ public class DownloadInfoImple extends BaseDao<DownloadInfoDbBean> {
             if (isOpen()) {
                 UpdateBuilder<DownloadInfoDbBean, Integer> ub = baseDao.updateBuilder();
                 ub.updateColumnValue("downStatus", info.downStatus);
-                ub.where().eq("title", info.title);
+                ub.where().eq("itemId", info.itemId);
                 updateData(ub);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    
        public void inserPageDownloadData(List<DownloadInfoDbBean> list){
            try {
                if (isOpen()) {

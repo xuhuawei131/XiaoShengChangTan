@@ -13,7 +13,7 @@ import android.view.View;
 import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.adapters.HomePageAdapter;
 import com.lingdian.xiaoshengchangtan.cache.DownloadManager;
-import com.lingdian.xiaoshengchangtan.config.SingleData;
+import com.lingdian.xiaoshengchangtan.config.SingleCacheData;
 import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.callbacks.ParserStringCallBack;
 import com.lingdian.xiaoshengchangtan.db.impls.PageInfoImple;
@@ -43,6 +43,7 @@ import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS
 
 /**
  * 首页面
+ * 列表展示所有的即将播放的列表
  */
 public class HomePageActivity extends BaseRefreshMoreViewActivity implements View.OnClickListener {
 
@@ -119,11 +120,12 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
             }
             @Override
             public void onResultComing(List<PageInfoDbBean> response) {
+                disProgressDialog();
+                isDoingRequest = false;
+
                 arrayList.clear();
                 arrayList.addAll(response);
 
-                disProgressDialog();
-                isDoingRequest = false;
                 notifyDataSetChanged();
                 notifyEmptyAdapter();
                 setRefreshFinish();
@@ -326,7 +328,7 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
     }
     @Subscriber(tag = TAG_HOME_ITEM_CLICK)
     private void onItemClick(PageInfoDbBean bean) {
-        SingleData.getInstance().setCurrentList(arrayList);
+        SingleCacheData.getInstance().setCurrentList(arrayList);
         MyPlayerService.startPlay(bean);
 
         Intent intent = new Intent(this, DetailPageActivity.class);

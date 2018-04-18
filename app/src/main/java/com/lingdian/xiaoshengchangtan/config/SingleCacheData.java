@@ -15,68 +15,92 @@ import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_STAR
 
 /**
  * Created by lingdian on 17/9/22.
- * 单例的集合再次
+ * 单例的集合
  */
 
-public class SingleData {
+public class SingleCacheData {
 
-    private static SingleData instance=null;
+    private static SingleCacheData instance=null;
     private PageInfoDbBean currentBean;
     //设置当前的播放列表
     private List<PageInfoDbBean> currentList;
     private TimerType currentTimerType;
-    private SingleData(){
+    private SingleCacheData(){
         currentTimerType=TimerType.TIMER_CANCEL;
         currentList=new ArrayList<>();
     }
-    public static SingleData getInstance(){
+    public static SingleCacheData getInstance(){
         if(instance==null){
-            instance=new SingleData();
+            instance=new SingleCacheData();
         }
         return instance;
     }
 
-
-
-
-
+    /**
+     * 获取当前定时的类型
+     * @return
+     */
     public TimerType getCurrentTimerType() {
         return currentTimerType;
     }
 
+    /**
+     * 设置定时关闭的类型
+     * @param currentTimerType
+     */
     public void setCurrentTimerType(TimerType currentTimerType) {
         this.currentTimerType = currentTimerType;
     }
 
 
-    public PageInfoDbBean getDownLoadDbBean(){
+    /**
+     * 获取当前播放的数据bean
+     * @return
+     */
+    public PageInfoDbBean getCurrentPlayBean(){
         return currentBean;
     }
 
+    /**
+     * 获取当前的播放列表
+     * @return
+     */
     public List<PageInfoDbBean> getCurrentList() {
         return currentList;
     }
 
+    /**
+     * 清空播放列表
+     */
     public void clearCurrentList(){
         if(currentList!=null){
             currentList.clear();
         }
     }
 
+    /**
+     * 设置新的播放列表
+     * @param currentList
+     */
     public void setCurrentList(List<PageInfoDbBean> currentList) {
         this.currentList = currentList;
     }
 
 
+    /**
+     * 播放新的数据bean
+     * @param bean
+     */
     public void playNewMusic(PageInfoDbBean bean){
         if (currentBean != null) {
-            if (!currentBean.title.equals(bean.title)) {
+            if (!currentBean.itemId.equals(bean.itemId)) {
                 currentBean = bean;
+//                MyPlayerApi.getInstance().stop();
                 EventBus.getDefault().post(bean,TAG_PLAY_UI_START_NEW_MUSIC);
 
                 FileBean fileBean = FileBean.newInstance(bean.title);
                 String url;
-                if (new File(fileBean.filePath).exists()) {
+                if (fileBean.isExistFile()) {
                     url = fileBean.filePath;
                 } else {
                     url = fileBean.fileUrl;
@@ -90,7 +114,7 @@ public class SingleData {
 
             FileBean fileBean = FileBean.newInstance(bean.title);
             String url;
-            if (new File(fileBean.filePath).exists()) {
+            if (fileBean.isExistFile()) {
                 url = fileBean.filePath;
             } else {
                 url = fileBean.fileUrl;
@@ -100,6 +124,10 @@ public class SingleData {
         }
     }
 
+    /**
+     * 获取下一个 数据bean
+     * @return
+     */
     public PageInfoDbBean getNextMusic(){
         if(currentList!=null&&currentList.size()>0){
             int index=0;
@@ -118,6 +146,10 @@ public class SingleData {
         return null;
     }
 
+    /**
+     * 获取最后一个数据bean
+     * @return
+     */
     public PageInfoDbBean getLastMusic(){
         if(currentList!=null&&currentList.size()>0){
             int index=0;

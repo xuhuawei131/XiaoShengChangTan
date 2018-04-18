@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lingdian.xiaoshengchangtan.R;
-import com.lingdian.xiaoshengchangtan.config.SingleData;
+import com.lingdian.xiaoshengchangtan.config.SingleCacheData;
 import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.services.MyPlayerService;
 
@@ -100,7 +100,7 @@ public class MainLockActivity extends SwipeBackBaseActivity {
     }
 
     private void setData(){
-        PageInfoDbBean bean=SingleData.getInstance().getDownLoadDbBean();
+        PageInfoDbBean bean= SingleCacheData.getInstance().getCurrentPlayBean();
         if(bean!=null){
             text_title.setText(bean.title);
             btn_subTitle.setText("晓声长谈电台版");

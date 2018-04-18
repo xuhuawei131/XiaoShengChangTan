@@ -26,13 +26,13 @@ public class SwitchConfig {
     public static final String DB_NAME="xsct.db";
 
     //下载的状态
-    public static final int DOWNLOAD_STATUS_NO=0;
-    public static final int DOWNLOAD_STATUS_DOING=1;
-    public static final int DOWNLOAD_STATUS_PAUSE=2;
-    public static final int DOWNLOAD_STATUS_WAITTING=3;
-    public static final int DOWNLOAD_STATUS_DONE=4;
-    public static final int DOWNLOAD_STATUS_ERROR=5;
-    public static final int DOWNLOAD_STATUS_PREPARE=6;
+    public static final int DOWNLOAD_STATUS_NO=0;//还没下载
+    public static final int DOWNLOAD_STATUS_DOING=1;//下载完成
+    public static final int DOWNLOAD_STATUS_PAUSE=2;//暂停下载
+    public static final int DOWNLOAD_STATUS_WAITTING=3;//等待下载
+    public static final int DOWNLOAD_STATUS_DONE=4;//下载完成
+    public static final int DOWNLOAD_STATUS_ERROR=5;//下载错误
+    public static final int DOWNLOAD_STATUS_PREPARE=6;//准备下载
 
     /**
      * 通过下载的状态 转化成str

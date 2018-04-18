@@ -10,7 +10,7 @@ import android.view.View;
 import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.adapters.DownloadedAdapter;
 import com.lingdian.xiaoshengchangtan.bean.FileBean;
-import com.lingdian.xiaoshengchangtan.config.SingleData;
+import com.lingdian.xiaoshengchangtan.config.SingleCacheData;
 import com.lingdian.xiaoshengchangtan.db.impls.PageInfoImple;
 import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.decoration.ItemDecoration;
@@ -117,7 +117,7 @@ public class DownLoadedActivity extends BaseActivity {
     @Subscriber(tag = TAG_DOWNLOADING_ITEM_CLICK)
     private void onDoneItemClick(PageInfoDbBean bean){
 
-        SingleData.getInstance().setCurrentList(arrayList);
+        SingleCacheData.getInstance().setCurrentList(arrayList);
         MyPlayerService.startPlay(bean);
 
         Intent intent=new Intent();

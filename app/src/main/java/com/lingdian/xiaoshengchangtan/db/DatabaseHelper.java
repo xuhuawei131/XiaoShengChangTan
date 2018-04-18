@@ -8,6 +8,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.lingdian.xiaoshengchangtan.MyApp;
 import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
+import com.lingdian.xiaoshengchangtan.db.tables.DownloadInfoDbBean;
 import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.db.impls.PageInfoImple;
 import com.xhwbaselibrary.caches.MyAppContext;
@@ -31,6 +32,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                          ConnectionSource connectionSource) {
         try {
             TableUtils.createTable(connectionSource, PageInfoDbBean.class);
+            TableUtils.createTable(connectionSource, DownloadInfoDbBean.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -41,6 +43,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                           ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
             TableUtils.dropTable(connectionSource, PageInfoDbBean.class, true);
+            TableUtils.dropTable(connectionSource, DownloadInfoDbBean.class, true);
             onCreate(database, connectionSource);
         } catch (SQLException e) {
             e.printStackTrace();

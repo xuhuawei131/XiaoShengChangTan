@@ -14,15 +14,20 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.util.Log;
 
-import com.lingdian.xiaoshengchangtan.MyApp;
 import com.lingdian.xiaoshengchangtan.activity.MainLockActivity;
-import com.lingdian.xiaoshengchangtan.config.SingleData;
+import com.lingdian.xiaoshengchangtan.config.SingleCacheData;
 import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
+import com.lingdian.xiaoshengchangtan.db.impls.DownloadInfoImple;
 import com.lingdian.xiaoshengchangtan.db.impls.PageInfoImple;
 import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.enums.TimerType;
 import com.lingdian.xiaoshengchangtan.player.MyPlayerApi;
+import com.lingdian.xiaoshengchangtan.utils.HtmlParer;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 import com.xhwbaselibrary.caches.MyAppContext;
 
 import org.simple.eventbus.EventBus;
@@ -52,7 +57,7 @@ public class MyPlayerService extends Service {
 
 
     public static void startTimer(TimerType timerType) {
-        SingleData.getInstance().setCurrentTimerType(timerType);
+        SingleCacheData.getInstance().setCurrentTimerType(timerType);
         Context context = MyAppContext.getInstance().getContext();
         Intent intent = new Intent(context, MyPlayerService.class);
         intent.setAction(SERVICE_ACTION_TIMER_ADD);
@@ -74,12 +79,12 @@ public class MyPlayerService extends Service {
     }
 
     public static void startPlayNext(){
-        PageInfoDbBean bean=SingleData.getInstance().getNextMusic();
+        PageInfoDbBean bean= SingleCacheData.getInstance().getNextMusic();
         startPlay(bean);
     }
 
     public static void startPlayLast(){
-        PageInfoDbBean bean=SingleData.getInstance().getLastMusic();
+        PageInfoDbBean bean= SingleCacheData.getInstance().getLastMusic();
         startPlay(bean);
     }
     @Override
@@ -118,15 +123,15 @@ public class MyPlayerService extends Service {
                 if (SERVICE_ACTION_PLAYER.equals(action)) {
                     PageInfoDbBean bean = (PageInfoDbBean) intent.getSerializableExtra("bean");
                     if (bean != null) {
-                        SingleData.getInstance().playNewMusic(bean);
+                        playItem(bean);
                     }
                     //添加新的定时器
                 } else if (SERVICE_ACTION_TIMER_ADD.equals(action)) {
-                    TimerType currentTimerType = SingleData.getInstance().getCurrentTimerType();
+                    TimerType currentTimerType = SingleCacheData.getInstance().getCurrentTimerType();
                     if (currentTimerType != null) {
                         stopAlarm();
                         if(currentTimerType ==TimerType.TIMER_END){
-                            PageInfoDbBean currentBean=SingleData.getInstance().getDownLoadDbBean();
+                            PageInfoDbBean currentBean= SingleCacheData.getInstance().getCurrentPlayBean();
                             if(currentBean!=null){
                                 startAlarm(currentBean.totalTime);
                             }
@@ -151,16 +156,61 @@ public class MyPlayerService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+
+    /**
+     * 播放  * @param bean
+     */
+    public void playItem(PageInfoDbBean bean){
+        if (TextUtils.isEmpty(bean.fileUrl)){
+            getPageDownFilePath(bean,bean.link);
+        }else{
+            SingleCacheData.getInstance().playNewMusic(bean);
+        }
+    }
+
+    /**
+     * 获取下载的路径
+     * @param bean
+     * @param url
+     */
+    private void getPageDownFilePath(final PageInfoDbBean bean,String url){
+
+        OkGo.<String>post(url).tag(this).execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                String html = response.body();
+                String fileUrl = HtmlParer.getPageDownFile(html);
+                bean.fileUrl=fileUrl;
+                PageInfoImple.getInstance().updateDownloadFileUrl(bean.itemId,fileUrl);
+                SingleCacheData.getInstance().playNewMusic(bean);
+            }
+
+            @Override
+            public void onCacheSuccess(Response<String> response) {
+                String html = response.body();
+                String fileUrl = HtmlParer.getPageDownFile(html);
+                bean.fileUrl=fileUrl;
+                PageInfoImple.getInstance().updateDownloadFileUrl(bean.itemId,fileUrl);
+                SingleCacheData.getInstance().playNewMusic(bean);
+            }
+            @Override
+            public void onError(Response<String> response) {
+                super.onError(response);
+            }
+        });
+    }
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
 
-        SingleData.getInstance().clearCurrentList();
+        SingleCacheData.getInstance().clearCurrentList();
 
 
         stopAlarm();
 
-        PageInfoDbBean currentBean=SingleData.getInstance().getDownLoadDbBean();
+        PageInfoDbBean currentBean= SingleCacheData.getInstance().getCurrentPlayBean();
         PageInfoImple.getInstance().updateDownloadPlayerStatus(currentBean);
 
         MyPlayerApi.getInstance().removeMediaPlayerListener(listener);
@@ -210,7 +260,7 @@ public class MyPlayerService extends Service {
     private void onHandPauseOrStart(String item) {
         MyPlayerApi.MusicStatus status = MyPlayerApi.getInstance().startOrPause();
 
-        PageInfoDbBean currentBean=SingleData.getInstance().getDownLoadDbBean();
+        PageInfoDbBean currentBean= SingleCacheData.getInstance().getCurrentPlayBean();
         if (status == MyPlayerApi.MusicStatus.PAUSE) {
             currentBean.isPlaying = false;
 
@@ -252,7 +302,7 @@ public class MyPlayerService extends Service {
         public void onCompletion(MediaPlayer mediaPlayer, PageInfoDbBean bean) {
             EventBus.getDefault().post(bean, TAG_PLAY_UI_COMPLETION);
 
-            if (SingleData.getInstance().getCurrentTimerType() ==TimerType.TIMER_END) {
+            if (SingleCacheData.getInstance().getCurrentTimerType() ==TimerType.TIMER_END) {
                 LocalBroadcastManager.getInstance(MyPlayerService.this).sendBroadcast(new Intent(ACTION_EXIT_ALL_LIFE));
             } else {//播放完 下一个
                 MyPlayerService.startPlayNext();
@@ -268,7 +318,7 @@ public class MyPlayerService extends Service {
         @Override
         public boolean onError(MediaPlayer mediaPlayer, int i, int i1, PageInfoDbBean bean) {
 
-            PageInfoDbBean currentBean=SingleData.getInstance().getDownLoadDbBean();
+            PageInfoDbBean currentBean= SingleCacheData.getInstance().getCurrentPlayBean();
             currentBean.isPlaying = false;
 
             EventBus.getDefault().post(bean, TAG_PLAY_UI_ERROR);
@@ -284,7 +334,7 @@ public class MyPlayerService extends Service {
         public void onPrepared(MediaPlayer mediaPlayer, PageInfoDbBean bean) {
             int during = mediaPlayer.getDuration();
 
-            PageInfoDbBean currentBean=SingleData.getInstance().getDownLoadDbBean();
+            PageInfoDbBean currentBean= SingleCacheData.getInstance().getCurrentPlayBean();
             currentBean.totalTime = during;
             currentBean.isPlaying = true;
 
@@ -294,7 +344,7 @@ public class MyPlayerService extends Service {
                 MyPlayerApi.getInstance().seekTo(currentBean.currentTime);
             }
 
-            PageInfoImple.getInstance().updateDownloadDuring(currentBean);
+            PageInfoImple.getInstance().updateDownloadDuring(currentBean.itemId,currentBean.totalTime);
 
             MyPlayerApi.getInstance().startPlay();
 

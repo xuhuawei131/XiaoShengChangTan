@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.lingdian.xiaoshengchangtan.R;
 import com.lingdian.xiaoshengchangtan.bean.FileBean;
 import com.lingdian.xiaoshengchangtan.bean.TimerBean;
-import com.lingdian.xiaoshengchangtan.config.SingleData;
+import com.lingdian.xiaoshengchangtan.config.SingleCacheData;
 import com.lingdian.xiaoshengchangtan.customview.MyMenuDialog;
 import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.enums.TimerType;
@@ -165,8 +165,7 @@ public class DetailPageActivity extends BaseActivity {
     private void dealPageResult(Response<String> response) {
         Log.v("xhw", "onSuccess");
         String html = response.body();
-//        InputStream inputStream=response.getRawResponse().body().byteStream();
-       String fileUrl = HtmlParer.getPageDownFile(html);
+        String fileUrl = HtmlParer.getPageDownFile(html);
     }
 
 
@@ -279,7 +278,7 @@ public class DetailPageActivity extends BaseActivity {
     }
 
     private void setData() {
-        bean= SingleData.getInstance().getDownLoadDbBean();
+        bean= SingleCacheData.getInstance().getCurrentPlayBean();
         fileBean = FileBean.newInstance(bean.title);
         if (fileBean == null) {
             finish();
