@@ -32,7 +32,11 @@ public class DownloadInfoImple extends BaseDao<DownloadInfoDbBean> {
         return instance;
         }
 
-       public List<DownloadInfoDbBean> getAllDownloadData(){
+    /**
+     * 获取所有的下载数据
+     * @return
+     */
+    public List<DownloadInfoDbBean> getAllDownloadData(){
            try {
                if (isOpen()) {
                    return baseDao.queryForAll();

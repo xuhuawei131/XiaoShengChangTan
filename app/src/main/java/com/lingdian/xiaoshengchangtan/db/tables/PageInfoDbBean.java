@@ -26,11 +26,6 @@ public class PageInfoDbBean implements Serializable{
     /**文件的日期*/
     @DatabaseField
     public String date;
-    /**文件总共的时间*/
-    @DatabaseField
-    public int totalTime;
-    /**下载的状态*/
-    public int downStatus= SwitchConfig.DOWNLOAD_STATUS_NO;//0 为下载
     /**详情页面地址**/
     @DatabaseField
     public String link;
@@ -39,6 +34,10 @@ public class PageInfoDbBean implements Serializable{
     public String fileUrl;
 
 
+    /**下载的状态*/
+    public int downStatus= SwitchConfig.DOWNLOAD_STATUS_NO;//0 为下载
+    /**文件总共的时间*/
+    public int totalTime;
     /**下载的进度**/
     public float percent;
     /**文件当前播放时间*/
@@ -47,7 +46,6 @@ public class PageInfoDbBean implements Serializable{
     public int buffet_percent;
 
     public PageInfoDbBean(){
-
     }
 
     @Override

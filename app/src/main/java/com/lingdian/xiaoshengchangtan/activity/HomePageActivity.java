@@ -90,7 +90,7 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
         View text_setting=headerLayout.findViewById(R.id.text_setting);
         View text_exit=headerLayout.findViewById(R.id.text_exit);
 
-        DownloadManager.getInstance().getAllDownList();
+//        DownloadManager.getInstance().getAllDownList();
 
         text_downloading.setOnClickListener(this);
         text_downloaded.setOnClickListener(this);
@@ -115,7 +115,7 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
             @Override
             public List<PageInfoDbBean> parserJson(Response<String> response) {
                 List<PageInfoDbBean> dataList = HtmlParer.dealFileListResult(response);
-                dealDataCombinDb(dataList);
+//                dealDataCombinDb(dataList);
                 return dataList;
             }
             @Override
@@ -193,7 +193,7 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
      * @param dataList
      */
     private void dealDataCombinDb(List<PageInfoDbBean> dataList) {
-        List<PageInfoDbBean> dbList = PageInfoImple.getInstance().getAllDownloadData();
+        List<PageInfoDbBean> dbList = PageInfoImple.getInstance().getAllPageData();
         List<PageInfoDbBean> updateList = new ArrayList<>();
         for (PageInfoDbBean item : dataList) {
             boolean isExit = false;
@@ -283,7 +283,7 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
             @Override
             public List<PageInfoDbBean> parserJson(Response response) {
                 List<PageInfoDbBean> dataList = HtmlParer.dealFileListResult(response);
-                dealDataCombinDb(dataList);
+//                dealDataCombinDb(dataList);
                 return dataList;
             }
             @Override
@@ -328,9 +328,11 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
     }
     @Subscriber(tag = TAG_HOME_ITEM_CLICK)
     private void onItemClick(PageInfoDbBean bean) {
+        //缓存播放列表
         SingleCacheData.getInstance().setCurrentList(arrayList);
+        //播放制定的音频
         MyPlayerService.startPlay(bean);
-
+        //跳转详情页面
         Intent intent = new Intent(this, DetailPageActivity.class);
         startActivity(intent);
     }

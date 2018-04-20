@@ -99,7 +99,7 @@ public class MyPlayerService extends Service {
 
         EventBus.getDefault().register(this);
 
-
+        //接受系统广播 监视屏幕是否锁屏
         IntentFilter lockIntentFilter = new IntentFilter();
         lockIntentFilter.addAction(Intent.ACTION_SCREEN_ON);
         lockIntentFilter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -162,7 +162,13 @@ public class MyPlayerService extends Service {
      */
     public void playItem(PageInfoDbBean bean){
         if (TextUtils.isEmpty(bean.fileUrl)){
-            getPageDownFilePath(bean,bean.link);
+            PageInfoDbBean dbBean=PageInfoImple.getInstance().getPageItemInfo(bean.itemId);
+            if (TextUtils.isEmpty(dbBean.fileUrl)){
+                getPageDownFilePath(bean,bean.link);
+            }else{
+                bean.fileUrl=dbBean.fileUrl;
+                SingleCacheData.getInstance().playNewMusic(bean);
+            }
         }else{
             SingleCacheData.getInstance().playNewMusic(bean);
         }
@@ -178,15 +184,13 @@ public class MyPlayerService extends Service {
         OkGo.<String>post(url).tag(this).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                String html = response.body();
-                String fileUrl = HtmlParer.getPageDownFile(html);
-                bean.fileUrl=fileUrl;
-                PageInfoImple.getInstance().updateDownloadFileUrl(bean.itemId,fileUrl);
-                SingleCacheData.getInstance().playNewMusic(bean);
+                playAudio(response);
             }
-
             @Override
             public void onCacheSuccess(Response<String> response) {
+                playAudio(response);
+            }
+            private void playAudio(Response<String> response){
                 String html = response.body();
                 String fileUrl = HtmlParer.getPageDownFile(html);
                 bean.fileUrl=fileUrl;
@@ -284,11 +288,16 @@ public class MyPlayerService extends Service {
             EventBus.getDefault().post(currentPosition, TAG_PLAY_UI_PROGRESS);
         }
     };
+
+    /**
+     * 开始更新进度条
+     */
     private void startUpdateSeekBarProgress() {
         /*避免重复发送Message*/
         stopUpdateSeekBarProgree();
         mMusicHandler.sendEmptyMessageDelayed(MUSIC_MESSAGE, 1000);
     }
+
     private void stopUpdateSeekBarProgree() {
         mMusicHandler.removeMessages(MUSIC_MESSAGE);
     }
@@ -317,10 +326,7 @@ public class MyPlayerService extends Service {
 
         @Override
         public boolean onError(MediaPlayer mediaPlayer, int i, int i1, PageInfoDbBean bean) {
-
-            PageInfoDbBean currentBean= SingleCacheData.getInstance().getCurrentPlayBean();
-            currentBean.isPlaying = false;
-
+            bean.isPlaying = false;
             EventBus.getDefault().post(bean, TAG_PLAY_UI_ERROR);
             return false;
         }
@@ -333,18 +339,20 @@ public class MyPlayerService extends Service {
         @Override
         public void onPrepared(MediaPlayer mediaPlayer, PageInfoDbBean bean) {
             int during = mediaPlayer.getDuration();
+            //设置当前的数据 总共时间
+//            PageInfoDbBean currentBean= SingleCacheData.getInstance().getCurrentPlayBean();
+//            currentBean.totalTime = during;
+//            currentBean.isPlaying = true;
 
-            PageInfoDbBean currentBean= SingleCacheData.getInstance().getCurrentPlayBean();
-            currentBean.totalTime = during;
-            currentBean.isPlaying = true;
+            bean.totalTime=during;
+            bean.isPlaying = true;
 
-            if (SwitchConfig.isSkipHead&& currentBean.currentTime==0) {
+            //跳过广告头
+            if (SwitchConfig.isSkipHead&& bean.currentTime==0) {
                 MyPlayerApi.getInstance().seekTo(SwitchConfig.SkipHeadTime);
             }else{
-                MyPlayerApi.getInstance().seekTo(currentBean.currentTime);
+                MyPlayerApi.getInstance().seekTo(bean.currentTime);
             }
-
-            PageInfoImple.getInstance().updateDownloadDuring(currentBean.itemId,currentBean.totalTime);
 
             MyPlayerApi.getInstance().startPlay();
 

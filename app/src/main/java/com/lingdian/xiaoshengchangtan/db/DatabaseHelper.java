@@ -23,7 +23,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 
     private DatabaseHelper() {
-        super(MyAppContext.getInstance().getContext(), SwitchConfig.DB_NAME, null, 2);
+        super(MyAppContext.getInstance().getContext(), SwitchConfig.DB_NAME, null, 3);
         daos = new HashMap<>();
     }
 

@@ -32,7 +32,11 @@ public class PageInfoImple extends BaseDao<PageInfoDbBean> {
         return instance;
         }
 
-       public List<PageInfoDbBean> getAllDownloadData(){
+    /**
+     * 获取所有页面的缓存
+     * @return
+     */
+    public List<PageInfoDbBean> getAllPageData(){
            try {
                if (isOpen()) {
                    return baseDao.queryForAll();
@@ -100,6 +104,30 @@ public class PageInfoImple extends BaseDao<PageInfoDbBean> {
         }
     }
 
+    /**
+     * 获取指定的某个数据
+     * @param itemId
+     * @return
+     */
+    public PageInfoDbBean getPageItemInfo(String itemId) {
+        try {
+            if (isOpen()) {
+                QueryBuilder<PageInfoDbBean, Integer> qb = baseDao.queryBuilder();
+                qb.where().eq("itemId", itemId);
+                List<PageInfoDbBean> list= getQuerryInfo(qb);
+                if (list!=null&&list.size()>0){
+                    return list.get(0);
+                }else{
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
     public void updateDownloadPlayerStatus(PageInfoDbBean info){
         if(info==null){
             return;
@@ -116,23 +144,6 @@ public class PageInfoImple extends BaseDao<PageInfoDbBean> {
         }
     }
 
-    /**
-     *  更新总共的时间
-     * @param itemId
-     * @param totalTime
-     */
-    public void updateDownloadDuring(String itemId,int totalTime){
-        try {
-            if (isOpen()) {
-                UpdateBuilder<PageInfoDbBean, Integer> ub = baseDao.updateBuilder();
-                ub.updateColumnValue("totalTime", totalTime);
-                ub.where().eq("itemId", itemId);
-                updateData(ub);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
     /**
      *
      * @param info
@@ -160,9 +171,6 @@ public class PageInfoImple extends BaseDao<PageInfoDbBean> {
                e.printStackTrace();
            }
        }
-
-
-
 
     @Override
     public void destory() {

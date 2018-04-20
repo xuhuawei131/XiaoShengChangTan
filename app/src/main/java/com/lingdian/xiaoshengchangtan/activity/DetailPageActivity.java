@@ -47,7 +47,6 @@ import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_STAR
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_START_NEW_MUSIC;
 
 /**
- *
  * 播放的详情页面
  */
 public class DetailPageActivity extends BaseActivity {
@@ -116,43 +115,6 @@ public class DetailPageActivity extends BaseActivity {
     protected void requestService() {
         EventBus.getDefault().register(this);
         setData();
-
-
-
-        OkGo.<String>post(url).tag(this).execute(new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                dealPageResult(response);
-            }
-
-            @Override
-            public void onCacheSuccess(Response<String> response) {
-                dealPageResult(response);
-            }
-
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-            }
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
-            }
-        });
-
-
-
-        Observable.just("Anima")
-                .subscribeOn(Schedulers.io())
-                .delay(500, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String s) {
-                        MyPlayerService.startPlay(bean);
-                    }
-                });
     }
 
     @Override
@@ -160,15 +122,6 @@ public class DetailPageActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
 
     }
-
-
-    private void dealPageResult(Response<String> response) {
-        Log.v("xhw", "onSuccess");
-        String html = response.body();
-        String fileUrl = HtmlParer.getPageDownFile(html);
-    }
-
-
 
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -208,10 +161,20 @@ public class DetailPageActivity extends BaseActivity {
         }
     };
 
+
+    /**
+     * 播放下一个音频
+     * @param bean
+     */
     @Subscriber(tag = TAG_PLAY_UI_START_NEW_MUSIC)
     private void onPlayNewMusic(PageInfoDbBean bean) {
         setData();
     }
+
+    /**
+     * 定时
+     * @param leftTimer
+     */
     @Subscriber(tag = ACTION_ALARM_TIMER_UI_UPDATE)
     private void onAlarmTimerUpate(int leftTimer) {
         if (leftTimer <= 0) {
@@ -222,6 +185,10 @@ public class DetailPageActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 暂停状态
+     * @param isStart
+     */
     @Subscriber(tag = TAG_PLAY_UI_STARTOR_PAUSE)
     private void onUIPauseOrStart(boolean isStart) {
         if (isStart) {
@@ -231,36 +198,60 @@ public class DetailPageActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 更新进度
+     * @param currentPosition
+     */
     @Subscriber(tag = TAG_PLAY_UI_PROGRESS)
     private void onUpdateProgress(int currentPosition) {
         mSeekBar.setProgress(currentPosition);
         text_currentTime.setText(DateUtils.duration2TimeByMicSecond(currentPosition));
     }
 
+    /**
+     * 播放错误
+     * @param bean
+     */
     @Subscriber(tag = TAG_PLAY_UI_ERROR)
     private void onError(PageInfoDbBean bean) {
         mSeekBar.setMax(bean.totalTime);
         text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
     }
 
+    /**
+     * 开始缓存
+     * @param bean
+     */
     @Subscriber(tag = TAG_PLAY_UI_BUFFER)
     private void onBufferingUpdate(PageInfoDbBean bean) {
         mSeekBar.setMax(bean.totalTime);
         text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
     }
 
+    /**
+     * 拖动完成
+     * @param bean
+     */
     @Subscriber(tag = TAG_PLAY_UI_SEEK_COMPLETION)
     private void onSeekComplete(PageInfoDbBean bean) {
         mSeekBar.setMax(bean.totalTime);
         text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
     }
 
+    /**
+     * 播放完成
+     * @param bean
+     */
     @Subscriber(tag = TAG_PLAY_UI_COMPLETION)
     private void onCompletion(PageInfoDbBean bean) {
         mSeekBar.setMax(bean.totalTime);
         text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
     }
 
+    /**
+     * 播放准备好了
+     * @param bean
+     */
     @Subscriber(tag = TAG_PLAY_UI_PREPARE)
     private void onPrepared(PageInfoDbBean bean) {
 //        MyPlayerService.startTimer(TimerType.TIMER_30);
@@ -268,6 +259,10 @@ public class DetailPageActivity extends BaseActivity {
         text_totalTime.setText(DateUtils.duration2TimeByMicSecond(bean.totalTime));
     }
 
+    /**
+     * 选择定时器了
+     * @param bean
+     */
     @Subscriber(tag = ACTION_VIEWHOLDER_TIMER)
     private void onSetTimer(TimerBean bean) {
         if (bean.timerType == TimerType.TIMER_CANCEL) {
@@ -277,8 +272,11 @@ public class DetailPageActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 更新信息
+     */
     private void setData() {
-        bean= SingleCacheData.getInstance().getCurrentPlayBean();
+        bean = SingleCacheData.getInstance().getCurrentPlayBean();
         fileBean = FileBean.newInstance(bean.title);
         if (fileBean == null) {
             finish();
