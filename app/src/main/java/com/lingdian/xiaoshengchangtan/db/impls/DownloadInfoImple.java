@@ -19,46 +19,49 @@ import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS
  */
 
 public class DownloadInfoImple extends BaseDao<DownloadInfoDbBean> {
-    private static DownloadInfoImple instance=null;
-    private DownloadInfoImple(){
+    private static DownloadInfoImple instance = null;
+
+    private DownloadInfoImple() {
         super();
     }
 
 
-    public static DownloadInfoImple getInstance(){
-        if(instance==null){
-            instance=new DownloadInfoImple();
+    public static DownloadInfoImple getInstance() {
+        if (instance == null) {
+            instance = new DownloadInfoImple();
         }
         return instance;
-        }
+    }
 
     /**
      * 获取所有的下载数据
+     *
      * @return
      */
-    public List<DownloadInfoDbBean> getAllDownloadData(){
-           try {
-               if (isOpen()) {
-                   return baseDao.queryForAll();
-               } else {
-                   return null;
-               }
-           } catch (Exception e) {
-               return null;
-           }
-       }
+    public List<DownloadInfoDbBean> getAllDownloadData() {
+        try {
+            if (isOpen()) {
+                return baseDao.queryForAll();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      * 获取下载列表数据
+     *
      * @return
      */
-    public  DownloadInfoDbBean getDownloadList(String itemId) {
+    public DownloadInfoDbBean getDownloadList(String itemId) {
         try {
             if (isOpen()) {
                 QueryBuilder<DownloadInfoDbBean, Integer> qb = baseDao.queryBuilder();
                 qb.where().eq("itemId", itemId);
-                List<DownloadInfoDbBean> list= getQuerryInfo(qb);
-                if(list!=null&&list.size()>0){
+                List<DownloadInfoDbBean> list = getQuerryInfo(qb);
+                if (list != null && list.size() > 0) {
                     return list.get(0);
                 }
             } else {
@@ -72,6 +75,7 @@ public class DownloadInfoImple extends BaseDao<DownloadInfoDbBean> {
 
     /**
      * 获取已经下载的文件列表
+     *
      * @return
      */
     public List<DownloadInfoDbBean> getDownloadedList() {
@@ -91,12 +95,12 @@ public class DownloadInfoImple extends BaseDao<DownloadInfoDbBean> {
 
 
     /**
-     *
      * 更新下载的状态
+     *
      * @param itemId
      * @param downStatus
      */
-    public void updateDownloadStatus(String itemId, int downStatus){
+    public void updateDownloadStatus(String itemId, int downStatus) {
         try {
             if (isOpen()) {
                 UpdateBuilder<DownloadInfoDbBean, Integer> ub = baseDao.updateBuilder();
@@ -112,10 +116,11 @@ public class DownloadInfoImple extends BaseDao<DownloadInfoDbBean> {
 
     /**
      * 更新总共的时间
+     *
      * @param itemId
      * @param totalSize
      */
-    public synchronized void updateDownloadTotalSize(String itemId,long totalSize){
+    public synchronized void updateDownloadTotalSize(String itemId, long totalSize) {
         try {
             if (isOpen()) {
                 UpdateBuilder<DownloadInfoDbBean, Integer> ub = baseDao.updateBuilder();
@@ -127,12 +132,14 @@ public class DownloadInfoImple extends BaseDao<DownloadInfoDbBean> {
             e.printStackTrace();
         }
     }
+
     /**
      * 更新总共的时间
+     *
      * @param itemId
      * @param fileDownSize
      */
-    public synchronized void updateDownloadSize(String itemId,long fileDownSize){
+    public synchronized void updateDownloadSize(String itemId, long fileDownSize) {
         try {
             if (isOpen()) {
                 UpdateBuilder<DownloadInfoDbBean, Integer> ub = baseDao.updateBuilder();
@@ -144,36 +151,22 @@ public class DownloadInfoImple extends BaseDao<DownloadInfoDbBean> {
             e.printStackTrace();
         }
     }
+
     /**
-     *更改下载状态
-     * @param info
+     * 更新插入下载状态
+     * @param list
      */
-    public void updateDownloadStatus(PageInfoDbBean info){
+    public void inserPageDownloadData(List<DownloadInfoDbBean> list) {
         try {
             if (isOpen()) {
-                UpdateBuilder<DownloadInfoDbBean, Integer> ub = baseDao.updateBuilder();
-                ub.updateColumnValue("downStatus", info.downStatus);
-                ub.where().eq("itemId", info.itemId);
-                updateData(ub);
+                for (DownloadInfoDbBean info : list) {
+                    baseDao.createOrUpdate(info);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    
-       public void inserPageDownloadData(List<DownloadInfoDbBean> list){
-           try {
-               if (isOpen()) {
-                   for (DownloadInfoDbBean info : list) {
-                       baseDao.createOrUpdate(info);
-                   }
-               }
-           } catch (SQLException e) {
-               e.printStackTrace();
-           }
-       }
-
-
 
 
     @Override

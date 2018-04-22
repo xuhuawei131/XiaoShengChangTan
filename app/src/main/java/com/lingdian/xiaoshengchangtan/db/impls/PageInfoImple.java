@@ -56,14 +56,14 @@ public class PageInfoImple extends BaseDao<PageInfoDbBean> {
         try {
             if (isOpen()) {
                 QueryBuilder<PageInfoDbBean, Integer> qb = baseDao.queryBuilder();
-                qb.where().in("downStatus", DOWNLOAD_STATUS_DOING,DOWNLOAD_STATUS_PAUSE,DOWNLOAD_STATUS_WAITTING);
+//                qb.where().in("downStatus", DOWNLOAD_STATUS_DOING,DOWNLOAD_STATUS_PAUSE,DOWNLOAD_STATUS_WAITTING);
 //                qb.where().eq("downStatus", DOWNLOAD_STATUS_WAITTING).or().eq("downStatus", DOWNLOAD_STATUS_DOING);
                 qb.orderBy("date", false);
                 return getQuerryInfo(qb);
             } else {
                 return null;
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -144,22 +144,22 @@ public class PageInfoImple extends BaseDao<PageInfoDbBean> {
         }
     }
 
-    /**
-     *
-     * @param info
-     */
-    public void updateDownloadStatus(PageInfoDbBean info){
-        try {
-            if (isOpen()) {
-                UpdateBuilder<PageInfoDbBean, Integer> ub = baseDao.updateBuilder();
-                ub.updateColumnValue("downStatus", info.downStatus);
-                ub.where().eq("itemId", info.itemId);
-                updateData(ub);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+//    /**
+//     *
+//     * @param info
+//     */
+//    public void updateDownloadStatus(PageInfoDbBean info){
+//        try {
+//            if (isOpen()) {
+//                UpdateBuilder<PageInfoDbBean, Integer> ub = baseDao.updateBuilder();
+//                ub.updateColumnValue("downStatus", info.downStatus);
+//                ub.where().eq("itemId", info.itemId);
+//                updateData(ub);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
        public void inserPageDownloadData(List<PageInfoDbBean> list){
            try {
                if (isOpen()) {

@@ -56,7 +56,6 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
     private ActionBarDrawerToggle toggle;
     private boolean  isFirstRequest=true;
 
-
     @Override
     protected void init() {
         EventBus.getDefault().register(this);
@@ -334,6 +333,7 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
         MyPlayerService.startPlay(bean);
         //跳转详情页面
         Intent intent = new Intent(this, DetailPageActivity.class);
+
         startActivity(intent);
     }
     /**

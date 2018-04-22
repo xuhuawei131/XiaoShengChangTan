@@ -101,7 +101,7 @@ public class DownLoadedActivity extends BaseActivity {
         arrayList.remove(bean);
         bean.downStatus=DOWNLOAD_STATUS_NO;
 
-        PageInfoImple.getInstance().updateDownloadStatus(bean);
+//        PageInfoImple.getInstance().updateDownloadStatus(bean);
         adapter.notifyDataSetChanged();
         notifyAdapter();
     }

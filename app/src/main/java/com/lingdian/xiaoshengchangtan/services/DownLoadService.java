@@ -91,7 +91,7 @@ public class DownLoadService extends Service {
                 boolean isExistWorkting = DownloadManager.getInstance().isExistWorkingQueue(bean);
 
                 if (!isExistWaitting && !isExistWorkting) {
-                    PageInfoImple.getInstance().updateDownloadStatus(bean);
+//                    PageInfoImple.getInstance().updateDownloadStatus(bean);
                     DownloadManager.getInstance().addWaittingQueue(bean);
                     startNextDownload();
                 } else {//任务已存在
@@ -166,7 +166,7 @@ public class DownLoadService extends Service {
                 EventBus.getDefault().post(bean, TAG_DOWNLOADING_DONE);
                 //下载完成
                 DownloadManager.getInstance().remoteWorkingList(bean);
-                PageInfoImple.getInstance().updateDownloadStatus(bean);
+//                PageInfoImple.getInstance().updateDownloadStatus(bean);
 
                 startNextDownload();
             }

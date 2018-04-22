@@ -23,7 +23,9 @@ import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_STAR
 import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_START_NEW_MUSIC;
 import static me.imid.swipebacklayout.lib.SwipeBackLayout.EDGE_BOTTOM;
 
-
+/**
+ * 锁屏页面 上拉关闭
+ */
 public class MainLockActivity extends SwipeBackBaseActivity {
     private TextView text_title;
     private TextView btn_subTitle;

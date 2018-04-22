@@ -9,6 +9,7 @@ import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.xhwbaselibrary.MyBaseApp;
 
 import java.util.concurrent.TimeUnit;
@@ -30,6 +31,7 @@ public class MyApp extends MyBaseApp {
     @Override
     public void onlyInitOnce() {
         initHttp();
+        CrashReport.initCrashReport(getApplicationContext(), "593542ef72", false);
         MyPlayerApi.getInstance().init(this);
     }
 

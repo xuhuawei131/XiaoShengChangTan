@@ -60,7 +60,6 @@ public class SingleCacheData {
     public PageInfoDbBean getCurrentPlayBean(){
         return currentBean;
     }
-
     /**
      * 获取当前的播放列表
      * @return
@@ -103,7 +102,7 @@ public class SingleCacheData {
                 if (fileBean.isExistFile()) {
                     url = fileBean.filePath;
                 } else {
-                    url = fileBean.fileUrl;
+                    url = bean.fileUrl;
                 }
                 //加载数据url
                 MyPlayerApi.getInstance().loadUri(bean, url);

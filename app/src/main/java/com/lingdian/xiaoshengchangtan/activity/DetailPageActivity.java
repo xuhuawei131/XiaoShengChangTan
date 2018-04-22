@@ -277,19 +277,21 @@ public class DetailPageActivity extends BaseActivity {
      */
     private void setData() {
         bean = SingleCacheData.getInstance().getCurrentPlayBean();
-        fileBean = FileBean.newInstance(bean.title);
-        if (fileBean == null) {
-            finish();
-        } else {
-            if (new File(fileBean.filePath).exists()) {
-                url = fileBean.filePath;
-                isDowned = true;
+        if (bean!=null){
+            fileBean = FileBean.newInstance(bean.title);
+            if (fileBean == null) {
+                finish();
             } else {
-                url = fileBean.fileUrl;
-                isDowned = false;
+                if (new File(fileBean.filePath).exists()) {
+                    url = fileBean.filePath;
+                    isDowned = true;
+                } else {
+                    url = fileBean.fileUrl;
+                    isDowned = false;
+                }
             }
+            text_title.setText(fileBean.fileName);
         }
-        text_title.setText(fileBean.fileName);
     }
 
     /**
