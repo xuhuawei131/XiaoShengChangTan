@@ -1,6 +1,7 @@
 package com.lingdian.xiaoshengchangtan.config;
 
 import com.lingdian.xiaoshengchangtan.bean.FileBean;
+import com.lingdian.xiaoshengchangtan.db.impls.PageInfoImple;
 import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 import com.lingdian.xiaoshengchangtan.enums.TimerType;
 import com.lingdian.xiaoshengchangtan.player.MyPlayerApi;
@@ -19,12 +20,15 @@ import static com.lingdian.xiaoshengchangtan.config.EventBusTag.TAG_PLAY_UI_STAR
  */
 
 public class SingleCacheData {
-
-    private static SingleCacheData instance=null;
+    //当前播放的bean
     private PageInfoDbBean currentBean;
     //设置当前的播放列表
     private List<PageInfoDbBean> currentList;
+    //定时关闭的类型
     private TimerType currentTimerType;
+
+    private static SingleCacheData instance=null;
+
     private SingleCacheData(){
         currentTimerType=TimerType.TIMER_CANCEL;
         currentList=new ArrayList<>();
@@ -51,7 +55,6 @@ public class SingleCacheData {
     public void setCurrentTimerType(TimerType currentTimerType) {
         this.currentTimerType = currentTimerType;
     }
-
 
     /**
      * 获取当前播放的数据bean
@@ -92,9 +95,13 @@ public class SingleCacheData {
      */
     public void playNewMusic(PageInfoDbBean bean){
         if (currentBean != null) {
+            //如果播放的 id与当前id 不一样 那么就播放
             if (!currentBean.itemId.equals(bean.itemId)) {
+                //保存更新播放进度
+                PageInfoImple.getInstance().updatePlayProgress();
+
                 currentBean = bean;
-//                MyPlayerApi.getInstance().stop();
+                //播放下一个新音乐
                 EventBus.getDefault().post(bean,TAG_PLAY_UI_START_NEW_MUSIC);
 
                 FileBean fileBean = FileBean.newInstance(bean.title);
@@ -109,6 +116,9 @@ public class SingleCacheData {
             }
         }else{
             currentBean = bean;
+            //保存更新播放进度
+            PageInfoImple.getInstance().updatePlayProgress();
+            //播放下一个新音乐
             EventBus.getDefault().post(bean,TAG_PLAY_UI_START_NEW_MUSIC);
 
             FileBean fileBean = FileBean.newInstance(bean.title);
@@ -116,13 +126,12 @@ public class SingleCacheData {
             if (fileBean.isExistFile()) {
                 url = fileBean.filePath;
             } else {
-                url = fileBean.fileUrl;
+                url = bean.fileUrl;
             }
             //加载数据url
             MyPlayerApi.getInstance().loadUri(bean, url);
         }
     }
-
     /**
      * 获取下一个 数据bean
      * @return

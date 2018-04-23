@@ -9,9 +9,7 @@ import com.lingdian.xiaoshengchangtan.config.SwitchConfig;
  */
 @DatabaseTable(tableName="downloadinfo")
 public class DownloadInfoDbBean {
-    /**
-     * 主键
-     */
+    /*** 主键*/
     @DatabaseField(generatedId = true)
     public int _id;
     /**数据唯一的索引 标题的md5值**/
@@ -29,10 +27,12 @@ public class DownloadInfoDbBean {
     /**下载的进度**/
     @DatabaseField
     public int percent;
-    /**是否下载完成*/
     @DatabaseField
-    public int downStatus= SwitchConfig.DOWNLOAD_STATUS_NO;//0 为下载
+    public String fileUrl;
     /**文件名称*/
     @DatabaseField
     public String fileName;
+    /**是否下载完成*/
+    @DatabaseField
+    public int downStatus= SwitchConfig.DOWNLOAD_STATUS_NO;//0 为下载
 }

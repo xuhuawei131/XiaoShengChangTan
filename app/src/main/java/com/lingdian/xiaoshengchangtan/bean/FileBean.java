@@ -24,7 +24,7 @@ public class FileBean {
         String array[] = fileTitle.split("_");
         if (array.length > 1) {
             FileBean bean = new FileBean();
-//            bean.fileUrl = String.format(URL, array[1]);//不使用本地拼接的方式了 而使用网络获取下载地址方式
+            bean.fileUrl = String.format(URL, array[1]);//不使用本地拼接的方式了 而使用网络获取下载地址方式
 
             bean.fileName = fileTitle + ".mp4";
             ;
@@ -36,6 +36,10 @@ public class FileBean {
         }
         return null;
     }
+
+
+
+
 
     private static String getFilePath(String fileName) {
         String fileDir = FileCache.getInstance().getDownloadFile().getAbsolutePath();

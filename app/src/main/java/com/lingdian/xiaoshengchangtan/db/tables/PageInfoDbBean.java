@@ -12,9 +12,7 @@ import java.io.Serializable;
  */
 @DatabaseTable(tableName="pageinfo")
 public class PageInfoDbBean implements Serializable{
-    /**
-     * 主键
-     */
+    /*** 主键*/
     @DatabaseField(generatedId = true)
     public int _id;
     /**数据唯一的索引 标题的md5值**/
@@ -32,6 +30,9 @@ public class PageInfoDbBean implements Serializable{
     /**文件地址数据**/
     @DatabaseField
     public String fileUrl;
+    /**文件当前播放时间*/
+    @DatabaseField
+    public int currentTime;
 
 
     /**下载的状态*/
@@ -40,9 +41,9 @@ public class PageInfoDbBean implements Serializable{
     public int totalTime;
     /**下载的进度**/
     public float percent;
-    /**文件当前播放时间*/
-    public int currentTime;
+    /*** 是否正在播放*/
     public boolean isPlaying=false;
+    /**缓存进度**/
     public int buffet_percent;
 
     public PageInfoDbBean(){

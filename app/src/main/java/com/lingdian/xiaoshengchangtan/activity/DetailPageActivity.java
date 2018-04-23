@@ -120,7 +120,6 @@ public class DetailPageActivity extends BaseActivity {
     @Override
     protected void onMyDestory() {
         EventBus.getDefault().unregister(this);
-
     }
 
 

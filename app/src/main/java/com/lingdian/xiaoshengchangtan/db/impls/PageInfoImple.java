@@ -2,6 +2,7 @@ package com.lingdian.xiaoshengchangtan.db.impls;
 
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
+import com.lingdian.xiaoshengchangtan.config.SingleCacheData;
 import com.lingdian.xiaoshengchangtan.db.tables.DownloadInfoDbBean;
 import com.lingdian.xiaoshengchangtan.db.tables.PageInfoDbBean;
 
@@ -19,37 +20,40 @@ import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS
  */
 
 public class PageInfoImple extends BaseDao<PageInfoDbBean> {
-    private static PageInfoImple instance=null;
-    private PageInfoImple(){
+    private static PageInfoImple instance = null;
+
+    private PageInfoImple() {
         super();
     }
 
 
-    public static PageInfoImple getInstance(){
-        if(instance==null){
-            instance=new PageInfoImple();
+    public static PageInfoImple getInstance() {
+        if (instance == null) {
+            instance = new PageInfoImple();
         }
         return instance;
-        }
+    }
 
     /**
      * 获取所有页面的缓存
+     *
      * @return
      */
-    public List<PageInfoDbBean> getAllPageData(){
-           try {
-               if (isOpen()) {
-                   return baseDao.queryForAll();
-               } else {
-                   return null;
-               }
-           } catch (Exception e) {
-               return null;
-           }
-       }
+    public List<PageInfoDbBean> getAllPageData() {
+        try {
+            if (isOpen()) {
+                return baseDao.queryForAll();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      * 获取下载列表数据
+     *
      * @return
      */
     public List<PageInfoDbBean> getDownloadList() {
@@ -67,26 +71,10 @@ public class PageInfoImple extends BaseDao<PageInfoDbBean> {
             return null;
         }
     }
-    /**
-     *
-     * 更改下载的路径
-     * @param itemId
-     * @param fileUrl
-     */
-    public void updateDownloadFileUrl(String itemId, String fileUrl){
-        try {
-            if (isOpen()) {
-                UpdateBuilder<PageInfoDbBean, Integer> ub = baseDao.updateBuilder();
-                ub.updateColumnValue("fileUrl", fileUrl);
-                ub.where().eq("itemId", itemId);
-                updateData(ub);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+
     /**
      * 获取已经下载的文件列表
+     *
      * @return
      */
     public List<PageInfoDbBean> getDownloadedList() {
@@ -106,6 +94,7 @@ public class PageInfoImple extends BaseDao<PageInfoDbBean> {
 
     /**
      * 获取指定的某个数据
+     *
      * @param itemId
      * @return
      */
@@ -114,10 +103,10 @@ public class PageInfoImple extends BaseDao<PageInfoDbBean> {
             if (isOpen()) {
                 QueryBuilder<PageInfoDbBean, Integer> qb = baseDao.queryBuilder();
                 qb.where().eq("itemId", itemId);
-                List<PageInfoDbBean> list= getQuerryInfo(qb);
-                if (list!=null&&list.size()>0){
+                List<PageInfoDbBean> list = getQuerryInfo(qb);
+                if (list != null && list.size() > 0) {
                     return list.get(0);
-                }else{
+                } else {
                     return null;
                 }
             } else {
@@ -128,49 +117,54 @@ public class PageInfoImple extends BaseDao<PageInfoDbBean> {
         }
     }
 
-    public void updateDownloadPlayerStatus(PageInfoDbBean info){
-        if(info==null){
-            return;
+    /**
+     * 更新播放的进度
+     */
+    public void updatePlayProgress() {
+        PageInfoDbBean currentBean = SingleCacheData.getInstance().getCurrentPlayBean();
+        try {
+            PageInfoDbBean bean=getPageItemInfo(currentBean.itemId);
+            if (bean!=null){
+                if (isOpen()) {
+                    UpdateBuilder<PageInfoDbBean, Integer> ub = baseDao.updateBuilder();
+                    ub.updateColumnValue("currentTime", currentBean.currentTime);
+                    ub.where().eq("itemId", currentBean.itemId);
+                    updateData(ub);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+    }
+    /**
+     * 批量插入下载缓存的数据
+     * @param info
+     */
+    public void inserPageDownloadData(PageInfoDbBean info) {
         try {
             if (isOpen()) {
-                UpdateBuilder<PageInfoDbBean, Integer> ub = baseDao.updateBuilder();
-                ub.updateColumnValue("currentTime", info.currentTime);
-                ub.where().eq("itemId", info.itemId);
-                updateData(ub);
+                    baseDao.createOrUpdate(info);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-//    /**
-//     *
-//     * @param info
-//     */
-//    public void updateDownloadStatus(PageInfoDbBean info){
-//        try {
-//            if (isOpen()) {
-//                UpdateBuilder<PageInfoDbBean, Integer> ub = baseDao.updateBuilder();
-//                ub.updateColumnValue("downStatus", info.downStatus);
-//                ub.where().eq("itemId", info.itemId);
-//                updateData(ub);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-       public void inserPageDownloadData(List<PageInfoDbBean> list){
-           try {
-               if (isOpen()) {
-                   for (PageInfoDbBean info : list) {
-                       baseDao.createOrUpdate(info);
-                   }
-               }
-           } catch (SQLException e) {
-               e.printStackTrace();
-           }
-       }
+    /**
+     * 批量插入下载缓存的数据列表
+     * @param list
+     */
+    public void inserPageDownloadDataList(List<PageInfoDbBean> list) {
+        try {
+            if (isOpen()) {
+                for (PageInfoDbBean info : list) {
+                    baseDao.createOrUpdate(info);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void destory() {

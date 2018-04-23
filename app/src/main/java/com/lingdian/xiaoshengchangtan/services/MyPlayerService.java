@@ -15,6 +15,7 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.lingdian.xiaoshengchangtan.activity.MainLockActivity;
 import com.lingdian.xiaoshengchangtan.config.SingleCacheData;
@@ -171,6 +172,7 @@ public class MyPlayerService extends Service {
     public void playItem(PageInfoDbBean bean) {
         if (TextUtils.isEmpty(bean.fileUrl)) {
             PageInfoDbBean dbBean = PageInfoImple.getInstance().getPageItemInfo(bean.itemId);
+
             if (dbBean == null || TextUtils.isEmpty(dbBean.fileUrl)) {
                 getPageDownFilePath(bean, "http://gb.jlradio.net/"+bean.link);
             } else {
@@ -205,13 +207,15 @@ public class MyPlayerService extends Service {
                 String html = response.body();
                 String fileUrl = HtmlParer.getPageDownFile(html);
                 bean.fileUrl = fileUrl;
-                PageInfoImple.getInstance().updateDownloadFileUrl(bean.itemId, fileUrl);
+
+                PageInfoImple.getInstance().inserPageDownloadData(bean);
                 SingleCacheData.getInstance().playNewMusic(bean);
             }
 
             @Override
             public void onError(Response<String> response) {
                 super.onError(response);
+                Toast.makeText(MyPlayerService.this, "网络地址获取异常！", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -220,23 +224,27 @@ public class MyPlayerService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        //清空播放列表
         SingleCacheData.getInstance().clearCurrentList();
-
-
+        //关闭定时器
         stopAlarm();
 
-        PageInfoDbBean currentBean = SingleCacheData.getInstance().getCurrentPlayBean();
-        PageInfoImple.getInstance().updateDownloadPlayerStatus(currentBean);
+        //保存进度
+        PageInfoImple.getInstance().updatePlayProgress();
 
+        //移除监听器
         MyPlayerApi.getInstance().removeMediaPlayerListener(listener);
+        //关闭播放器
         MyPlayerApi.getInstance().destory();
-
+        //卸载监听
         EventBus.getDefault().unregister(this);
-
+        //停止更新进度更新
         stopUpdateSeekBarProgree();
-        mMusicHandler = null;
 
+        //清空handler消息队列
+        mMusicHandler.removeCallbacksAndMessages(null);
+        mMusicHandler = null;
+        //卸载广播
         unregisterReceiver(broadcastReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
     }
@@ -279,7 +287,7 @@ public class MyPlayerService extends Service {
         PageInfoDbBean currentBean = SingleCacheData.getInstance().getCurrentPlayBean();
         if (status == MyPlayerApi.MusicStatus.PAUSE) {
             currentBean.isPlaying = false;
-
+            PageInfoImple.getInstance().updatePlayProgress();
             EventBus.getDefault().post(true, TAG_PLAY_UI_STARTOR_PAUSE);
         } else {
             currentBean.isPlaying = true;
@@ -294,7 +302,6 @@ public class MyPlayerService extends Service {
     private Handler mMusicHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            super.handleMessage(msg);
             int currentPosition = MyPlayerApi.getInstance().getCurrentPosition();
             startUpdateSeekBarProgress();
             EventBus.getDefault().post(currentPosition, TAG_PLAY_UI_PROGRESS);

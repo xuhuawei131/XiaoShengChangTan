@@ -45,7 +45,7 @@ import static com.lingdian.xiaoshengchangtan.config.SwitchConfig.DOWNLOAD_STATUS
  * 下载的服务器
  */
 public class DownLoadService extends Service {
-    //
+    //同时下载的最大 数量
     private static final int num = 2;
 
     public static void addDownloadTask(PageInfoDbBean bean) {
@@ -120,7 +120,6 @@ public class DownLoadService extends Service {
         while (DownloadManager.getInstance().getWorkingLenght() <= num) {
             if (!DownloadManager.getInstance().isEmptyWaitting()) {
                 PageInfoDbBean task = DownloadManager.getInstance().pollWaittingQueue();
-
                 DownloadManager.getInstance().addWorkingList(task);
                 startDownload(task);
             } else {
@@ -152,7 +151,7 @@ public class DownLoadService extends Service {
             task = new DownLoadBeanTask(bean.title);
         }
 
-        request.tag(bean.title).execute(new MyFileCallback(task) {
+        request.tag(bean.itemId).execute(new MyFileCallback(task) {
             @Override
             public void onSuccess(Response<File> response) {
                 response.getRawResponse().body().contentLength();
@@ -166,8 +165,6 @@ public class DownLoadService extends Service {
                 EventBus.getDefault().post(bean, TAG_DOWNLOADING_DONE);
                 //下载完成
                 DownloadManager.getInstance().remoteWorkingList(bean);
-//                PageInfoImple.getInstance().updateDownloadStatus(bean);
-
                 startNextDownload();
             }
 

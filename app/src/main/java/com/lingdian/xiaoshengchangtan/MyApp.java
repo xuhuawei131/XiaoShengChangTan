@@ -1,6 +1,7 @@
 package com.lingdian.xiaoshengchangtan;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.lingdian.xiaoshengchangtan.crash.CrashHandler;
 import com.lingdian.xiaoshengchangtan.player.MyPlayerApi;
@@ -22,6 +23,8 @@ import okhttp3.OkHttpClient;
  */
 
 public class MyApp extends MyBaseApp {
+    //全局应用上下文
+    private static Context mAppContext;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -36,7 +39,12 @@ public class MyApp extends MyBaseApp {
     }
 
 
-
+    /*
+         * 获得全局上下文
+         */
+    public static Context getAppContext() {
+        return mAppContext;
+    }
 
     private void initHttp() {
 

@@ -13,6 +13,7 @@ import java.util.List;
 
 /**
  * Created by lingdian on 17/9/10.
+ * 播放器调用的api
  */
 
 public class MyPlayerApi {

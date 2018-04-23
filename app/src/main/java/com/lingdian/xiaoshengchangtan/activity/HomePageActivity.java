@@ -89,8 +89,6 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
         View text_setting=headerLayout.findViewById(R.id.text_setting);
         View text_exit=headerLayout.findViewById(R.id.text_exit);
 
-//        DownloadManager.getInstance().getAllDownList();
-
         text_downloading.setOnClickListener(this);
         text_downloaded.setOnClickListener(this);
         text_setting.setOnClickListener(this);
@@ -143,7 +141,6 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
             @Override
             public void onError(Response<String> response) {
                 super.onError(response);
-                int code = response.code();
                 notifyEmptyAdapter();
                 disProgressDialog();
             }
@@ -211,7 +208,7 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
             }
         }
         if (updateList.size() > 0) {
-            PageInfoImple.getInstance().inserPageDownloadData(updateList);
+            PageInfoImple.getInstance().inserPageDownloadDataList(updateList);
         }
     }
 
