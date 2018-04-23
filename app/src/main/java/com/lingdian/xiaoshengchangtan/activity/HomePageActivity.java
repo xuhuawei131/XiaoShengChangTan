@@ -320,7 +320,6 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
             finish();
             stopService(new Intent(this, MyPlayerService.class));
         }
-
     }
     @Subscriber(tag = TAG_HOME_ITEM_CLICK)
     private void onItemClick(PageInfoDbBean bean) {
@@ -330,7 +329,6 @@ public class HomePageActivity extends BaseRefreshMoreViewActivity implements Vie
         MyPlayerService.startPlay(bean);
         //跳转详情页面
         Intent intent = new Intent(this, DetailPageActivity.class);
-
         startActivity(intent);
     }
     /**

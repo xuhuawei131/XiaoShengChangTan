@@ -28,8 +28,8 @@ public class SplashActivity extends Activity {
                 .subscribe(new Action1<String>() {
                     @Override
                     public void call(String s) {
-//                        startActivity(new Intent(SplashActivity.this,HomePageActivity.class));
-                        startActivity(new Intent(SplashActivity.this,MainActivity.class));
+                        startActivity(new Intent(SplashActivity.this,HomePageActivity.class));
+//                        startActivity(new Intent(SplashActivity.this,MainActivity.class));
                         finish();
                     }
                 });
